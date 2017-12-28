@@ -1,6 +1,7 @@
 /* main.cpp
 Copyright (c) 2018 by Kirk Lange
 
+
 Main function for ezsdl. None of this code is part of the engine itself.
 Rather, treat this as an example or template for basing your future projects
 off of.
@@ -31,6 +32,15 @@ My Signature Variable Prefixes
   > Obj& getObj(const int& pcfObjectID);
   > for (int lIndex=0; lIndex<vStr.length(); lIndex++) { ... }
 ===============================================================================
+
+EZSDL is free software: you can redistribute it and/or modify it under the
+terms of the GNU General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version.
+
+EZSDL is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 */
 
 //#include ezsdl/
