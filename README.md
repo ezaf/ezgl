@@ -1,2 +1,3 @@
-# ezsdl2
-An easy, object-oriented wrapper for SDL2 and its various libraries. OpenGL support not planned at the moment.
+# ezsdl
+The easy, object-oriented wrapper for SDL2 and its extension libraries. 
+OpenGL/GLEW support not currently planned, but are possible in the future.
