@@ -1,27 +1,33 @@
-#OBJS specifies which files to compile as part of the project
+#OBJS specifies which files to compile for the project
 OBJS = main.cpp
+
+#OUT specifies the name of the executable
+OUT = debug
 
 BUILD_DIR = ../build
 RESRC_DIR = ../resrc
 
 #CC specifies which compiler we're using
-CC = g++ -std=c++11 -O3
+CC = g++
 
-#INCLUDE_PATHS specifies the additional include paths we'll need
-INCLUDE_PATHS = -ID:\org\libsdl\include -ID:\net\glew\include
+#CF specifies universal/cross-platform compiler flags
+CF = -std=c++11 -O3
 
-#LIBRARY_PATHS specifies the additional library paths we'll need
-LIBRARY_PATHS = -LD:\org\libsdl\lib -LD:\net\glew\lib\Release\Win32
+#INC_PATHS specifies include paths
+INC_PATHS = -ID:\org\libsdl\include -ID:\net\glew\include
 
-#COMPILER_FLAGS specifies the additional compilation options we're using
+#LIB_PATHS specifies library paths
+LIB_PATHS = -LD:\org\libsdl\lib -LD:\net\glew\lib\Release\Win32
+
+#CF_X specifies platform-specific compiler flags
 # -w suppresses all warnings
 #  # -Wl,-subsystem,windows gets rid of the console window
-COMPILER_FLAGS_L = -w
-COMPILER_FLAGS_W = -w -Wl,-subsystem,windows
+CF_L = -w
+CF_W = -w -Wl,-subsystem,windows
 
-#LINKER_FLAGS specifies the libraries we're linking against
-LINKER_FLAGS_L = -lSDL2main -lSDL2
-LINKER_FLAGS_W = -lmingw32 -lSDL2main -lSDL2
+#LF_X specifies platform-specific libraries
+LF_L = -lSDL2main -lSDL2
+LF_W = -lmingw32 -lSDL2main -lSDL2
 
 
 all : 
@@ -34,10 +40,10 @@ linux:
 	make mk_dirs && make linux_compile && make cp_resrc && make run
 
 windows_compile : $(OBJS)
-		$(CC) $(OBJS) $(INCLUDE_PATHS) $(LIBRARY_PATHS) $(COMPILER_FLAGS_W) $(LINKER_FLAGS_W) -o $(BUILD_DIR)/debug
+	$(CC) $(OBJS) $(INC_PATHS) $(LIB_PATHS) $(CF_W) $(LF_W) -o $(BUILD_DIR)/$(OUT)
 
 linux_compile: $(OBJS)
-	$(CC) $(OBJS) $(COMPILER_FLAGS_L) $(LINKER_FLAGS_L) -o $(BUILD_DIR)/debug
+	$(CC) $(OBJS) $(CF_L) $(LF_L) -o $(BUILD_DIR)/$(OUT)
 
 
 # Utilities
@@ -48,7 +54,7 @@ cp_resrc :
 	cp -R $(RESRC_DIR)/. $(BUILD_DIR)/
 
 run :
-	cd ../build && echo '' && ./debug && cd ../source
+	cd $(BUILD_DIR) && echo '' && ./debug && cd ../source
 
 clean :
 	rm -f $(BUILD_DIR)/*
