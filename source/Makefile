@@ -1,34 +1,37 @@
-#OBJS specifies which files to compile for the project
+# OBJS specifies which files to compile for the project
 OBJS = main.c
 
-#OUT specifies the name of the executable
+# OUT specifies the name of the executable
 OUT = debug
 
 BUILD_DIR = ../build/
 RESRC_DIR = ../resrc/
 
-#CC specifies which compiler we're using
+# CC specifies which compiler we're using
 CC = gcc
 
-#CF specifies universal/cross-platform compiler flags
+# CF specifies universal/cross-platform compiler flags
 CF = -std=c89 -O3
 
-#INC_PATHS specifies include paths
+# INC_PATHS specifies include paths
 INC_PATHS = -ID:\org\libsdl\include -ID:\org\lua-5.3.4\src
 
-#LIB_PATHS specifies library paths
+# LIB_PATHS specifies library paths
 LIB_PATHS = -LD:\org\libsdl\lib -ID:\org\lua-5.3.4\src
 
-#CF_X specifies platform-specific compiler flags
-# -w suppresses all warnings
+# CF_X specifies platform-specific compiler flags
+# "-w" suppresses all warnings
 # "-Wl,-subsystem,windows" gets rid of the console window
-CF_L = -w
-CF_W = -w
-CF_W_NOCONSOLE = -w -Wl,-subsystem,windows
+CF = -w
+CF_L = $(CF)
+CF_W = $(CF) #-Wl,-subsystem,windows
 
-#LF_X specifies platform-specific libraries
-LF_L = -lSDL2main -lSDL2
-LF_W = -lmingw32 -lSDL2main -lSDL2
+# LF_X specifies platform-specific libraries
+LF = -lSDL2main -lSDL2
+LF_L = $(LF)
+LF_W = -lmingw32 $(LF)
+
+# TODO: add mac support
 
 
 all : 
