@@ -13,17 +13,8 @@ WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
 A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 */
 
-#include "OUTLINE.hpp"
-#include "STUFF.hpp"
+#include "OUTLINE.h"
+#include "STUFF.h"
 
 
 
-OUTLINE::OUTLINE()
-{
-    // ctor
-}
-
-OUTLINE::~OUTLINE()
-{
-    // dtor
-}

@@ -13,31 +13,11 @@ WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
 A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 */
 
-#ifndef DEFINEME_HPP
-#define DEFINEME_HPP
+#ifndef DEFINEME_H
+#define DEFINEME_H
 
-#include "STUFF.hpp"
-
-class STUFF;
+#include "STUFF.h"
 
 
 
-class OUTLINE
-{
-public:
-    // ctor: TODO description
-    OUTLINE();
-    
-    // dtor: TODO description
-    virtual ~OUTLINE();
-
-
-protected:
-
-
-private:
-};
-
-
-
-#endif // DEFINEME_HPP
+#endif // DEFINEME_H

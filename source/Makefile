@@ -1,29 +1,30 @@
 #OBJS specifies which files to compile for the project
-OBJS = main.cpp
+OBJS = main.c
 
 #OUT specifies the name of the executable
 OUT = debug
 
-BUILD_DIR = ../build
-RESRC_DIR = ../resrc
+BUILD_DIR = ../build/
+RESRC_DIR = ../resrc/
 
 #CC specifies which compiler we're using
-CC = g++
+CC = gcc
 
 #CF specifies universal/cross-platform compiler flags
-CF = -std=c++11 -O3
+CF = -std=c89 -O3
 
 #INC_PATHS specifies include paths
-INC_PATHS = -ID:\org\libsdl\include -ID:\net\glew\include
+INC_PATHS = -ID:\org\libsdl\include -ID:\org\lua-5.3.4\src
 
 #LIB_PATHS specifies library paths
-LIB_PATHS = -LD:\org\libsdl\lib -LD:\net\glew\lib\Release\Win32
+LIB_PATHS = -LD:\org\libsdl\lib -ID:\org\lua-5.3.4\src
 
 #CF_X specifies platform-specific compiler flags
 # -w suppresses all warnings
-#  # -Wl,-subsystem,windows gets rid of the console window
+# "-Wl,-subsystem,windows" gets rid of the console window
 CF_L = -w
-CF_W = -w -Wl,-subsystem,windows
+CF_W = -w
+CF_W_NOCONSOLE = -w -Wl,-subsystem,windows
 
 #LF_X specifies platform-specific libraries
 LF_L = -lSDL2main -lSDL2
@@ -40,21 +41,21 @@ linux:
 	make mk_dirs && make linux_compile && make cp_resrc && make run
 
 windows_compile : $(OBJS)
-	$(CC) $(OBJS) $(INC_PATHS) $(LIB_PATHS) $(CF_W) $(LF_W) -o $(BUILD_DIR)/$(OUT)
+	$(CC) $(OBJS) $(INC_PATHS) $(LIB_PATHS) $(CF_W) $(LF_W) -o $(BUILD_DIR)$(OUT)
 
 linux_compile: $(OBJS)
-	$(CC) $(OBJS) $(CF_L) $(LF_L) -o $(BUILD_DIR)/$(OUT)
+	$(CC) $(OBJS) $(CF_L) $(LF_L) -o $(BUILD_DIR)$(OUT)
 
 
 # Utilities
 mk_dirs :
-	mkdir $(BUILD_DIR) && mkdir $(RESRC_DIR)
+	mkdir -p $(BUILD_DIR) && mkdir -p $(RESRC_DIR)
 
 cp_resrc :
-	cp -R $(RESRC_DIR)/. $(BUILD_DIR)/
+	cp -R $(RESRC_DIR). $(BUILD_DIR)
 
 run :
-	cd $(BUILD_DIR) && echo '' && ./debug && cd ../source
+	cd $(BUILD_DIR) && echo '' && ./debug && cd ../source/
 
 clean :
-	rm -f $(BUILD_DIR)/*
+	rm -f $(BUILD_DIR)*
