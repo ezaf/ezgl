@@ -1,5 +1,5 @@
 # OBJS specifies which files to compile for the project
-OBJS = main.c
+OBJS = main.c ezwindow.c
 
 # OUT specifies the name of the executable
 OUT = debug
@@ -14,7 +14,7 @@ CC = gcc
 CF = -std=c89 -O3
 
 # INC_PATHS specifies include paths
-INC_PATHS = -ID:\org\libsdl\include -ID:\org\lua-5.3.4\src
+INC_PATHS = -ID:\org\libsdl\include\SDL2 -ID:\org\lua-5.3.4\src
 
 # LIB_PATHS specifies library paths
 LIB_PATHS = -LD:\org\libsdl\lib -ID:\org\lua-5.3.4\src
@@ -27,7 +27,7 @@ CF_L = $(CF)
 CF_W = $(CF) #-Wl,-subsystem,windows
 
 # LF_X specifies platform-specific libraries
-LF = -lSDL2main -lSDL2
+LF = -lSDL2main -lSDL2 -lSDL2_image
 LF_L = $(LF)
 LF_W = -lmingw32 $(LF)
 
