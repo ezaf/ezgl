@@ -1,7 +1,5 @@
-/* OUTLINE.cpp
+/* OUTLINE.c
 Copyright (c) 2018 by Kirk Lange
-
-TODO: brief implementation summary
 
 EZSDL is free software: you can redistribute it and/or modify it under the
 terms of the GNU General Public License as published by the Free Software
@@ -14,7 +12,35 @@ A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 */
 
 #include "OUTLINE.h"
-#include "STUFF.h"
 
 
 
+struct OUTLINE
+{
+    // members here
+};
+
+
+
+OUTLINE* OUTLINE_new()
+{
+    // ctor
+}
+
+
+
+uint8_t OUTLINE_del(OUTLINE *pnSelf)
+{
+    if (pnSelf)
+    {
+        // dtor
+        free(pnSelf);
+
+        return 1;
+    }
+    else
+    {
+        // print error message
+        return 0
+    }
+}

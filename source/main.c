@@ -1,7 +1,4 @@
 /* main.cpp
-Copyright (c) 2018 by Kirk Lange
-
-
 Main function for ezsdl. None of this code is part of the engine itself.
 Rather, treat this as an example or template for basing your future projects
 off of.
@@ -13,6 +10,7 @@ Oregonian Notation (Kirk Lange's Apps Hungarian Notation)
   u - public / visible namespace
   o - protected
   i - private / annonymous namespace
+  m - member (for structs in C)
   s - static
   p - parameter
   r - return
@@ -20,8 +18,8 @@ Oregonian Notation (Kirk Lange's Apps Hungarian Notation)
   l - iterator (looper, hence 'l')
   h - push (as in said variable will be pushed to a cointainer or array)
   c - constant
-  f - reference
   n - pointer / array
+  f - reference
   v - value (use only if no other prefixes apply)
 -------------------------------------------------------------------------------
 > Append all applicable prefixes (except for 'v') in the order listed above.
@@ -33,6 +31,9 @@ Oregonian Notation (Kirk Lange's Apps Hungarian Notation)
   > for (int lIndex=0; lIndex<vStr.length(); lIndex++) { ... }
 ===============================================================================
 
+
+Copyright (c) 2018 by Kirk Lange
+
 EZSDL is free software: you can redistribute it and/or modify it under the
 terms of the GNU General Public License as published by the Free Software
 Foundation, either version 3 of the License, or (at your option) any later
@@ -43,7 +44,8 @@ WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
 A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 */
 
-//#include ezsdl/
+#include "ezwindow.h"
+
 #include <stdio.h>
 
 
@@ -51,6 +53,15 @@ A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 int main(int argc, char *argv[])
 {
     printf("Hello world, I am ezsdl2!\n");
+
+    ezwindow *ezw = ezwindow_new();
+    while (ezwindow_isRunning(ezw))
+    {
+        ezwindow_pollEvent(ezw);
+        ezwindow_clear(ezw);
+        ezwindow_update(ezw);
+    }
+    ezwindow_del(&ezw);
 
     return 0;
 }

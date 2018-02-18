@@ -1,6 +1,5 @@
-/* OUTLINE.h
-A rough template to base future files off of. Replace this paragraph with a
-brief, high-level description of your code.
+/* ezlog.h
+Easy way to change where your fprintf statements print to.
 
 
 Copyright (c) 2018 by Kirk Lange
@@ -15,22 +14,16 @@ WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
 A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 */
 
-#ifndef MACRO_H
-#define MACRO_H
+#ifndef EZLOG_H
+#define EZLOG_H
 
-#include "TODO.h"
-#include <stdint.h>
-
-typedef struct OUTLINE OUTLINE;
+#include <stdio.h>
 
 
 
-OUTLINE*        OUTLINE_new();
-uint8_t         OUTLINE_del(OUTLINE *pnSelf);
-
-
-// other functions here
+#define logout stdout
+#define logerr stderr
 
 
 
-#endif // MACRO_H
+#endif // EZLOG_H
