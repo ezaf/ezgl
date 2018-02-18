@@ -8,7 +8,7 @@ off of.
 
 TODO: move prefix documentation to some central window/engine class header (?)
 
-My Signature Variable Prefixes
+Oregonian Notation (Kirk Lange's Apps Hungarian Notation)
 ===============================================================================
   u - public / visible namespace
   o - protected
@@ -44,7 +44,7 @@ A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 */
 
 //#include ezsdl/
-#include <cstdio>
+#include <stdio.h>
 
 
 
