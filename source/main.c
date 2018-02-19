@@ -1,47 +1,27 @@
 /* main.cpp
-Main function for ezsdl. None of this code is part of the engine itself.
+Main function for ezSDL. None of this code is part of the engine itself.
 Rather, treat this as an example or template for basing your future projects
 off of.
 
-TODO: move prefix documentation to some central window/engine class header (?)
 
-Oregonian Notation (Kirk Lange's Apps Hungarian Notation)
-===============================================================================
-  u - public / visible namespace
-  o - protected
-  i - private / annonymous namespace
-  m - member (for structs in C)
-  s - static
-  p - parameter
-  r - return
-  t - temporary holder value (use only if 'h' prefix does not apply)
-  l - iterator (looper, hence 'l')
-  h - push (as in said variable will be pushed to a cointainer or array)
-  c - constant
-  n - pointer / array
-  f - reference
-  v - value (use only if no other prefixes apply)
--------------------------------------------------------------------------------
-> Append all applicable prefixes (except for 'v') in the order listed above.
-> Whether to use 't' or 'v' can get a little hazy. Use your best judgement.
-> "argc" and "argv" are sacred, otherwise, ALL arguments/parameters as well as
-  ALL variables on both the stack and heap get prefixes.
-> Common Examples
-  > Obj& getObj(const int& pcfObjectID);
-  > for (int lIndex=0; lIndex<vStr.length(); lIndex++) { ... }
-===============================================================================
+ezSDL - The Easy Simple DirectMedia Layer Wrapper
+Copyright (c) 2018 Kirk Lange
 
+This software is provided 'as-is', without any express or implied
+warranty. In no event will the authors be held liable for any damages
+arising from the use of this software.
 
-Copyright (c) 2018 by Kirk Lange
+Permission is granted to anyone to use this software for any purpose,
+including commercial applications, and to alter it and redistribute it
+freely, subject to the following restrictions:
 
-EZSDL is free software: you can redistribute it and/or modify it under the
-terms of the GNU General Public License as published by the Free Software
-Foundation, either version 3 of the License, or (at your option) any later
-version.
-
-EZSDL is distributed in the hope that it will be useful, but WITHOUT ANY
-WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
-A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+1. The origin of this software must not be misrepresented; you must not
+   claim that you wrote the original software. If you use this software
+   in a product, an acknowledgment in the product documentation would be
+   appreciated but is not required.
+2. Altered source versions must be plainly marked as such, and must not be
+   misrepresented as being the original software.
+3. This notice may not be removed or altered from any source distribution.
 */
 
 #include "ezwindow.h"
