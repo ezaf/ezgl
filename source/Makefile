@@ -1,17 +1,18 @@
 # OBJS specifies which files to compile for the project
-OBJS = main.c ezwindow.c
+OBJS = main.c ezwindow.c ezlog.c
 
 # OUT specifies the name of the executable
 OUT = debug
 
 BUILD_DIR = ../build/
 RESRC_DIR = ../resrc/
+SOURCE_DIR = ../source/
 
 # CC specifies which compiler we're using
 CC = gcc
 
 # CF specifies universal/cross-platform compiler flags
-CF = -std=c89 -O3
+CF = -std=c89 -O3 -I
 
 # INC_PATHS specifies include paths
 INC_PATHS = -ID:\org\libsdl\include\SDL2 -ID:\org\lua-5.3.4\src
@@ -35,13 +36,21 @@ LF_W = -lmingw32 $(LF)
 
 
 all : 
-	echo '' && echo "Try \"make windows\" or \"make linux\"" && echo ''
+	@echo
+	@echo "Try \"make windows\" or \"make linux\""
+	@echo
 
 windows:
-	make mk_dirs && make windows_compile && make cp_resrc && make run
+	make mk_dirs
+	make windows_compile
+	make cp_resrc
+	make run
 
 linux:
-	make mk_dirs && make linux_compile && make cp_resrc && make run
+	make mk_dirs
+	make linux_compile
+	make cp_resrc
+	make run
 
 windows_compile : $(OBJS)
 	$(CC) $(OBJS) $(INC_PATHS) $(LIB_PATHS) $(CF_W) $(LF_W) -o $(BUILD_DIR)$(OUT)
@@ -52,13 +61,15 @@ linux_compile: $(OBJS)
 
 # Utilities
 mk_dirs :
-	mkdir -p $(BUILD_DIR) && mkdir -p $(RESRC_DIR)
+	mkdir -p $(BUILD_DIR)
+	mkdir -p $(RESRC_DIR)
 
 cp_resrc :
 	cp -R $(RESRC_DIR). $(BUILD_DIR)
 
+# At least on windows this only plays nicely when it's on one line
 run :
-	cd $(BUILD_DIR) && echo '' && ./debug && cd ../source/
+	@cd $(BUILD_DIR) && echo && ./debug && echo && cd $(SOURCE_DIR)
 
 clean :
 	rm -f $(BUILD_DIR)*
