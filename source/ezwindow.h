@@ -1,5 +1,5 @@
 /* ezwindow.h
-Handle your windows and renderers here!
+Handles your SDL windows and renderers.
 
 
 ezSDL - The Easy Simple DirectMedia Layer Wrapper

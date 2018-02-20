@@ -67,9 +67,9 @@ mk_dirs :
 cp_resrc :
 	cp -R $(RESRC_DIR). $(BUILD_DIR)
 
-# At least on windows this only plays nicely when it's on one line
 run :
 	@cd $(BUILD_DIR) && echo && ./debug && echo && cd $(SOURCE_DIR)
+	# At least on windows, this only plays nicely when it's on one line
 
 clean :
 	rm -f $(BUILD_DIR)*

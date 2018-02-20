@@ -1,5 +1,5 @@
 /* ezlog.h
-Easy way to change where your fprintf statements print to.
+Prioritizes and auto-formats your log and error messages.
 
 
 ezSDL - The Easy Simple DirectMedia Layer Wrapper
