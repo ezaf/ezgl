@@ -25,12 +25,27 @@ freely, subject to the following restrictions:
 #ifndef EZLOG_H
 #define EZLOG_H
 
-#include <stdio.h>
 
 
+// ezlog will only print messages at least as severe as VERBOSITY
+#define VERBOSITY DEBUG
 
-#define logout stdout
-#define logerr stderr
+typedef enum
+{
+    FATAL,      /* So bad that a crash is imminent or program can't run.
+                     Example: failed to initialize SDL                       */
+    CRIT,       /* Won't cause a crash but may lead to instability.
+                     Example: couldn't get desktop display mode              */
+    HARD,       /* Bad enough that the program may become unusable.
+                     Example: missing textures                               */
+    SOFT,       /* Still an error but not that bad of one.
+                     Example: had to skip a frame for whatever reason        */
+    DEBUG       /* Not necessarily an error, just helpful for debugging.
+                     Example: input log, application state log, etc          */
+} ezlog_t;
+
+
+void            ezlog(ezlog_t pType, char *pnCallee, char *pnMessage, ...);
 
 
 
