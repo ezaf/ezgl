@@ -64,11 +64,14 @@ ezwindow* ezwindow_new()
 
     if (vError)
     {
-        fprintf(logerr, "[ezwindow_new] Failed to allocate new ezwindow "
-                "instance. SDL Error: %s\n", SDL_GetError());
-
+        ezlog(FATAL, "ezwindow_new", "Failed to create ezwindow instance.");
         free(rnSelf);
         rnSelf = 0;
+    }
+    else
+    {
+        ezlog(DEBUG, "ezwindow_new", "Successfully created new ezwindow "
+                "instance.");
     }
 
     return rnSelf;
@@ -92,8 +95,8 @@ uint8_t ezwindow_del(ezwindow **pnfSelf)
     }
     else
     {
-        fprintf(logerr, "[ezwindow_del] Skipped deletion of ezwindow "
-                "instance. Cannot free a null pointer.\n");
+        ezlog(CRIT, "ezwindow_del", "Skipped deletion of ezwindow instance. "
+                "Cannot free a null pointer. (Duh!)");
         return 0;
     }
 
