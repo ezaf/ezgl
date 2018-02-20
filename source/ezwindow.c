@@ -22,7 +22,7 @@ freely, subject to the following restrictions:
 #include "ezwindow.h"
 #include "ezlog.h"
 
-#include <SDL_image.h>
+#include <SDL2/SDL_image.h>
 #include <stdio.h>
 
 

@@ -25,7 +25,7 @@ freely, subject to the following restrictions:
 #ifndef EZWINDOW_H
 #define EZWINDOW_H
 
-#include <SDL.h>
+#include <SDL2/SDL.h>
 #include <stdint.h>
 
 typedef struct ezwindow ezwindow;

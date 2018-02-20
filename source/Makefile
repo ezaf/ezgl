@@ -15,7 +15,7 @@ CC = gcc
 CF = -std=c89 -O3 -I
 
 # INC_PATHS specifies include paths
-INC_PATHS = -ID:\org\libsdl\include\SDL2 -ID:\org\lua-5.3.4\src
+INC_PATHS = -ID:\org\libsdl\include -ID:\org\lua-5.3.4\src
 
 # LIB_PATHS specifies library paths
 LIB_PATHS = -LD:\org\libsdl\lib -ID:\org\lua-5.3.4\src
@@ -69,7 +69,7 @@ cp_resrc :
 
 run :
 	@cd $(BUILD_DIR) && echo && ./debug && echo && cd $(SOURCE_DIR)
-	# At least on windows, this only plays nicely when it's on one line
+#   At least on windows, this only plays nicely when it's on one line
 
 clean :
 	rm -f $(BUILD_DIR)*
