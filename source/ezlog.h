@@ -25,28 +25,55 @@ freely, subject to the following restrictions:
 #ifndef EZLOG_H
 #define EZLOG_H
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 
 
 // ezlog will only print messages at least as severe as VERBOSITY
 #define VERBOSITY DEBUG
 
-typedef enum
+enum ezlog_t
 {
-    FATAL,      /* So bad that a crash is imminent or program can't run.
-                     Example: failed to initialize SDL                       */
-    CRIT,       /* Won't cause a crash but may lead to instability.
-                     Example: couldn't get desktop display mode              */
-    HARD,       /* Bad enough that the program may become unusable.
-                     Example: missing textures                               */
-    SOFT,       /* Still an error but not that bad of one.
-                     Example: had to skip a frame for whatever reason        */
-    DEBUG       /* Not necessarily an error, just helpful for debugging.
-                     Example: input log, application state log, etc          */
-} ezlog_t;
+    FATAL, VITAL, MAJOR, MINOR, DEBUG
+};
+
+/* ezlog_t Reference
+ * 
+ * FATAL
+ *   - So bad that either a crash is imminent or the program will not run
+ *   - e.g. failed to initialize SDL
+ *
+ * VITAL
+ *   - Won't cause a crash but may lead to instability
+ *   - e.g. couldn't get desktop display mode
+ *
+ * MAJOR
+ *   - Bad enough that some of the program's functionality is compromised
+ *   - e.g. missing textures, cannot fetch user input
+ *
+ * MINOR
+ *   - Still an error but not that bad of one
+ *   - e.g. had to skip a frame, using default values due to bad user input
+ *
+ * DEBUG
+ *   - Miscellaneous debugging messages; not necessarily errors
+ *   - e.g. input log, application state log, etc
+ *
+ */
+
+typedef enum ezlog_t ezlog_t;
+
 
 
 void            ezlog(ezlog_t pType, char *pnCallee, char *pnMessage, ...);
 
 
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // EZLOG_H
