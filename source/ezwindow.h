@@ -25,6 +25,13 @@ freely, subject to the following restrictions:
 #ifndef EZWINDOW_H
 #define EZWINDOW_H
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
+
+
 #include <SDL2/SDL.h>
 #include <stdint.h>
 
@@ -35,16 +42,18 @@ typedef struct ezwindow ezwindow;
 ezwindow*       ezwindow_new();
 uint8_t         ezwindow_del(ezwindow **pnfSelf);
 
-
 SDL_Window*     ezwindow_getWindow(ezwindow *pnSelf);
 SDL_Renderer*   ezwindow_getRenderer(ezwindow *pnSelf);
 uint8_t         ezwindow_isRunning(ezwindow *pnSelf);
-
 
 void            ezwindow_pollEvent(ezwindow *pnSelf);
 void            ezwindow_clear(ezwindow *pnSelf);
 void            ezwindow_update(ezwindow *pnSelf);
 
 
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // EZWINDOW_H

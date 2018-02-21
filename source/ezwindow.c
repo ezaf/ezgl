@@ -95,7 +95,7 @@ uint8_t ezwindow_del(ezwindow **pnfSelf)
     }
     else
     {
-        ezlog(CRIT, "ezwindow_del", "Skipped deletion of ezwindow instance. "
+        ezlog(VITAL, "ezwindow_del", "Skipped deletion of ezwindow instance. "
                 "Cannot free a null pointer. (Duh!)");
         return 0;
     }

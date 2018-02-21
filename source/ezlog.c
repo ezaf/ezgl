@@ -34,11 +34,11 @@ const char* ezlog_typeSymbol(ezlog_t pType)
     {
         case FATAL:
             return "X";
-        case CRIT:
+        case VITAL:
             return "!";
-        case HARD:
+        case MAJOR:
             return ">";
-        case SOFT:
+        case MINOR:
             return "<";
         case DEBUG:
             return "-";
@@ -56,6 +56,7 @@ void ezlog(ezlog_t pType, char *pnCallee, char *pnMessage, ...)
         // Allocate output buffer of necessary size
         char nOutput[ (strlen(pnCallee)+strlen(pnMessage))+8 ];
 
+        // Format it as "[type] (callee) message"
         strcpy(nOutput, "[");
         strcat(nOutput, ezlog_typeSymbol(pType));
         strcat(nOutput, "] (");
@@ -64,11 +65,15 @@ void ezlog(ezlog_t pType, char *pnCallee, char *pnMessage, ...)
         strcat(nOutput, pnMessage);
         strcat(nOutput, "\n");
 
+        // Pass on any printf args
         va_list vArgs;
         va_start(vArgs, pnMessage);
         vfprintf(stdout, nOutput, vArgs);
-
-        if (pType != DEBUG)
+        
+        // If SDL has something to say, display it
+        if (strlen(SDL_GetError()) > 0)
+        {
             fprintf(stdout, "    SDL Error: %s\n", SDL_GetError());
+        }
     }
 }

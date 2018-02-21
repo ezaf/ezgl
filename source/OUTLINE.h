@@ -1,6 +1,6 @@
 /* OUTLINE.h
-A rough template to base future files off of. Replace this paragraph with a
-brief, high-level description of your code.
+TODO: Replace me. A rough template to base future files off of. Replace this
+paragraph with a brief, high-level description of your code.
 
 
 ezSDL - The Easy Simple DirectMedia Layer Wrapper
@@ -26,6 +26,13 @@ freely, subject to the following restrictions:
 #ifndef MACRO_H
 #define MACRO_H
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
+
+
 #include "TODO.h"
 #include <stdint.h>
 
@@ -36,9 +43,12 @@ typedef struct OUTLINE OUTLINE;
 OUTLINE*        OUTLINE_new();
 uint8_t         OUTLINE_del(OUTLINE *pnSelf);
 
-
 // other functions here
 
 
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // MACRO_H
