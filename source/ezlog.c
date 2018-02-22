@@ -70,10 +70,15 @@ void ezlog(ezlog_t pType, char *pnCallee, char *pnMessage, ...)
         va_start(vArgs, pnMessage);
         vfprintf(stdout, nOutput, vArgs);
         
+        /* Causes seg faults on linux due to SDL_GetError() returning a
+         * non-0 pointer yet there being no string there.
+
         // If SDL has something to say, display it
         if (strlen(SDL_GetError()) > 0)
         {
             fprintf(stdout, "    SDL Error: %s\n", SDL_GetError());
         }
+
+        */
     }
 }
