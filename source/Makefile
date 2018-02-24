@@ -12,20 +12,20 @@ SOURCE_DIR = ../source/
 CC = gcc
 
 # CF specifies universal/cross-platform compiler flags
-CF = -std=c89 -O3 -I
+CF = -std=c89 -pedantic-errors -O3 -I
+
+# CF_X specifies platform-specific compiler flags
+# "-w" suppresses all warnings; "-Wall" shows all warnings
+# "-Wl,-subsystem,windows" gets rid of the console window on windows os
+CF = -Wall
+CF_LINUX = $(CF)
+CF_WINDOWS = $(CF) #-Wl,-subsystem,windows
 
 # INC_PATHS specifies include paths
 INC_PATHS = -ID:\org\libsdl\include -ID:\org\lua-5.3.4\src
 
 # LIB_PATHS specifies library paths
 LIB_PATHS = -LD:\org\libsdl\lib -ID:\org\lua-5.3.4\src
-
-# CF_X specifies platform-specific compiler flags
-# "-w" suppresses all warnings
-# "-Wl,-subsystem,windows" gets rid of the console window
-CF = -w
-CF_LINUX = $(CF)
-CF_WINDOWS = $(CF) #-Wl,-subsystem,windows
 
 # LF_X specifies platform-specific libraries
 LF = -lSDL2main -lSDL2 -lSDL2_image
