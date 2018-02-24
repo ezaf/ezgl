@@ -24,13 +24,13 @@ LIB_PATHS = -LD:\org\libsdl\lib -ID:\org\lua-5.3.4\src
 # "-w" suppresses all warnings
 # "-Wl,-subsystem,windows" gets rid of the console window
 CF = -w
-CF_L = $(CF)
-CF_W = $(CF) #-Wl,-subsystem,windows
+CF_LINUX = $(CF)
+CF_WINDOWS = $(CF) #-Wl,-subsystem,windows
 
 # LF_X specifies platform-specific libraries
 LF = -lSDL2main -lSDL2 -lSDL2_image
-LF_L = $(LF)
-LF_W = -lmingw32 $(LF)
+LF_LINUX = $(LF)
+LF_WINDOWS = -lmingw32 $(LF)
 
 # TODO: add mac support
 
@@ -41,30 +41,30 @@ all :
 	@echo
 
 windows:
-	make mk_dirs
-	make windows_compile
-	make cp_resrc
+	make mk-dirs
+	make windows-compile
+	make cp-resrc
 	make run
 
 linux:
-	make mk_dirs
-	make linux_compile
-	make cp_resrc
+	make mk-dirs
+	make linux-compile
+	make cp-resrc
 	make run
 
-windows_compile : $(OBJS)
-	$(CC) $(OBJS) $(INC_PATHS) $(LIB_PATHS) $(CF_W) $(LF_W) -o $(BUILD_DIR)$(OUT)
+windows-compile : $(OBJS)
+	$(CC) $(OBJS) $(INC_PATHS) $(LIB_PATHS) $(CF_WINDOWS) $(LF_WINDOWS) -o $(BUILD_DIR)$(OUT)
 
-linux_compile: $(OBJS)
-	$(CC) $(OBJS) $(CF_L) $(LF_L) -o $(BUILD_DIR)$(OUT)
+linux-compile: $(OBJS)
+	$(CC) $(OBJS) $(CF_LINUX) $(LF_LINUX) -o $(BUILD_DIR)$(OUT)
 
 
 # Utilities
-mk_dirs :
+mk-dirs :
 	mkdir -p $(BUILD_DIR)
 	mkdir -p $(RESRC_DIR)
 
-cp_resrc :
+cp-resrc :
 	cp -R $(RESRC_DIR). $(BUILD_DIR)
 
 run :
