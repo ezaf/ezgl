@@ -43,7 +43,7 @@ typedef struct OUTLINE OUTLINE;
 OUTLINE*        OUTLINE_new();
 uint8_t         OUTLINE_del(OUTLINE *pnSelf);
 
-// other functions here
+/* other functions here */
 
 
 
@@ -51,4 +51,4 @@ uint8_t         OUTLINE_del(OUTLINE *pnSelf);
 }
 #endif
 
-#endif // MACRO_H
+#endif /* MACRO_H */

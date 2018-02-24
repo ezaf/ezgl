@@ -56,4 +56,4 @@ void            ezwindow_update(ezwindow *pnSelf);
 }
 #endif
 
-#endif // EZWINDOW_H
+#endif /* EZWINDOW_H */

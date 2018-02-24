@@ -25,14 +25,14 @@ freely, subject to the following restrictions:
 
 struct OUTLINE
 {
-    // members here
+    /* members here */
 };
 
 
 
 OUTLINE* OUTLINE_new()
 {
-    // ctor
+    /* ctor */
 }
 
 
@@ -41,14 +41,14 @@ uint8_t OUTLINE_del(OUTLINE *pnSelf)
 {
     if (pnSelf)
     {
-        // dtor
+        /* dtor */
         free(pnSelf);
 
         return 1;
     }
     else
     {
-        // print error message
+        /* print error message */
         return 0
     }
 }

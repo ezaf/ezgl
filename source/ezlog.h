@@ -32,13 +32,13 @@ extern "C"
 
 
 
-// ezlog will only print messages at least as severe as VERBOSITY
+/* ezlog will only print messages at least as severe as VERBOSITY */
 #define VERBOSITY DEBUG
 
-enum ezlog_t
+typedef enum ezlog_t
 {
     FATAL, VITAL, MAJOR, MINOR, DEBUG
-};
+} ezlog_t;
 
 /* ezlog_t Reference
  * 
@@ -64,8 +64,6 @@ enum ezlog_t
  *
  */
 
-typedef enum ezlog_t ezlog_t;
-
 
 
 void            ezlog(ezlog_t pType, char *pnCallee, char *pnMessage, ...);
@@ -76,4 +74,4 @@ void            ezlog(ezlog_t pType, char *pnCallee, char *pnMessage, ...);
 }
 #endif
 
-#endif // EZLOG_H
+#endif /* EZLOG_H */
