@@ -28,20 +28,53 @@ freely, subject to the following restrictions:
 
 #include <stdio.h>
 
+void sillyEvent(ezwindow *pnWindow);
+
 
 
 int main(int argc, char *argv[])
 {
-    printf("Hello world, I am ezsdl2!\n");
+    printf("Hello world, I am ezsdl!\n");
 
     ezwindow *ezw = ezwindow_new();
     while (ezwindow_isRunning(ezw))
     {
-        ezwindow_pollEvent(ezw);
+        while (ezwindow_pollEvent(ezw))
+        {
+            /* Send events to game objects. Something like:
+             * player_checkEvent(player, ezw); */
+
+            /* Here's a quick demo */
+            sillyEvent(ezw);
+        }
+
         ezwindow_clear(ezw);
-        ezwindow_update(ezw);
+        /* Draw the game objects. Something like:
+         * player_draw(player, ezw); */
+
+        ezwindow_render(ezw);
     }
     ezwindow_del(&ezw);
 
     return 0;
+}
+
+
+
+void sillyEvent(ezwindow *pnWindow)
+{
+    /* So that I don't have to keep typing this darn function call */
+    SDL_Event vEvent = *ezwindow_getEvent(pnWindow);
+
+    switch (vEvent.type)
+    {
+        case SDL_KEYDOWN:
+            switch (vEvent.key.keysym.scancode)
+            {
+                case SDL_SCANCODE_SPACE:
+                    printf("You pressed space bar!\n");
+                    break;
+            }
+            break;
+    }
 }

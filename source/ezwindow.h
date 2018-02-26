@@ -44,11 +44,13 @@ uint8_t         ezwindow_del(ezwindow **pnfSelf);
 
 SDL_Window*     ezwindow_getWindow(ezwindow *pnSelf);
 SDL_Renderer*   ezwindow_getRenderer(ezwindow *pnSelf);
+SDL_Event*      ezwindow_getEvent(ezwindow *pnSelf);
 uint8_t         ezwindow_isRunning(ezwindow *pnSelf);
+uint8_t         ezwindow_isPaused(ezwindow *pnSelf);
 
-void            ezwindow_pollEvent(ezwindow *pnSelf);
+uint8_t         ezwindow_pollEvent(ezwindow *pnSelf);
 void            ezwindow_clear(ezwindow *pnSelf);
-void            ezwindow_update(ezwindow *pnSelf);
+void            ezwindow_render(ezwindow *pnSelf);
 
 
 
