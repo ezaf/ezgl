@@ -17,7 +17,7 @@ CF = -std=c89 -pedantic-errors -O3 -I
 # CF_X specifies platform-specific compiler flags
 # "-w" suppresses all warnings; "-Wall" shows all warnings
 # "-Wl,-subsystem,windows" gets rid of the console window on windows os
-CF = -Wall
+CF = -w
 CF_LINUX = $(CF)
 CF_WINDOWS = $(CF) #-Wl,-subsystem,windows
 
