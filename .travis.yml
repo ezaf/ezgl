@@ -1,0 +1,3 @@
+language: c
+install: libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl-net-dev libsdl-ttf-dev
+script: make linux-compile
