@@ -68,7 +68,7 @@ cp-resrc :
 	cp -R $(RESRC_DIR). $(BUILD_DIR)
 
 run :
-	@cd $(BUILD_DIR) && echo && ./debug && echo && cd $(SOURCE_DIR)
+	@cd $(BUILD_DIR) && echo && ./$(OUT) && echo && cd $(SOURCE_DIR)
 #   At least on windows, this only plays nicely when it's on one line
 
 clean :
