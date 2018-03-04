@@ -1,3 +1,15 @@
 language: c
-install: libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl-net-dev libsdl-ttf-dev
-script: make linux-compile
+install:
+- wget https://www.libsdl.org/release/SDL2-2.0.0.tar.gz
+- tar -xzf SDL2-*.tar.gz
+- pushd SDL2-* && ./configure && make && sudo make install && popd
+- wget -q https://www.libsdl.org/projects/SDL_image/release/SDL2_image-2.0.0.tar.gz
+- wget -q https://www.libsdl.org/projects/SDL_mixer/release/SDL2_mixer-2.0.0.tar.gz
+- wget -q https://www.libsdl.org/projects/SDL_net/release/SDL2_net-2.0.0.tar.gz
+- tar -xzf SDL2_image-*.tar.gz
+- tar -xzf SDL2_mixer-*.tar.gz
+- tar -xzf SDL2_net-*.tar.gz
+- pushd SDL2_image-* && ./configure && make && sudo make install && popd
+- pushd SDL2_mixer-* && ./configure && make && sudo make install && popd
+- pushd SDL2_net-* && ./configure && make && sudo make install && popd
+script: pushd source* && make mk-dirs && make linux-compile && popd
