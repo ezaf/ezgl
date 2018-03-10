@@ -12,4 +12,4 @@ install:
 - pushd SDL2_image-* && ./configure && make && sudo make install && popd
 - pushd SDL2_mixer-* && ./configure && make && sudo make install && popd
 - pushd SDL2_net-* && ./configure && make && sudo make install && popd
-script: pushd source* && make mk-dirs && make linux-compile && popd
+script: pushd source* && make build && popd

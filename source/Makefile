@@ -8,58 +8,54 @@ BUILD_DIR = ../build/
 RESRC_DIR = ../resrc/
 SOURCE_DIR = ../source/
 
+# Find what OS we're on so we can better configure all the compiler options
+# Linux->"Linux" | MacOS->"Darwin" | Windows->"MSYS_NT-#"
+#UNAME = `(uname -s) 2>/dev/null`
+
 # CC specifies which compiler we're using
 CC = gcc
 
-# CF specifies universal/cross-platform compiler flags
-CF = -std=c89 -pedantic-errors -O3 -I
+# Compiler and linker flags; include and library paths
+# Must be C99 or newer because and older and SDL2 has compile errors
+CF_UNIV = -std=c99 -pedantic -O3 -w
+LF_UNIV = -lSDL2main -lSDL2 -lSDL2_image
+INC_UNIV =
+LIB_UNIV =
 
-# CF_X specifies platform-specific compiler flags
-# "-w" suppresses all warnings; "-Wall" shows all warnings
-# "-Wl,-subsystem,windows" gets rid of the console window on windows os
-CF = -w
-CF_LINUX = $(CF)
-CF_WINDOWS = $(CF) #-Wl,-subsystem,windows
-
-# INC_PATHS specifies include paths
-INC_PATHS = -ID:\org\libsdl\include -ID:\org\lua-5.3.4\src
-
-# LIB_PATHS specifies library paths
-LIB_PATHS = -LD:\org\libsdl\lib -ID:\org\lua-5.3.4\src
-
-# LF_X specifies platform-specific libraries
-LF = -lSDL2main -lSDL2 -lSDL2_image
-LF_LINUX = $(LF)
-LF_WINDOWS = -lmingw32 $(LF)
-
-# TODO: add mac support
+# All compiler flags can be customized on a per-platform basis
+ifeq ($(OS),Windows_NT)
+	# Uncomment "-Wl..." to remove console window on Windows OS
+	CF = $(CF_UNIV) #-Wl,-subsystem,windows
+	LF = -lmingw32 $(LF_UNIV)
+	# lua modding support planned
+	INC = $(INC_UNIV) -ID:\org\libsdl\include #-ID:\org\lua-5.3.4\src
+	LIB = $(LIB_UNIV) -LD:\org\libsdl\lib #-ID:\org\lua-5.3.4\src
+else
+	CF = $(CF_UNIV)
+	LF = $(LF_UNIV)
+	INC = $(INC_UNIV)
+	LIB = $(LIB_UNIV)
+endif
 
 
-all : 
-	@echo
-	@echo "Try \"make windows\" or \"make linux\""
-	@echo
 
-windows:
-	make mk-dirs
-	make windows-compile
-	make cp-resrc
+all :
+	make build
 	make run
 
-linux:
+help :
+	@echo
+	@echo "TODO: describe make targets"
+	@echo
+
+clean :
+	rm -f $(BUILD_DIR)*
+
+build :
 	make mk-dirs
-	make linux-compile
 	make cp-resrc
-	make run
+	make compile
 
-windows-compile : $(OBJS)
-	$(CC) $(OBJS) $(INC_PATHS) $(LIB_PATHS) $(CF_WINDOWS) $(LF_WINDOWS) -o $(BUILD_DIR)$(OUT)
-
-linux-compile: $(OBJS)
-	$(CC) $(OBJS) $(CF_LINUX) $(LF_LINUX) -o $(BUILD_DIR)$(OUT)
-
-
-# Utilities
 mk-dirs :
 	mkdir -p $(BUILD_DIR)
 	mkdir -p $(RESRC_DIR)
@@ -67,9 +63,10 @@ mk-dirs :
 cp-resrc :
 	cp -R $(RESRC_DIR). $(BUILD_DIR)
 
+compile : $(OBJS)
+	$(CC) $(OBJS) $(INC) $(LIB) $(CF) $(LF) -o $(BUILD_DIR)$(OUT)
+
 run :
 	@cd $(BUILD_DIR) && echo && ./$(OUT) && echo && cd $(SOURCE_DIR)
 #   At least on windows, this only plays nicely when it's on one line
 
-clean :
-	rm -f $(BUILD_DIR)*
