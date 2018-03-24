@@ -41,42 +41,53 @@ else
 	LF = $(LF_UNIV)
 	INC = $(INC_UNIV)
 	LIB = $(LIB_UNIV)
+	OPEN = xdg-open
 endif
 
 
 
+.PHONY : all
 all :
 	make build --no-print-directory
 	make run --no-print-directory
 
-doxy :
+.PHONY : docs
+docs :
 	doxygen .doxyfile
+	$(OPEN) docs/index.html
 
+.PHONY : help
 help :
 	@echo
 	@echo "TODO: describe make targets"
 	@echo
 
+.PHONY : clean
 clean :
 	rm -f $(BUILD_DIR)*
 
+.PHONY : build
 build :
 	make mk-dirs --no-print-directory
-	make cp-resrc --no-print-directory
+	make cp-deps --no-print-directory
 	make compile --no-print-directory
 
+.PHONY : mk-dirs
 mk-dirs :
 	mkdir -p $(BUILD_DIR)
 	mkdir -p $(LIB_DIR)
 	mkdir -p $(ASSET_DIR)
 
-cp-resrc :
+.PHONY : cp-deps
+cp-deps :
 	cp -R $(LIB_DIR). $(BUILD_DIR)
 	cp -R $(ASSET_DIR). $(BUILD_DIR)
 
+.PHONY : compile
 compile : $(OBJS)
 	$(CC) $(OBJS) $(INC) $(LIB) $(CF) $(LF) -o $(BUILD_DIR)$(OUT)
 
+.PHONY : run
 run :
 	@echo && ./$(BUILD_DIR)$(OUT) && echo
 #   At least on windows, this only plays nicely when it's on one line

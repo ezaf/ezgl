@@ -4,7 +4,6 @@ Rather, treat this as an example or template for basing your future projects
 off of.
 
 
-ezSDL - The Easy Simple DirectMedia Layer Wrapper
 Copyright (c) 2018 Kirk Lange
 
 This software is provided 'as-is', without any express or implied
