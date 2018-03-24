@@ -3,7 +3,6 @@ TODO: Replace me. A rough template to base future files off of. Replace this
 paragraph with a brief, high-level description of your code.
 
 
-ezSDL - The Easy Simple DirectMedia Layer Wrapper
 Copyright (c) 2018 Kirk Lange
 
 This software is provided 'as-is', without any express or implied

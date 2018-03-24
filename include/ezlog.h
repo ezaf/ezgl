@@ -2,7 +2,6 @@
 Prioritizes and auto-formats your log and error messages.
 
 
-ezSDL - The Easy Simple DirectMedia Layer Wrapper
 Copyright (c) 2018 Kirk Lange
 
 This software is provided 'as-is', without any express or implied
