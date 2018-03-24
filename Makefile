@@ -1,8 +1,11 @@
 # All source files to compile for the project
-MY_SOURCE = main.c ezwindow.c ezlog.c
+SOURCE = main.c ezwindow.c ezlog.c
 
 # All submodule source files to compile for the project
 SUBMOD_SOURCE = parson/parson.c
+
+# All submodule include directories to compile for the project
+SUBMOD_INCLUDE = parson
 
 # Name of the executable
 OUT = debug
@@ -17,7 +20,7 @@ SOURCE_DIR = src
 ASSET_DIR = asset
 
 # Add source directory to source file names
-OBJS = $(foreach OBJ,$(MY_SOURCE),$(SOURCE_DIR)/$(OBJ)) $(foreach OBJ,$(SUBMOD_SOURCE),$(SUBMOD_DIR)/$(OBJ))
+OBJS = $(foreach OBJ,$(SOURCE),$(SOURCE_DIR)/$(OBJ)) $(foreach OBJ,$(SUBMOD_SOURCE),$(SUBMOD_DIR)/$(OBJ))
 
 # Find what OS we're on so we can better configure all the compiler options
 # Linux->"Linux" | MacOS->"Darwin" | Windows->"MSYS_NT-#"
@@ -30,7 +33,7 @@ CC = gcc
 # Must be C99 or newer because and older and SDL2 has compile errors
 CF_UNIV = -std=c99 -pedantic -O3 -w
 LF_UNIV = -lSDL2main -lSDL2 -lSDL2_image
-INC_UNIV = -I$(INCLUDE_DIR) -I$(SUBMOD_DIR)
+INC_UNIV = -I$(INCLUDE_DIR) $(foreach DIR,$(SUBMOD_INCLUDE),-I$(SUBMOD_DIR)/$(DIR))
 LIB_UNIV =
 
 # All compiler flags can be customized on a per-platform basis
@@ -73,25 +76,46 @@ help :
 
 .PHONY : clean
 clean :
-	rm -f $(BUILD_DIR)*
+	make clean-submods $(NPD)
+	make clean-bin $(NPD)
 
+.PHONY : clean-bin
+clean-bin :
+	rm -rf $(BUILD_DIR)/*
+
+# Clean submodules
+.PHONY : clean-submods
+clean-submods :
+	rm -rf $(SUBMOD_DIR)/*
 
 .PHONY : build
 build :
-	make mk-dirs $(NPD)
-	make cp-deps $(NPD)
+	make dirs $(NPD)
+	make deps $(NPD)
+	make submods $(NPD)
 	make compile $(NPD)
 
-.PHONY : mk-dirs
-mk-dirs :
+.PHONY : dirs
+dirs :
 	mkdir -p $(BUILD_DIR)
 	mkdir -p $(LIB_DIR)
 	mkdir -p $(ASSET_DIR)
 
-.PHONY : cp-deps
-cp-deps :
+# Copy dependencies for build
+.PHONY : deps
+deps :
 	cp -R $(LIB_DIR)/. $(BUILD_DIR)
 	cp -R $(ASSET_DIR)/. $(BUILD_DIR)
+
+# Clone submodules from scratch
+.PHONY : submods
+submods :
+	git submodule init
+	git submodule update
+	pushd $(SUBMOD_DIR)
+	$(foreach DIR,$(SUBMOD_INCLUDE), \
+		pushd $(DIR) && git submodule init && git submodule update && popd)
+	popd
 
 .PHONY : compile
 compile : $(OBJS)
@@ -111,3 +135,15 @@ bin/ :
 .PHONY : docs/
 docs/ :
 	make docs $(NPD)
+
+.PHONY : submodule/
+submodule/ :
+	make submods $(NPD)
+
+.PHONY : submod
+submod :
+	make submods $(NPD)
+
+.PHONY : clean-submod
+clean-submod :
+	make clean-submods $(NPD)
