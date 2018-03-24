@@ -35,6 +35,7 @@ ifeq ($(OS),Windows_NT)
 	# lua modding support planned
 	INC = $(INC_UNIV) -ID:\org\libsdl\include #-ID:\org\lua-5.3.4\src
 	LIB = $(LIB_UNIV) -LD:\org\libsdl\lib #-ID:\org\lua-5.3.4\src
+	OPEN = cmd //c start "${@//&/^&}"
 else
 	CF = $(CF_UNIV)
 	LF = $(LF_UNIV)
@@ -47,6 +48,9 @@ endif
 all :
 	make build --no-print-directory
 	make run --no-print-directory
+
+doxy :
+	doxygen .doxyfile
 
 help :
 	@echo
