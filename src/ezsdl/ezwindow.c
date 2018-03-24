@@ -18,8 +18,8 @@ freely, subject to the following restrictions:
 3. This notice may not be removed or altered from any source distribution.
 */
 
-#include "ezwindow.h"
-#include "ezlog.h"
+#include "ezsdl/ezwindow.h"
+#include "ezsdl/ezlog.h"
 
 #include <SDL2/SDL_image.h>
 #include <stdio.h>
