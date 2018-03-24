@@ -1,12 +1,17 @@
-# OBJS specifies which files to compile for the project
-OBJS = main.c ezwindow.c ezlog.c
+# FILES specifies which files to compile for the project
+FILES = main.c ezwindow.c ezlog.c
 
 # OUT specifies the name of the executable
 OUT = debug
 
-BUILD_DIR = ../build/
-RESRC_DIR = ../resrc/
-SOURCE_DIR = ../source/
+BUILD_DIR = bin/
+LIB_DIR = lib/
+INCLUDE_DIR = include/
+SOURCE_DIR = src/
+ASSET_DIR = asset/
+
+# Add source directory to source file names
+OBJS = $(foreach OBJ,$(FILES),$(SOURCE_DIR)$(OBJ))
 
 # Find what OS we're on so we can better configure all the compiler options
 # Linux->"Linux" | MacOS->"Darwin" | Windows->"MSYS_NT-#"
@@ -19,7 +24,7 @@ CC = gcc
 # Must be C99 or newer because and older and SDL2 has compile errors
 CF_UNIV = -std=c99 -pedantic -O3 -w
 LF_UNIV = -lSDL2main -lSDL2 -lSDL2_image
-INC_UNIV =
+INC_UNIV = -I$(INCLUDE_DIR)
 LIB_UNIV =
 
 # All compiler flags can be customized on a per-platform basis
@@ -40,8 +45,8 @@ endif
 
 
 all :
-	make build
-	make run
+	make build --no-print-directory
+	make run --no-print-directory
 
 help :
 	@echo
@@ -52,21 +57,23 @@ clean :
 	rm -f $(BUILD_DIR)*
 
 build :
-	make mk-dirs
-	make cp-resrc
-	make compile
+	make mk-dirs --no-print-directory
+	make cp-resrc --no-print-directory
+	make compile --no-print-directory
 
 mk-dirs :
 	mkdir -p $(BUILD_DIR)
-	mkdir -p $(RESRC_DIR)
+	mkdir -p $(LIB_DIR)
+	mkdir -p $(ASSET_DIR)
 
 cp-resrc :
-	cp -R $(RESRC_DIR). $(BUILD_DIR)
+	cp -R $(LIB_DIR). $(BUILD_DIR)
+	cp -R $(ASSET_DIR). $(BUILD_DIR)
 
 compile : $(OBJS)
 	$(CC) $(OBJS) $(INC) $(LIB) $(CF) $(LF) -o $(BUILD_DIR)$(OUT)
 
 run :
-	@cd $(BUILD_DIR) && echo && ./$(OUT) && echo && cd $(SOURCE_DIR)
+	@echo && ./$(BUILD_DIR)$(OUT) && echo
 #   At least on windows, this only plays nicely when it's on one line
 
