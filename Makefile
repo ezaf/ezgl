@@ -1,8 +1,8 @@
 # All source files to compile for the project
-MY_SRC = main.c ezsdl/ezwindow.c ezsdl/ezlog.c
+MY_SOURCE = main.c ezwindow.c ezlog.c
 
 # All submodule source files to compile for the project
-SUBMOD_SRC = parson/parson.c
+SUBMOD_SOURCE = parson/parson.c
 
 # Name of the executable
 OUT = debug
@@ -12,12 +12,12 @@ OUT = debug
 BUILD_DIR = bin
 LIB_DIR = lib
 INCLUDE_DIR = include
-SUBMOD_DIR = submodules
+SUBMOD_DIR = submodule
 SOURCE_DIR = src
 ASSET_DIR = asset
 
 # Add source directory to source file names
-OBJS = $(foreach OBJ,$(MY_SRC),$(SOURCE_DIR)/$(OBJ)) $(foreach OBJ,$(SUBMOD_SRC),$(SUBMOD_DIR)/$(OBJ))
+OBJS = $(foreach OBJ,$(MY_SOURCE),$(SOURCE_DIR)/$(OBJ)) $(foreach OBJ,$(SUBMOD_SOURCE),$(SUBMOD_DIR)/$(OBJ))
 
 # Find what OS we're on so we can better configure all the compiler options
 # Linux->"Linux" | MacOS->"Darwin" | Windows->"MSYS_NT-#"
@@ -30,7 +30,7 @@ CC = gcc
 # Must be C99 or newer because and older and SDL2 has compile errors
 CF_UNIV = -std=c99 -pedantic -O3 -w
 LF_UNIV = -lSDL2main -lSDL2 -lSDL2_image
-INC_UNIV = -I$(INCLUDE_DIR)
+INC_UNIV = -I$(INCLUDE_DIR) -I$(SUBMOD_DIR)
 LIB_UNIV =
 
 # All compiler flags can be customized on a per-platform basis
@@ -79,7 +79,6 @@ clean :
 .PHONY : build
 build :
 	make mk-dirs $(NPD)
-	make submods $(NPD)
 	make cp-deps $(NPD)
 	make compile $(NPD)
 
@@ -88,10 +87,6 @@ mk-dirs :
 	mkdir -p $(BUILD_DIR)
 	mkdir -p $(LIB_DIR)
 	mkdir -p $(ASSET_DIR)
-
-.PHONY : submods
-submods :
-	pushd $(SUBMOD_DIR) $(NULL) && ./import.sh 2$(NULL) && popd $(NULL)
 
 .PHONY : cp-deps
 cp-deps :
@@ -110,12 +105,8 @@ run :
 
 # Target aliases
 .PHONY : bin/
-bin / :
+bin/ :
 	make build $(NPD)
-
-.PHONY : submodules/
-submodules/ :
-	make submods $(NPD)
 
 .PHONY : docs/
 docs/ :
