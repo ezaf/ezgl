@@ -58,92 +58,78 @@ NULL = >/dev/null
 
 
 
-.PHONY : all
+.PHONY : all docs help clean clean-bin clean-submods build dirs deps submods
+.PHONY : compile run bin/ docs/ submodule/ submod clean-submod
+
 all :
 	make build $(NPD)
 	make run $(NPD)
 
-.PHONY : docs
 docs :
 	doxygen .doxyfile
+	make docs-open $(NPD)
+
+docs-open :
 	$(OPEN) docs/index.html
 
-.PHONY : help
+
 help :
 	@echo
 	@echo "TODO: describe make targets"
 	@echo
 
-.PHONY : clean
 clean :
 	make clean-submods $(NPD)
 	make clean-bin $(NPD)
 
-.PHONY : clean-bin
 clean-bin :
 	rm -rf $(BUILD_DIR)/*
 
 # Clean submodules
-.PHONY : clean-submods
 clean-submods :
 	rm -rf $(SUBMOD_DIR)/*
 
-.PHONY : build
 build :
 	make dirs $(NPD)
 	make deps $(NPD)
 	make submods $(NPD)
 	make compile $(NPD)
 
-.PHONY : dirs
 dirs :
 	mkdir -p $(BUILD_DIR)
 	mkdir -p $(LIB_DIR)
 	mkdir -p $(ASSET_DIR)
 
 # Copy dependencies for build
-.PHONY : deps
 deps :
 	cp -R $(LIB_DIR)/. $(BUILD_DIR)
 	cp -R $(ASSET_DIR)/. $(BUILD_DIR)
 
 # Clone submodules from scratch
-.PHONY : submods
 submods :
 	git submodule init
 	git submodule update
-	pushd $(SUBMOD_DIR)
-	$(foreach DIR,$(SUBMOD_INCLUDE), \
-		pushd $(DIR) && git submodule init && git submodule update && popd)
-	popd
 
-.PHONY : compile
 compile : $(OBJS)
 	$(CC) $(OBJS) $(INC) $(LIB) $(CF) $(LF) -o $(BUILD_DIR)/$(OUT)
 
-.PHONY : run
 run :
 	@echo && ./$(BUILD_DIR)/$(OUT) && echo
 
 
 
 # Target aliases
-.PHONY : bin/
 bin/ :
 	make build $(NPD)
 
-.PHONY : docs/
 docs/ :
 	make docs $(NPD)
 
-.PHONY : submodule/
 submodule/ :
 	make submods $(NPD)
 
-.PHONY : submod
 submod :
 	make submods $(NPD)
 
-.PHONY : clean-submod
 clean-submod :
 	make clean-submods $(NPD)
