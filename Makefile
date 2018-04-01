@@ -12,13 +12,13 @@ OUT = debug
 
 
 
+ASSET_DIR = asset
 BUILD_DIR = build
 DOCS_DIR = docs
-LIB_DIR = lib
 INCLUDE_DIR = include
-SUBMOD_DIR = submodule
+LIB_DIR = lib
 SOURCE_DIR = src
-ASSET_DIR = asset
+SUBMOD_DIR = submod
 
 # Add source directory to source file names
 OBJS = $(foreach OBJ,$(SOURCE),$(SOURCE_DIR)/$(OBJ)) $(foreach OBJ,$(SUBMOD_SOURCE),$(SUBMOD_DIR)/$(OBJ))
@@ -59,46 +59,22 @@ NULL = >/dev/null
 
 
 
-.PHONY : all $(DOCS_DIR) rtd help clean clean-build clean-submod build dirs
-.PHONY : deps submod compile run
+.PHONY : all $(BUILD_DIR) run dirs deps $(SUBMOD_DIR) $(DOCS_DIR) rtd compile
+.PHONY : help clean clean-$(BUILD_DIR) clean-$(SUBMOD_DIR)
 
 all :
-	make build $(NPD)
+	make $(BUILD_DIR) $(NPD)
 	make run $(NPD)
 
-$(DOCS_DIR) :
-	#doxygen .doxyfile
-	rm -rf docs/*
-	python $(SUBMOD_DIR)/mcss/doxygen/dox2html5.py .doxyfile-mcss
-	cd docs
-	rm -rf xml
-	cd ..
-	make rtd $(NPD)
-
-# Read the docs (not referring to the website)
-rtd :
-	$(OPEN) docs/index.html
-
-help :
-	@echo
-	@echo "TODO: describe make targets"
-	@echo
-
-clean :
-	#make clean-submod $(NPD)
-	make clean-build $(NPD)
-
-clean-build :
-	rm -rf $(BUILD_DIR)/*
-
-clean-submod :
-	rm -rf $(SUBMOD_DIR)/*
-
-build :
+$(BUILD_DIR) :
 	make dirs $(NPD)
 	make deps $(NPD)
-	make submods $(NPD)
+	make $(SUBMOD_DIR) $(NPD)
+	make $(DOCS_DIR) $(NPD)
 	make compile $(NPD)
+
+run :
+	@echo && ./$(BUILD_DIR)/$(OUT) && echo
 
 dirs :
 	mkdir -p $(BUILD_DIR)
@@ -110,12 +86,38 @@ deps :
 	cp -R $(LIB_DIR)/. $(BUILD_DIR)
 	cp -R $(ASSET_DIR)/. $(BUILD_DIR)
 
-submod :
+$(SUBMOD_DIR) :
 	git submodule init
 	git submodule update
+
+$(DOCS_DIR) :
+	#doxygen .doxyfile
+	rm -rf docs/*
+	python3 $(SUBMOD_DIR)/mcss/doxygen/dox2html5.py .doxyfile-mcss
+	cd docs
+	rm -rf xml
+	cd ..
+	make rtd $(NPD)
+
+# Read the docs (not referring to the website)
+rtd :
+	$(OPEN) docs/index.html
 
 compile : $(OBJS)
 	$(CC) $(OBJS) $(INC) $(LIB) $(CF) $(LF) -o $(BUILD_DIR)/$(OUT)
 
-run :
-	@echo && ./$(BUILD_DIR)/$(OUT) && echo
+help :
+	@echo
+	@echo "TODO: describe make targets"
+	@echo
+
+clean :
+	#make clean-$(SUBMOD_DIR) $(NPD)
+	make clean-$(BUILD_DIR) $(NPD)
+
+clean-$(BUILD_DIR) :
+	rm -rf $(BUILD_DIR)/*
+
+clean-$(SUBMOD_DIR) :
+	rm -rf $(SUBMOD_DIR)/*
+

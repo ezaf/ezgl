@@ -1,6 +1,6 @@
-[submodule "submodule/parson"]
-	path = submodule/parson
+[submodule "submod/parson"]
+	path = submod/parson
 	url = https://github.com/kgabis/parson.git
-[submodule "submodule/mcss"]
-	path = submodule/mcss
+[submodule "submod/mcss"]
+	path = submod/mcss
 	url = https://github.com/mosra/m.css.git
