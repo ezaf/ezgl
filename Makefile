@@ -91,10 +91,9 @@ $(SUBMOD_DIR) :
 	git submodule update
 
 $(DOCS_DIR) :
-	#doxygen .doxyfile
-	rm -rf docs/*
+	make clean-$(DOCS_DIR) $(NPD)
 	python3 $(SUBMOD_DIR)/mcss/doxygen/dox2html5.py .doxyfile-mcss
-	cd docs
+	cd $(DOCS_DIR)
 	rm -rf xml
 	cd ..
 	make rtd $(NPD)
@@ -112,11 +111,18 @@ help :
 	@echo
 
 clean :
-	#make clean-$(SUBMOD_DIR) $(NPD)
 	make clean-$(BUILD_DIR) $(NPD)
+
+clean-all :
+	make clean-$(BUILD_DIR) $(NPD)
+	make clean-$(DOCS_DIR) $(NPD)
+	make clean-$(SUBMOD_DIR) $(NPD)
 
 clean-$(BUILD_DIR) :
 	rm -rf $(BUILD_DIR)/*
+
+clean-$(DOCS_DIR) :
+	rm -rf $(DOCS_DIR)/*
 
 clean-$(SUBMOD_DIR) :
 	rm -rf $(SUBMOD_DIR)/*
