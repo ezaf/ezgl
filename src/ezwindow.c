@@ -212,7 +212,7 @@ uint8_t ezwindow_pollEvent(ezwindow *pnSelf)
 
 void ezwindow_clear(ezwindow *pnSelf)
 {
-    /* TODO: For now it's an obnoxious, bright blue so that it's obvious
+    /* TODO: For now it's obnoxious and bright blue so that it's obvious
      * when the bare background is exposed. Replace later with black. */
     SDL_SetRenderDrawColor(pnSelf->mnRenderer, 0x00, 0x00, 0xFF, 0xFF);
     SDL_RenderClear(pnSelf->mnRenderer);

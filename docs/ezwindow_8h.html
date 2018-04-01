@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>ezSDL</title>
+  <title>ezwindow.h file | ezSDL</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
   <link rel="stylesheet" href="m-dark.css" />
   <link rel="stylesheet" href="m-doxygen.css" />
@@ -41,24 +41,48 @@
   <div class="m-container m-container-inflatable">
     <div class="m-row">
       <div class="m-col-l-10 m-push-l-1">
-        <h1>Classes</h2>
-        <ul class="m-dox">
-        </ul>
-        <script>
-        function toggle(e) {
-            e.parentElement.className = e.parentElement.className == 'm-dox-collapsible' ?
-                'm-dox-expansible' : 'm-dox-collapsible';
-            return false;
-        }
-        /* Collapse all nodes marked as such. Doing it via JS instead of directly in
-           markup so disabling it doesn't harm usability. The list is somehow
-           regenerated on every iteration and shrinks as I change the classes. It's not
-           documented anywhere and I'm not sure if this is the same across browsers, so
-           I am going backwards in that list to be sure.  */
-        var collapsed = document.getElementsByClassName("collapsed");
-        for(var i = collapsed.length - 1; i >= 0; --i)
-            collapsed[i].className = 'm-dox-expansible';
-        </script>
+        <h1>
+          ezwindow.h <span class="m-thin">file</span>
+        </h1>
+        <p>Handle SDL windows and renderers.</p>
+        <div class="m-block m-default">
+          <h3>Contents</h3>
+          <ul>
+            <li>
+              Reference
+              <ul>
+                <li><a href="#func-members">Functions</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+        <section id="func-members">
+          <h2><a href="#func-members">Functions</a></h3>
+          <dl class="m-dox">
+            <dt>
+              <span class="m-dox-wrap-bumper">auto <a href="#abc1426b54ea9cc0b2ad6d00a43e016be" class="m-dox">ezwindow_new</a>(</span><span class="m-dox-wrap">) -&gt; ezwindow*</span>
+            </dt>
+            <dd>Create an <code>ezwindow</code> instance.</dd>
+          </dl>
+        </section>
+        <section>
+          <h2>Function documentation</h2>
+          <section class="m-dox-details" id="abc1426b54ea9cc0b2ad6d00a43e016be"><div>
+            <h3>
+              <span class="m-dox-wrap-bumper">ezwindow* </span><span class="m-dox-wrap"><span class="m-dox-wrap-bumper"><a href="#abc1426b54ea9cc0b2ad6d00a43e016be" class="m-dox-self">ezwindow_new</a>(</span><span class="m-dox-wrap">)</span></span>
+            </h3>
+            <p>Create an <code>ezwindow</code> instance.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <tfoot>
+                <tr>
+                  <th style="width: 1%">Returns</th>
+                  <td>A pointer to the created <code>ezwindow</code> instance.</td>
+                </tr>
+              </tfoot>
+            </table>
+<p>Some pretty prose here...</p>
+          </div></section>
+        </section>
       </div>
     </div>
   </div>
