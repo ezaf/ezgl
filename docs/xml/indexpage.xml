@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.14">
+  <compounddef id="indexpage" kind="page">
+    <compoundname>index</compoundname>
+    <title>ezSDL</title>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+<para><ulink url="https://travis-ci.org/kirklange/ezsdl"></ulink> <ulink url="http://kirklange.com/ezsdl"></ulink> <ulink url="https://zlib.net/zlib_license.html"></ulink></para><para>The easy, light-weight wrapper for SDL2 and its extension libraries. </para>    </detaileddescription>
+  </compounddef>
+</doxygen>

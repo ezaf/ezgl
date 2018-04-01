@@ -12,7 +12,8 @@ OUT = debug
 
 
 
-BUILD_DIR = bin
+BUILD_DIR = build
+DOCS_DIR = docs
 LIB_DIR = lib
 INCLUDE_DIR = include
 SUBMOD_DIR = submodule
@@ -58,20 +59,25 @@ NULL = >/dev/null
 
 
 
-.PHONY : all docs help clean clean-bin clean-submods build dirs deps submods
-.PHONY : compile run bin/ docs/ submodule/ submod clean-submod
+.PHONY : all $(DOCS_DIR) rtd help clean clean-build clean-submod build dirs
+.PHONY : deps submod compile run
 
 all :
 	make build $(NPD)
 	make run $(NPD)
 
-docs :
-	doxygen .doxyfile
-	make docs-open $(NPD)
+$(DOCS_DIR) :
+	#doxygen .doxyfile
+	rm -rf docs/*
+	python $(SUBMOD_DIR)/mcss/doxygen/dox2html5.py .doxyfile-mcss
+	cd docs
+	rm -rf xml
+	cd ..
+	make rtd $(NPD)
 
-docs-open :
+# Read the docs (not referring to the website)
+rtd :
 	$(OPEN) docs/index.html
-
 
 help :
 	@echo
@@ -79,14 +85,13 @@ help :
 	@echo
 
 clean :
-	make clean-submods $(NPD)
-	make clean-bin $(NPD)
+	#make clean-submod $(NPD)
+	make clean-build $(NPD)
 
-clean-bin :
+clean-build :
 	rm -rf $(BUILD_DIR)/*
 
-# Clean submodules
-clean-submods :
+clean-submod :
 	rm -rf $(SUBMOD_DIR)/*
 
 build :
@@ -105,8 +110,7 @@ deps :
 	cp -R $(LIB_DIR)/. $(BUILD_DIR)
 	cp -R $(ASSET_DIR)/. $(BUILD_DIR)
 
-# Clone submodules from scratch
-submods :
+submod :
 	git submodule init
 	git submodule update
 
@@ -115,21 +119,3 @@ compile : $(OBJS)
 
 run :
 	@echo && ./$(BUILD_DIR)/$(OUT) && echo
-
-
-
-# Target aliases
-bin/ :
-	make build $(NPD)
-
-docs/ :
-	make docs $(NPD)
-
-submodule/ :
-	make submods $(NPD)
-
-submod :
-	make submods $(NPD)
-
-clean-submod :
-	make clean-submods $(NPD)
