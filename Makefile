@@ -63,6 +63,7 @@ NULL = >/dev/null
 .PHONY : help clean clean-$(BUILD_DIR) clean-$(SUBMOD_DIR)
 
 all :
+	make $(DOCS_DIR) $(NPD)
 	make $(BUILD_DIR) $(NPD)
 	make run $(NPD)
 
@@ -70,7 +71,6 @@ $(BUILD_DIR) :
 	make dirs $(NPD)
 	make deps $(NPD)
 	make $(SUBMOD_DIR) $(NPD)
-	make $(DOCS_DIR) $(NPD)
 	make compile $(NPD)
 
 run :
