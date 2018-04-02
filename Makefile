@@ -20,14 +20,14 @@
 
 
 
-# All source FILES within src/ to compile for the project
-SOURCE = main.c ezwindow.c ezlog.c
+# All source files within src/ to compile for the project
+SRC_FILES = main.c ezwindow.c ezlog.c
 
-# All submodule source FILES within submod/ to compile for the project
-SUBMOD_SOURCE = parson/parson.c
+# All submodule source files within ext/ to compile for the project
+EXT_SRC_FILES = parson/parson.c
 
-# All submodule include DIRECTORIES within submod/ to compile for the project
-SUBMOD_INCLUDE = parson
+# All submodule include directories within ext/ to compile for the project
+EXT_INC_DIR = parson
 
 # Name for the executable FILE created in build/
 OUT = debug
@@ -41,27 +41,36 @@ OUT = debug
 
 
 
-ASSET_DIR = asset
-BUILD_DIR = build
-DOCS_DIR = docs
-INCLUDE_DIR = include
+# Binaries
+BIN_DIR = bin
+# Build
+BLD_DIR = build
+# Documentation
+DOC_DIR = docs
+# External (git submodule)
+EXT_DIR = ext
+# Include
+INC_DIR = include
+# Libraries
 LIB_DIR = lib
-SOURCE_DIR = src
-SUBMOD_DIR = submod
+# Resources (config, textures, etc)
+RES_DIR = res
+# Source
+SRC_DIR = src
 
 # CC specifies which compiler we're using
 CC = gcc
 
 # Add source directory to source file names
-OBJS = $(foreach OBJ,$(SOURCE),$(SOURCE_DIR)/$(OBJ)) \
-	   $(foreach OBJ,$(SUBMOD_SOURCE),$(SUBMOD_DIR)/$(OBJ))
+OBJS = $(foreach OBJ,$(SRC_FILES),$(SRC_DIR)/$(OBJ)) \
+	   $(foreach OBJ,$(EXT_SRC_FILES),$(EXT_DIR)/$(OBJ))
 
 # Compiler and linker flags; include and library paths
 # Must be C99 or newer because any older and SDL2 will get compile-time errors
 CF_UNIV = -std=c99 -pedantic -O3 -w
 LF_UNIV = -lSDL2main -lSDL2 -lSDL2_image
-INC_UNIV = -I$(INCLUDE_DIR) \
-		   $(foreach DIR,$(SUBMOD_INCLUDE),-I$(SUBMOD_DIR)/$(DIR))
+INC_UNIV = -I$(INC_DIR) \
+		   $(foreach DIR,$(EXT_INC_DIR),-I$(EXT_DIR)/$(DIR))
 LIB_UNIV =
 
 # Find what OS we're on so we can better configure all the compiler options
@@ -89,12 +98,12 @@ NPD = --no-print-directory
 
 
 
-.PHONY : all $(BUILD_DIR) run dirs deps $(SUBMOD_DIR) $(DOCS_DIR) rtd
-.PHONY : compile help clean clean-$(BUILD_DIR) clean-$(SUBMOD_DIR)
+.PHONY : all $(BLD_DIR) run dirs deps $(EXT_DIR) $(DOC_DIR) rtd
+.PHONY : compile help clean clean-$(BLD_DIR) clean-$(EXT_DIR)
 
 all :
-	make $(DOCS_DIR) $(NPD)
-	make $(BUILD_DIR) $(NPD)
+	make $(DOC_DIR) $(NPD)
+	make $(BLD_DIR) $(NPD)
 	make run $(NPD)
 
 help :
@@ -102,57 +111,53 @@ help :
 	@echo "TODO: describe make targets"
 	@echo
 
-$(DOCS_DIR) :
-	make clean-$(DOCS_DIR) $(NPD)
-	make $(SUBMOD_DIR) $(NPD)
-	python3 $(SUBMOD_DIR)/mcss/doxygen/dox2html5.py .doxyfile-mcss
-	cd $(DOCS_DIR) && rm -rf xml/
-	$(OPEN) docs/index.html
-	cd $(DOCS_DIR)/latex/ && make && mv refman.pdf ../refman.pdf && \
+$(DOC_DIR) :
+	mkdir -p $(DOC_DIR)
+	make clean-$(DOC_DIR) $(NPD)
+	make $(EXT_DIR) $(NPD)
+	python3 $(EXT_DIR)/mcss/doxygen/dox2html5.py .doxyfile-mcss
+	cd $(DOC_DIR) && rm -rf xml/
+	make rtd $(NPD)
+	cd $(DOC_DIR)/latex/ && make && mv refman.pdf ../refman.pdf && \
 		cd ../ && rm -rf latex/
-	#make rtd $(NPD)
 
 rtd :
 	$(OPEN) docs/index.html
 	#$(OPEN) docs/refman.pdf
 
-$(BUILD_DIR) :
-	make dirs $(NPD)
-	cp -R $(LIB_DIR)/. $(BUILD_DIR)
-	cp -R $(ASSET_DIR)/. $(BUILD_DIR)
-	make $(SUBMOD_DIR) $(NPD)
+$(BLD_DIR) :
+	mkdir -p $(BIN_DIR)
+	mkdir -p $(BLD_DIR)
+	mkdir -p $(RES_DIR)
+	cp -R $(BIN_DIR)/. $(BLD_DIR)
+	cp -R $(RES_DIR)/. $(BLD_DIR)
+	make $(EXT_DIR) $(NPD)
 	make compile $(NPD)
 
-dirs :
-	mkdir -p $(BUILD_DIR)
-	mkdir -p $(LIB_DIR)
-	# TODO: remove once stuff gets added to ASSET_DIR
-	mkdir -p $(ASSET_DIR)
-
-$(SUBMOD_DIR) :
+$(EXT_DIR) :
 	git submodule init
 	git submodule update
 
 compile : $(OBJS)
-	$(CC) $(OBJS) $(INC) $(LIB) $(CF) $(LF) -o $(BUILD_DIR)/$(OUT)
+	$(CC) $(OBJS) $(INC) $(LIB) $(CF) $(LF) -o $(BLD_DIR)/$(OUT)
 
 run :
-	@echo && ./$(BUILD_DIR)/$(OUT) && echo
+	@echo && ./$(BLD_DIR)/$(OUT) && echo
 
 clean :
-	make clean-$(BUILD_DIR) $(NPD)
+	make clean-$(BLD_DIR) $(NPD)
 
 clean-all :
-	make clean-$(BUILD_DIR) $(NPD)
-	make clean-$(DOCS_DIR) $(NPD)
-	make clean-$(SUBMOD_DIR) $(NPD)
+	make clean-$(BLD_DIR) $(NPD)
+	make clean-$(DOC_DIR) $(NPD)
+	make clean-$(EXT_DIR) $(NPD)
 
-clean-$(BUILD_DIR) :
-	rm -rf $(BUILD_DIR)/*
+clean-$(BLD_DIR) :
+	rm -rf $(BLD_DIR)/*
 
-clean-$(DOCS_DIR) :
-	rm -rf $(DOCS_DIR)/*
+clean-$(DOC_DIR) :
+	rm -rf $(DOC_DIR)/*
 
-clean-$(SUBMOD_DIR) :
-	rm -rf $(SUBMOD_DIR)/*
+clean-$(EXT_DIR) :
+	rm -rf $(EXT_DIR)/*
 
