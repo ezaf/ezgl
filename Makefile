@@ -67,11 +67,11 @@ OBJS = $(foreach OBJ,$(SRC_FILES),$(SRC_DIR)/$(OBJ)) \
 
 # Compiler and linker flags; include and library paths
 # Must be C99 or newer because any older and SDL2 will get compile-time errors
-CF_UNIV = -std=c99 -pedantic -O3 -w
-LF_UNIV = -lSDL2main -lSDL2 -lSDL2_image
-INC_UNIV = -I$(INC_DIR) \
+CF = -std=c99 -pedantic -O3 -w
+LF = -lSDL2main -lSDL2 -lSDL2_image
+INC = -I$(INC_DIR) \
 		   $(foreach DIR,$(EXT_INC_DIR),-I$(EXT_DIR)/$(DIR))
-LIB_UNIV =
+LIB =
 
 # Find what OS we're on so we can better configure all the compiler options
 # Linux->"Linux" | MacOS->"Darwin" | Windows->"MSYS_NT-#"
@@ -80,18 +80,29 @@ LIB_UNIV =
 # All compiler flags can be customized on a per-platform basis
 ifeq ($(OS),Windows_NT)
 	# Uncomment "-Wl..." to remove console window on Windows OS
-	CF = $(CF_UNIV) #-Wl,-subsystem,windows
-	LF = -lmingw32 $(LF_UNIV)
+	CF += #-Wl,-subsystem,windows
+	# -lmingw32 must come before all else
+	LF_TEMP := $(LF)
+	LF = -lmingw32 $(LF_TEMP)
 	# lua modding support planned
-	INC = $(INC_UNIV) -ID:/org/libsdl/include #-ID:/org/lua-5.3.4/src
-	LIB = $(LIB_UNIV) -LD:/org/libsdl/lib #-ID:/org/lua-5.3.4/src
+	INC += -ID:/org/libsdl/include #-ID:/org/lua/src
+	LIB += -LD:/org/libsdl/lib #-ID:/org/lua/src
 	OPEN = cmd //c start "${@//&/^&}"
 else
-	CF = $(CF_UNIV)
-	LF = $(LF_UNIV)
-	INC = $(INC_UNIV)
-	LIB = $(LIB_UNIV)
+	CF +=
+	LF +=
+	INC +=
+	LIB +=
 	OPEN = xdg-open
+endif
+
+# Figure out what commands are valid
+PY = $(shell echo "quit()">tmp.py && python3 test.py >/dev/null \
+	 && rm tmp.py && echo python3 || rm tmp.py && echo python)
+
+# TODO: https://stackoverflow.com/a/34756868/5890633
+ifeq ($(shell uname -s | grep -E _NT), 0)
+	MSG = "PRECODE"
 endif
 
 NPD = --no-print-directory
@@ -107,6 +118,11 @@ all :
 	make run $(NPD)
 
 help :
+	@echo $(shell uname -s)
+	@echo $(MSG)
+	@if [[ `uname -s | grep -E _NT` ]]; then \
+		echo "BASHCODE"; \
+	fi
 	@echo
 	@echo "TODO: describe make targets"
 	@echo
@@ -115,7 +131,13 @@ $(DOC_DIR) :
 	mkdir -p $(DOC_DIR)
 	make clean-$(DOC_DIR) $(NPD)
 	make $(EXT_DIR) $(NPD)
-	python3 $(EXT_DIR)/mcss/doxygen/dox2html5.py .doxyfile-mcss
+	@# m.css requires python 3.6+ and doxygen 1.8.14+
+	@if [[ `$(PY) --version | grep -E "\b3\.[^0-5]"` && \
+		`doxygen --version | grep -E "\b1.[^0-7].((1[^0-3])|(2.*))"` ]]; then \
+		$(PY) $(EXT_DIR)/m.css/doxygen/dox2html5.py .doxyfile-mcss; \
+	else \
+		doxygen .doxyfile; \
+	fi
 	cd $(DOC_DIR) && rm -rf xml/
 	make rtd $(NPD)
 	cd $(DOC_DIR)/latex/ && make && mv refman.pdf ../refman.pdf && \
