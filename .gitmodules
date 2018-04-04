@@ -1,6 +1,6 @@
 [submodule "ext/parson"]
 	path = ext/parson
 	url = https://github.com/kgabis/parson.git
-[submodule "ext/mcss"]
-	path = ext/mcss
+[submodule "ext/m.css"]
+	path = ext/m.css
 	url = https://github.com/mosra/m.css.git
