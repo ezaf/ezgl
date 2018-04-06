@@ -102,10 +102,10 @@ PY = $(shell echo "quit()">tmp.py && python3 test.py >/dev/null \
 
 # TODO: https://stackoverflow.com/a/34756868/5890633
 ifeq ($(shell uname -s | grep -E _NT), 0)
-	MSG = "PRECODE"
+	MSG = "Detected Windows Platform with Makefile"
 endif
 
-NPD = --no-print-directory
+MAKE = make --no-print-directory
 
 
 
@@ -113,15 +113,15 @@ NPD = --no-print-directory
 .PHONY : compile help clean clean-$(BLD_DIR) clean-$(EXT_DIR)
 
 all :
-	make $(DOC_DIR) $(NPD)
-	make $(BLD_DIR) $(NPD)
-	make run $(NPD)
+	$(MAKE) $(DOC_DIR)
+	$(MAKE) $(BLD_DIR)
+	$(MAKE) run
 
 help :
 	@echo $(shell uname -s)
 	@echo $(MSG)
 	@if [[ `uname -s | grep -E _NT` ]]; then \
-		echo "BASHCODE"; \
+		echo "Detected Windows Platform with shell script"; \
 	fi
 	@echo
 	@echo "TODO: describe make targets"
@@ -129,8 +129,8 @@ help :
 
 $(DOC_DIR) :
 	mkdir -p $(DOC_DIR)
-	make clean-$(DOC_DIR) $(NPD)
-	make $(EXT_DIR) $(NPD)
+	$(MAKE) clean-$(DOC_DIR)
+	$(MAKE) $(EXT_DIR)
 	@# m.css requires python 3.6+ and doxygen 1.8.14+
 	@if [[ `$(PY) --version | grep -E "\b3\.[^0-5]"` && \
 		`doxygen --version | grep -E "\b1.[^0-7].((1[^0-3])|(2.*))"` ]]; then \
@@ -141,13 +141,16 @@ $(DOC_DIR) :
 		doxygen .doxyfile; \
 	fi
 	cd $(DOC_DIR) && rm -rf xml/
-	make rtd $(NPD)
-	cd $(DOC_DIR)/latex/ && make && mv refman.pdf ../refman.pdf && \
+	$(MAKE) rtd
+	@# To be honest the default latex/pdf style is pretty ugly.
+	@# TODO: make latex/pdf output look more like sphinx/readthedocs
+	@#cd $(DOC_DIR)/latex/ && make && mv refman.pdf ../refman.pdf && \
 		cd ../ && rm -rf latex/
+	cd $(DOC_DIR) && rm -rf latex/
 
 rtd :
 	$(OPEN) docs/index.html
-	#$(OPEN) docs/refman.pdf
+	@#$(OPEN) docs/refman.pdf
 
 $(BLD_DIR) :
 	mkdir -p $(BIN_DIR)
@@ -155,8 +158,8 @@ $(BLD_DIR) :
 	mkdir -p $(RES_DIR)
 	cp -R $(BIN_DIR)/. $(BLD_DIR)
 	cp -R $(RES_DIR)/. $(BLD_DIR)
-	make $(EXT_DIR) $(NPD)
-	make compile $(NPD)
+	$(MAKE) $(EXT_DIR)
+	$(MAKE) compile
 
 $(EXT_DIR) :
 	git submodule init
@@ -166,15 +169,17 @@ compile : $(OBJS)
 	$(CC) $(OBJS) $(INC) $(LIB) $(CF) $(LF) -o $(BLD_DIR)/$(OUT)
 
 run :
-	@echo && ./$(BLD_DIR)/$(OUT) && echo
+	@echo
+	./$(BLD_DIR)/$(OUT)
+	@echo
 
 clean :
-	make clean-$(BLD_DIR) $(NPD)
+	$(MAKE) clean-$(BLD_DIR)
 
 clean-all :
-	make clean-$(BLD_DIR) $(NPD)
-	make clean-$(DOC_DIR) $(NPD)
-	make clean-$(EXT_DIR) $(NPD)
+	$(MAKE) clean-$(BLD_DIR)
+	$(MAKE) clean-$(DOC_DIR)
+	$(MAKE) clean-$(EXT_DIR)
 
 clean-$(BLD_DIR) :
 	rm -rf $(BLD_DIR)/*
