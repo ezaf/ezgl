@@ -135,6 +135,8 @@ $(DOC_DIR) :
 	@if [[ `$(PY) --version | grep -E "\b3\.[^0-5]"` && \
 		`doxygen --version | grep -E "\b1.[^0-7].((1[^0-3])|(2.*))"` ]]; then \
 		$(PY) $(EXT_DIR)/m.css/doxygen/dox2html5.py .doxyfile-mcss; \
+		cp $(EXT_DIR)/m.css/css/m-dark+doxygen.compiled.css \
+			$(DOC_DIR)/m-dark+doxygen.compiled.css; \
 	else \
 		doxygen .doxyfile; \
 	fi
