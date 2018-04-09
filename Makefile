@@ -1,4 +1,4 @@
-# ezSDL Makefile
+# EzSDL Makefile
 #
 # Copyright (c) 2018 Kirk Lange
 #
