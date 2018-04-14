@@ -416,7 +416,7 @@ ul ol, ul ul, ol ol, ol ul {
   margin-bottom: 0;
 }
 main p {
-  text-indent: 1.5rem;
+  text-indent: 0rem;
   text-align: justify;
 }
 main p.m-noindent, li > p, dd > p, table.m-table td > p {

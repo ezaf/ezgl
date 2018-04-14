@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>EzSDL</title>
+  <title>ezsdl.h file | EzSDL</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
   <link rel="stylesheet" href="m-dark+doxygen.compiled.css" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -41,9 +41,10 @@
     <div class="m-row">
       <div class="m-col-l-10 m-push-l-1">
         <h1>
-          EzSDL
+          ezsdl.h <span class="m-thin">file</span>
         </h1>
-<p><a href="https://travis-ci.org/ezaf/ezsdl"></a> <a href="http://ezaf.io/ezsdl"></a> <a href="https://zlib.net/zlib_license.html"></a></p><p>The easy, light-weight wrapper for SDL2 and its extension libraries.</p>
+        <p>Include SDL2 and fix its non-C89-compliant macro.</p>
+<p>If C89 compliance is desired, be sure to use <code class="m-code"><span class="cp">#include</span> <span class="cpf">&quot;EzSDL/ezsdl.h&quot;</span><span class="cp"></span></code> instead of <code class="m-code"><span class="cp">#include</span> <span class="cpf">&lt;SDL2/SDL.h&gt;</span><span class="cp"></span></code> This ensures that <code>SDL_FORCE_INLINE</code> gets defined before SDL2 gets included. At least on my machine with Windows 10, this macro was triggering errors while I was compiling with <code>gcc -std=c89 -pedantic</code>.</p>
       </div>
     </div>
   </div>
