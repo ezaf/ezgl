@@ -1,0 +1,6 @@
+#!/bin/bash
+
+G="${1}*"
+A=`find ./src -name $G`
+B=`find ./include -name $G`
+vim -O $A $B
