@@ -20,18 +20,27 @@
 
 
 
-# All source files within src/ to compile for the project
-SRC_FILES = main.c ezwindow.c ezlog.c
+# Source files within src/ to be added to the build
+SRC_FILES = main.c
 
-# All submodule source files within ext/ to compile for the project
-EXT_SRC_FILES = parson/parson.c
+# Directory within src/ for which all *.c files will be added to the build
+SRC_SUBDIRS = EzSDL EzLog
 
-# All submodule include directories within ext/ to compile for the project
-EXT_INC_DIR = parson
+# All submodule source files within ext/
+EXT_SRC_FILES =
 
-# Name for the executable FILE created in build/
+# All submodule include directories within ext/
+EXT_INC_DIRS =
+
+# Name for the executable file created in build/ (file extension not necessary)
 OUT = debug
 
+
+# NECESSARY FOR WINDOWS:
+# Directories required for `gcc`'s `-I` and `-L` such as the paths to the SDL2
+# and Lua includes and libraries
+GCC_I_DIRS = D:/org/libsdl/include #-ID:/org/lua/src
+GCC_L_DIRS = D:/org/libsdl/lib #-ID:/org/lua/src
 
 
 ###############################################################################
@@ -63,47 +72,52 @@ CC = gcc
 
 # Add source directory to source file names
 OBJS = $(foreach OBJ,$(SRC_FILES),$(SRC_DIR)/$(OBJ)) \
+	   $(foreach DIR,$(SRC_SUBDIRS),$(wildcard $(SRC_DIR)/$(DIR)/*.c)) \
 	   $(foreach OBJ,$(EXT_SRC_FILES),$(EXT_DIR)/$(OBJ))
 
 # Compiler and linker flags; include and library paths
 # Must be C99 or newer because any older and SDL2 will get compile-time errors
-CF = -std=c99 -pedantic -O3 -w
+CF = -std=c89 -pedantic -O3 -w
 LF = -lSDL2main -lSDL2 -lSDL2_image
-INC = -I$(INC_DIR) \
-		   $(foreach DIR,$(EXT_INC_DIR),-I$(EXT_DIR)/$(DIR))
+INC = -I$(INC_DIR) $(foreach DIR,$(EXT_INC_DIRS),-I$(EXT_DIR)/$(DIR))
 LIB =
 
 # Find what OS we're on so we can better configure all the compiler options
 # Linux->"Linux" | MacOS->"Darwin" | Windows->"MSYS_NT-#"
-#UNAME = `(uname -s) 2>/dev/null`
 
 # All compiler flags can be customized on a per-platform basis
-ifeq ($(OS),Windows_NT)
+ifneq (, $(shell uname -s | grep -E _NT))
+	CULT = windows
 	# Uncomment "-Wl..." to remove console window on Windows OS
 	CF += #-Wl,-subsystem,windows
 	# -lmingw32 must come before all else
 	LF_TEMP := $(LF)
 	LF = -lmingw32 $(LF_TEMP)
-	# lua modding support planned
-	INC += -ID:/org/libsdl/include #-ID:/org/lua/src
-	LIB += -LD:/org/libsdl/lib #-ID:/org/lua/src
+	INC += $(foreach DIR,$(GCC_I_DIRS),-I$(DIR))
+	LIB += $(foreach DIR,$(GCC_L_DIRS),-L$(DIR))
 	OPEN = cmd //c start "${@//&/^&}"
-else
+endif
+ifneq (, $(shell uname -s | grep -E Linux))
+	CULT = Linux
 	CF +=
 	LF +=
 	INC +=
 	LIB +=
 	OPEN = xdg-open
 endif
-
-# Figure out what commands are valid
-PY = $(shell echo "quit()">tmp.py && python3 test.py >/dev/null \
-	 && rm tmp.py && echo python3 || rm tmp.py && echo python)
-
-# TODO: https://stackoverflow.com/a/34756868/5890633
-ifeq ($(shell uname -s | grep -E _NT), 0)
-	MSG = "Detected Windows Platform with Makefile"
+ifneq (, $(shell uname -s | grep -E Darwin))
+	CULT = macos
+	# TODO: test on MacOS
 endif
+
+# TODO: version check python and doxygen
+#ifeq(, $(shell where python3))
+#endif
+
+PYV_FULL = $(wordlist 2,4,$(subst ., ,$(shell python3 --version 2>&1)))
+PYV_MAJOR = $(word 1,${PYV_FULL})
+PYV_MINOR = $(word 2,${PYV_FULL})
+PYV_PATCH = $(word 3,${PYV_FULL})
 
 MAKE = make --no-print-directory
 
@@ -118,11 +132,6 @@ all :
 	$(MAKE) run
 
 help :
-	@echo $(shell uname -s)
-	@echo $(MSG)
-	@if [[ `uname -s | grep -E _NT` ]]; then \
-		echo "Detected Windows Platform with shell script"; \
-	fi
 	@echo
 	@echo "TODO: describe make targets"
 	@echo
@@ -131,17 +140,13 @@ $(DOC_DIR) :
 	mkdir -p $(DOC_DIR)
 	$(MAKE) clean-$(DOC_DIR)
 	$(MAKE) $(EXT_DIR)
-	@# m.css requires python 3.6+ and doxygen 1.8.14+
-	@if [[ `$(PY) --version | grep -E "\b3\.[^0-5]"` && \
-		`doxygen --version | grep -E "\b1.[^0-7].((1[^0-3])|(2.*))"` ]]; then \
-		$(PY) $(EXT_DIR)/m.css/doxygen/dox2html5.py .doxyfile-mcss; \
-		cp $(EXT_DIR)/m.css/css/m-dark+doxygen.compiled.css \
-			$(DOC_DIR)/m-dark+doxygen.compiled.css; \
-	else \
-		doxygen .doxyfile; \
-	fi
+	@# TODO: version check, m.css requires python 3.6+ and doxygen 1.8.14+
+	python3 $(EXT_DIR)/m.css/doxygen/dox2html5.py .doxyfile-mcss
+	cp $(EXT_DIR)/m.css/css/m-dark+doxygen.compiled.css \
+		$(DOC_DIR)/m-dark+doxygen.compiled.css
+	find docs/m-dark+doxygen.compiled.css -type f -exec \
+		sed -i 's/text-indent: 1\.5rem/text-indent: 0rem/g' {} \;	
 	cd $(DOC_DIR) && rm -rf xml/
-	$(MAKE) rtd
 	@# To be honest the default latex/pdf style is pretty ugly.
 	@# TODO: make latex/pdf output look more like sphinx/readthedocs
 	@#cd $(DOC_DIR)/latex/ && make && mv refman.pdf ../refman.pdf && \
