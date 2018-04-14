@@ -1,4 +1,4 @@
-# EzSDL Makefile
+# Makefile for EzSDL
 #
 # Copyright (c) 2018 Kirk Lange
 #
@@ -20,6 +20,10 @@
 
 
 
+###############################################################################
+##############################  Standard Options  #############################
+###############################################################################
+
 # Source files within src/ to be added to the build
 SRC_FILES = main.c
 
@@ -36,19 +40,27 @@ EXT_INC_DIRS =
 OUT = debug
 
 
-# NECESSARY FOR WINDOWS:
-# Directories required for `gcc`'s `-I` and `-L` such as the paths to the SDL2
-# and Lua includes and libraries
+
+###############################################################################
+###########################  Semi-Advanced Options  ###########################
+###############################################################################
+
+# Compiler and linker settings
+CC = gcc
+CF = -std=c89 -pedantic -O3 -w
+LF = -lSDL2main -lSDL2 -lSDL2_image
+
+# NECESSARY FOR WINDOWS!!!
+# Outside include and lib directories for `gcc` such as the paths to the SDL2
+# Change the path to match where you have installed the stuff on your machine
 GCC_I_DIRS = D:/org/libsdl/include #-ID:/org/lua/src
 GCC_L_DIRS = D:/org/libsdl/lib #-ID:/org/lua/src
 
 
-###############################################################################
-#################  Standard configuration takes place above.  #################
-#################   Advanced options can be tweaked below.    #################
-###############################################################################
 
-
+###############################################################################
+##############################  Advanced Options  #############################
+###############################################################################
 
 # Binaries
 BIN_DIR = bin
@@ -67,30 +79,26 @@ RES_DIR = res
 # Source
 SRC_DIR = src
 
-# CC specifies which compiler we're using
-CC = gcc
+
 
 # Add source directory to source file names
 OBJS = $(foreach OBJ,$(SRC_FILES),$(SRC_DIR)/$(OBJ)) \
 	   $(foreach DIR,$(SRC_SUBDIRS),$(wildcard $(SRC_DIR)/$(DIR)/*.c)) \
 	   $(foreach OBJ,$(EXT_SRC_FILES),$(EXT_DIR)/$(OBJ))
 
-# Compiler and linker flags; include and library paths
-# Must be C99 or newer because any older and SDL2 will get compile-time errors
-CF = -std=c89 -pedantic -O3 -w
-LF = -lSDL2main -lSDL2 -lSDL2_image
+# Include and library flags
 INC = -I$(INC_DIR) $(foreach DIR,$(EXT_INC_DIRS),-I$(EXT_DIR)/$(DIR))
 LIB =
 
 # Find what OS we're on so we can better configure all the compiler options
-# Linux->"Linux" | MacOS->"Darwin" | Windows->"MSYS_NT-#"
+# Linux->"Linux" | MacOS->"Darwin" | Windows->"*_NT-*"
 
 # All compiler flags can be customized on a per-platform basis
 ifneq (, $(shell uname -s | grep -E _NT))
 	CULT = windows
-	# Uncomment "-Wl..." to remove console window on Windows OS
+	# Uncomment to remove console window
 	CF += #-Wl,-subsystem,windows
-	# -lmingw32 must come before all else
+	# -lmingw32 must come before everything else
 	LF_TEMP := $(LF)
 	LF = -lmingw32 $(LF_TEMP)
 	INC += $(foreach DIR,$(GCC_I_DIRS),-I$(DIR))
@@ -109,6 +117,8 @@ ifneq (, $(shell uname -s | grep -E Darwin))
 	CULT = macos
 	# TODO: test on MacOS
 endif
+
+
 
 # TODO: version check python and doxygen
 #ifeq(, $(shell where python3))
