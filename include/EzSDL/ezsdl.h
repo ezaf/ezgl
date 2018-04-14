@@ -1,6 +1,14 @@
-/** @file       ezwindow.h
- *  @brief      Handle SDL windows and renderers.
- *  
+/** @file       ezsdl.h
+ *  @brief      Include SDL2 and fix its non-C89-compliant macro.
+ *  @details    If C89 compliance is desired, be sure to use
+ *              @code{.c} #include "EzSDL/ezsdl.h" @endcode
+ *              instead of
+ *              @code{.c} #include <SDL2/SDL.h> @endcode
+ *              This ensures that `SDL_FORCE_INLINE` gets defined before
+ *              SDL2 gets included. At least on my machine with Windows 10,
+ *              this macro was triggering errors while I was compiling with
+ *              `gcc -std=c89 -pedantic`.
+ *
  *  <!---------
  *  Copyright (c) 2018 Kirk Lange
  *  
@@ -22,8 +30,8 @@
  *  ---------->
  */
 
-#ifndef EZWINDOW_H
-#define EZWINDOW_H
+#ifndef EZSDL_H
+#define EZSDL_H
 
 #ifdef __cplusplus
 extern "C"
@@ -32,30 +40,8 @@ extern "C"
 
 
 
+#define SDL_FORCE_INLINE static __inline__
 #include <SDL2/SDL.h>
-#include <stdint.h>
-
-typedef struct ezwindow ezwindow;
-
-
-
-/**
- *  @brief      Create an @c ezwindow instance.
- *  @details    Some pretty prose here...
- *  @return     A pointer to the created @c ezwindow instance.
- */
-ezwindow*       ezwindow_new();
-uint8_t         ezwindow_del(ezwindow **self);
-
-SDL_Window*     ezwindow_getWindow(ezwindow *self);
-SDL_Renderer*   ezwindow_getRenderer(ezwindow *self);
-SDL_Event*      ezwindow_getEvent(ezwindow *self);
-uint8_t         ezwindow_isRunning(ezwindow *self);
-uint8_t         ezwindow_isPaused(ezwindow *self);
-
-uint8_t         ezwindow_pollEvent(ezwindow *self);
-void            ezwindow_clear(ezwindow *self);
-void            ezwindow_render(ezwindow *self);
 
 
 
@@ -63,4 +49,4 @@ void            ezwindow_render(ezwindow *self);
 }
 #endif
 
-#endif /* EZWINDOW_H */
+#endif /* EZSDL_H */
