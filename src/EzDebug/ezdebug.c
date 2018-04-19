@@ -1,4 +1,4 @@
-/*  ezlog.c
+/*  ezdebug.c
  *
  *  <!---------
  *  Copyright (c) 2018 Kirk Lange
@@ -21,7 +21,7 @@
  *  ---------->
  */
 
-#include "EzLog/ezlog.h"
+#include "EzDebug/ezdebug.h"
 
 #include <stdarg.h>
 #include <stdint.h>
@@ -30,37 +30,16 @@
 
 
 
-const char* ezlog_typeSymbol(ezlog_t type)
+void ezdebug_log(ezdebug_log_t type, char *callee, char *message, ...)
 {
-    switch (type)
-    {
-        case FATAL:
-            return "X";
-        case VITAL:
-            return "!";
-        case MAJOR:
-            return ">";
-        case MINOR:
-            return "<";
-        case DEBUG:
-            return "-";
-        default:
-            return "?";
-    }
-}
-
-
-
-void ezlog(ezlog_t type, char *callee, char *message, ...)
-{
-    if (VERBOSITY >= type)
+    if (EZDEBUG_VERBOSITY >= type)
     {
         /* Allocate output buffer of necessary size */
         char output[ (strlen(callee)+strlen(message))+8 ];
 
         /* Format it as "[type] (callee) message" */
         strcpy(output, "[");
-        strcat(output, ezlog_typeSymbol(type));
+        strcat(output, (char) type);
         strcat(output, "] (");
         strcat(output, callee);
         strcat(output, ") ");
@@ -70,6 +49,6 @@ void ezlog(ezlog_t type, char *callee, char *message, ...)
         /* Pass on any printf args */
         va_list args;
         va_start(args, message);
-        vfprintf(stdout, output, args);
+        vfprintf(EZDEBUG_OUT, output, args);
     }
 }

@@ -28,7 +28,7 @@
 SRC_FILES = main.c
 
 # Directory within src/ for which all *.c files will be added to the build
-SRC_SUBDIRS = EzSDL EzLog
+SRC_SUBDIRS = EzSDL EzDebug
 
 # All submodule source files within ext/
 EXT_SRC_FILES =
