@@ -1,5 +1,6 @@
-/** @file       ezlog.h
- *  @brief      Prioritizes and auto-formats your log and error messages.
+/** @file       ezdebug.h
+ *  @brief      Helpful tools for debugging such as an assert macro and 
+ *              prioritized log messages.
  *  
  *  <!---------
  *  Copyright (c) 2018 Kirk Lange
@@ -22,31 +23,42 @@
  *  ---------->
  */
 
-#ifndef EZLOG_H
-#define EZLOG_H
+#ifndef EZDEBUG_H
+#define EZDEBUG_H
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
+#include <stdio.h>
 
 
-#ifndef EZDEBUG_LOG
-#define EZDEBUG_LOG(severity, message, ...) \
-    ezlog(severity, __func__, message, __VA_ARGS__);
+
+/* TODO: Placeholder. Replace with OOP-like file I/O system? */
+#ifndef EZDEBUG_OUT
+#define EZDEBUG_OUT stdout
 #endif
 
-/* ezlog will only print messages at least as severe as VERBOSITY */
-#define VERBOSITY DEBUG
-
-
-
-typedef enum ezlog_t
-{
-    FATAL, VITAL, MAJOR, MINOR, DEBUG
+#ifndef ezdebug_assert
+#define ezdebug_assert(expA, op, expB) \
+{ \
+    if (!( expA op expB )) \
+        fprintf(stdout, "FAIL:   !( " #expA " " #op " " #expB " )\n"); \
 }
-ezlog_t;
+#endif /* ezdebug_assert */
+
+/* ezdebug_log will only print messages at least as severe as this */
+#ifndef EZDEBUG_VERBOSITY
+#define EZDEBUG_VERBOSITY DEBUG
+#endif
+
+
+
+typedef enum ezdebug_log_t
+{
+    FATAL='X', VITAL='!', MAJOR='>', MINOR='<', DEBUG='-'
+} ezdebug_log_t;
 
 /* ezlog_t Reference
  * 
@@ -74,7 +86,8 @@ ezlog_t;
 
 
 
-void            ezlog(ezlog_t pType, char *pnCallee, char *pnMessage, ...);
+void            ezdebug_log(ezdebug_log_t pType, char *pnCallee,
+                            char *pnMessage, ...);
 
 
 
@@ -82,4 +95,4 @@ void            ezlog(ezlog_t pType, char *pnCallee, char *pnMessage, ...);
 }
 #endif
 
-#endif /* EZLOG_H */
+#endif /* EZDEBUG_H */

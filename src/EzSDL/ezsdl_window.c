@@ -22,7 +22,7 @@
  */
 
 #include "EzSDL/ezsdl_window.h"
-#include "EzLog/ezlog.h"
+#include "EzDebug/ezdebug.h"
 
 #include <SDL2/SDL_image.h>
 
@@ -65,14 +65,14 @@ ezsdl_window* ezsdl_window_new()
 
     if (error)
     {
-        ezlog(FATAL, "ezsdl_window_new", "Failed to create ezsdl_window "
-                "instance.");
+        ezdebug_log(FATAL, "ezsdl_window_new", "Failed to create "
+                "ezsdl_window instance.");
         free(self);
         self = 0;
     }
     else
     {
-        ezlog(DEBUG, "ezsdl_window_new", "Successfully created new "
+        ezdebug_log(DEBUG, "ezsdl_window_new", "Successfully created new "
                 "ezsdl_window instance.");
     }
 
@@ -98,8 +98,8 @@ uint8_t ezsdl_window_del(ezsdl_window **self)
     }
     else
     {
-        ezlog(VITAL, "ezsdl_window_del", "Skipped deletion of ezsdl_window "
-                "instance. Cannot free a null pointer.");
+        ezdebug_log(VITAL, "ezsdl_window_del", "Skipped deletion of "
+                "ezsdl_window instance. Cannot free a null pointer.");
         return 0;
     }
 
