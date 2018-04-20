@@ -40,6 +40,13 @@ extern "C"
 #define EZDEBUG_OUT stdout
 #endif
 
+/* Probably won't use this, but just in case, I'll keep it in a comment.
+#ifndef EZDEBUG_LOG
+#define EZDEBUG_LOG(severity, message, ...) \
+    ezdebug_log(severity, __func__, message, __VA_ARGS__);
+#endif
+*/
+
 #ifndef ezdebug_assert
 #define ezdebug_assert(expA, op, expB) \
 { \
