@@ -1,6 +1,7 @@
 #!/bin/bash
 
-G="${1}*"
-A=`find ./src -name $G`
-B=`find ./include -name $G`
-vim -O $A $B
+O="${1}"
+F="${2}*"
+A=`find ./src -name $F`
+B=`find ./include -name $F`
+vim -$O $A $B
