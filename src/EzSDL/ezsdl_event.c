@@ -23,7 +23,7 @@
 
 #include "EzSDL/ezsdl_event.h"
 #include "EzSDL/ezsdl_window.h"
-#include "EzLog/ezlog.h"
+#include "EzDebug/ezdebug.h"
 
 
 
@@ -60,7 +60,7 @@ ezsdl_event_node* ezsdl_event_addNode(ezsdl_window *window,
 
     if (error |= !notify)
     {
-        ezlog(MAJOR, __func__, "Notify function pointer is null.");
+        ezdebug_log(MAJOR, __func__, "Notify function pointer is null.");
     }
 
     if (!error)
@@ -90,7 +90,7 @@ uint8_t ezsdl_event_removeNode(ezsdl_event_node *node)
     }
     else
     {
-        ezlog(MINOR, __func__, "Cannot remove a null node.");
+        ezdebug_log(MINOR, __func__, "Cannot remove a null node.");
         return 0;
     }
 }
@@ -103,11 +103,11 @@ uint8_t error_check_window_ptr(ezsdl_window *window, const char *caller)
 
     if (error |= !window)
     {
-        ezlog(MAJOR, caller, "Window pointer is null.");
+        ezdebug_log(MAJOR, caller, "Window pointer is null.");
     }
     else if (error |= !window->eventHead)
     {
-        ezlog(MAJOR, caller, "Head of event node linked list is null.");
+        ezdebug_log(MAJOR, caller, "Head of event node linked list is null.");
     }
 
     return error;
