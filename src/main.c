@@ -38,17 +38,10 @@ int main(int argc, char *argv[])
     printf("Hello world, I am ezsdl!\n");
 
     ezsdl_window *ezw = ezsdl_window_new();
+    ezsdl_event_addNode(ezw, &sillyEvent);
     while (ezw->isRunning)
     {
-        while (ezsdl_window_pollEvent(ezw))
-        {
-            /* Send events to game objects. Something like:
-             * player_checkEvent(player, ezw); */
-
-            /* Here's a quick demo */
-            sillyEvent(ezw);
-        }
-
+        ezsdl_event_notifyAll(ezw);
         ezsdl_window_clear(ezw);
         /* Draw the game objects. Something like:
          * player_draw(player, ezw); */

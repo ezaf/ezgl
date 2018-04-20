@@ -25,7 +25,11 @@
 #include "EzLog/ezlog.h"
 
 #include <SDL2/SDL_image.h>
-#include <stdio.h>
+
+
+
+/* Anonymous window event handler function. */
+void ezsdl_window_event(ezsdl_window *self);
 
 
 
@@ -40,7 +44,7 @@ ezsdl_window* ezsdl_window_new()
 
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
     
-    self->window = SDL_CreateWindow( "ezsdl",
+    self->window = SDL_CreateWindow( "EzSDL",
             SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
             640, 480,
             SDL_WINDOW_SHOWN );
@@ -51,6 +55,10 @@ ezsdl_window* ezsdl_window_new()
     SDL_SetRenderDrawColor(self->renderer, 0x00, 0x00, 0xFF, 0xFF);
 
     self->event = (SDL_Event*) malloc(sizeof(SDL_Event));
+    self->eventHead = (ezsdl_event_node*) malloc(sizeof(ezsdl_event_node));
+    self->eventHead->prev = 0;
+    self->eventHead->next = 0;
+    self->eventHead->notify = &ezsdl_window_event;
     self->isRunning = 1;
     self->isPaused = 0;
 
@@ -99,76 +107,10 @@ uint8_t ezsdl_window_del(ezsdl_window **self)
 
 
 
-uint8_t ezsdl_window_pollEvent(ezsdl_window *self)
+uint8_t ezsdl_window_clear(ezsdl_window *self)
 {
-    uint8_t polling;
-    
-    if (self)
-    {
-        /* Save polling status so we can return to everyone else.
-         * It is essential that self's actual mnEvent rather than a copy
-         *   of self *mnEvent be passed to SDL_PollEvent() */
-        polling = SDL_PollEvent(self->event);
-        /* So that I don't have to keep typing this... */
-        SDL_Event e = *(self->event);
+    /* TODO: add error checking */
 
-        /* Internal event handling */
-        if (polling)
-        {
-            switch (e.type)
-            {
-                case SDL_QUIT:
-                    self->isRunning = 0;
-                    break;
-
-                case SDL_KEYDOWN:
-                    switch (e.key.keysym.scancode)
-                    {
-                        case SDL_SCANCODE_ESCAPE:
-                            self->isRunning = 0;
-                            break;
-
-                        default:
-                            break;
-                    }
-                    break;
-
-                case SDL_KEYUP:
-                    break;
-
-                case SDL_WINDOWEVENT:
-                    switch (e.window.event)
-                    {
-                        /* Pause app if lost keyboard focus (like tab out) */
-                        case SDL_WINDOWEVENT_FOCUS_GAINED:
-                            self->isPaused = 0;
-                            break;
-                        case SDL_WINDOWEVENT_FOCUS_LOST:
-                            self->isPaused = 1;
-                            break;
-                    }
-                    break;
-
-                default:
-                    break;
-            }
-        }
-    }
-    else
-    {
-        ezlog(MAJOR, "ezsdl_window_pollEvent", "Cannot poll events off of an "
-                "ezsdl_window null pointer.");
-        polling = 0;
-    }
-    
-    /* Return polling status to everyone else */
-    return polling;
-}
-
-
-
-void ezsdl_window_clear(ezsdl_window *self)
-{
     /* TODO: For now it's obnoxious and bright blue so that it's obvious
      * when the bare background is exposed. Replace later with black. */
     SDL_SetRenderDrawColor(self->renderer, 0x00, 0x00, 0xFF, 0xFF);
@@ -177,7 +119,57 @@ void ezsdl_window_clear(ezsdl_window *self)
 
 
 
-void ezsdl_window_render(ezsdl_window *self)
+uint8_t ezsdl_window_render(ezsdl_window *self)
 {
+    /* TODO: add error checking */
+
     SDL_RenderPresent(self->renderer);
+}
+
+
+
+void ezsdl_window_event(ezsdl_window *self)
+{
+    /* TODO: add error checking */
+
+    SDL_Event e = *(self->event);
+
+    /* Internal event handling */
+    switch (e.type)
+    {
+        case SDL_QUIT:
+            self->isRunning = 0;
+            break;
+
+        case SDL_KEYDOWN:
+            switch (e.key.keysym.scancode)
+            {
+                case SDL_SCANCODE_ESCAPE:
+                    self->isRunning = 0;
+                    break;
+
+                default:
+                    break;
+            }
+            break;
+
+        case SDL_KEYUP:
+            break;
+
+        case SDL_WINDOWEVENT:
+            switch (e.window.event)
+            {
+                /* Pause app if lost keyboard focus (like tab out) */
+                case SDL_WINDOWEVENT_FOCUS_GAINED:
+                    self->isPaused = 0;
+                    break;
+                case SDL_WINDOWEVENT_FOCUS_LOST:
+                    self->isPaused = 1;
+                    break;
+            }
+            break;
+
+        default:
+            break;
+    }
 }

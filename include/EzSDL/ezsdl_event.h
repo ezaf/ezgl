@@ -1,5 +1,5 @@
-/** @file       ezsdl_window.h
- *  @brief      Handle SDL windows and renderers.
+/** @file       ezsdl_event.h
+ *  @brief      A linked list event system.
  *  
  *  <!---------
  *  Copyright (c) 2018 Kirk Lange
@@ -22,8 +22,8 @@
  *  ---------->
  */
 
-#ifndef EZSDL_WINDOW_H
-#define EZSDL_WINDOW_H
+#ifndef EZSDL_EVENT_H
+#define EZSDL_EVENT_H
 
 #ifdef __cplusplus
 extern "C"
@@ -32,40 +32,26 @@ extern "C"
 
 
 
-#include "EzSDL/ezsdl.h"
-#include "EzSDL/ezsdl_event.h"
-
 #include <stdint.h>
 
 
 
-/* TODO: Document Me! */
-typedef struct ezsdl_window
+typedef struct ezsdl_window ezsdl_window;
+
+typedef struct ezsdl_event_node
 {
-    SDL_Window         *window;
-    SDL_Renderer       *renderer;
-    SDL_Event          *event;
-    ezsdl_event_node   *eventHead;
-    SDL_DisplayMode     displayMode;
-    uint8_t             isRunning;
-    uint8_t             isPaused;
+    struct ezsdl_event_node    *prev;
+    struct ezsdl_event_node    *next;
+    void                      (*notify)(ezsdl_window *window);
 }
-ezsdl_window;
+ezsdl_event_node;
 
 
 
-/**
- *  @brief      Create an `ezsdl_window` instance.
- *  @return     A pointer to the created `ezsdl_window` instance.
- *  @details    Some pretty prose here...
- */
-ezsdl_window*   ezsdl_window_new();
-uint8_t         ezsdl_window_del(ezsdl_window **self);
-
-uint8_t         ezsdl_window_eventNodePush(ezsdl_window *self);
-uint8_t         ezsdl_window_eventNotifyAll(ezsdl_window *self);
-uint8_t         ezsdl_window_clear(ezsdl_window *self);
-uint8_t         ezsdl_window_render(ezsdl_window *self);
+uint8_t             ezsdl_event_notifyAll(ezsdl_window *window);
+ezsdl_event_node*   ezsdl_event_addNode(ezsdl_window *window,
+                                        void (*notify)(ezsdl_window*));
+uint8_t             ezsdl_event_removeNode(ezsdl_event_node *node);
 
 
 
@@ -73,4 +59,4 @@ uint8_t         ezsdl_window_render(ezsdl_window *self);
 }
 #endif
 
-#endif /* EZSDL_WINDOW_H */
+#endif /* EZSDL_EVENT_H */
