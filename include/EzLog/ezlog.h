@@ -32,13 +32,21 @@ extern "C"
 
 
 
+#ifndef EZDEBUG_LOG
+#define EZDEBUG_LOG(severity, message, ...) \
+    ezlog(severity, __func__, message, __VA_ARGS__);
+#endif
+
 /* ezlog will only print messages at least as severe as VERBOSITY */
 #define VERBOSITY DEBUG
+
+
 
 typedef enum ezlog_t
 {
     FATAL, VITAL, MAJOR, MINOR, DEBUG
-} ezlog_t;
+}
+ezlog_t;
 
 /* ezlog_t Reference
  * 
