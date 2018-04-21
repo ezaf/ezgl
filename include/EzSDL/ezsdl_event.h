@@ -36,7 +36,10 @@ extern "C"
 
 
 
-typedef struct ezsdl_window ezsdl_window;
+struct ezsdl_window;
+#ifndef ezsdl_window
+#define ezsdl_window struct ezsdl_window
+#endif
 
 typedef struct ezsdl_event_node
 {
@@ -54,6 +57,10 @@ ezsdl_event_node*   ezsdl_event_addNode(ezsdl_window *window,
 uint8_t             ezsdl_event_removeNode(ezsdl_event_node *node);
 
 
+
+#ifdef ezsdl_window
+#undef ezsdl_window
+#endif
 
 #ifdef __cplusplus
 }
