@@ -50,11 +50,15 @@ CC = gcc
 CF = -std=c89 -pedantic -O3 -w
 LF = -lSDL2main -lSDL2 -lSDL2_image
 
-# NECESSARY FOR WINDOWS!!!
+# ALWAYS NECESSARY FOR WINDOWS!!!
 # Outside include and lib directories for `gcc` such as the paths to the SDL2
 # Change the path to match where you have installed the stuff on your machine
-GCC_I_DIRS = D:/org/libsdl/include #-ID:/org/lua/src
-GCC_L_DIRS = D:/org/libsdl/lib #-ID:/org/lua/src
+GCC_I_DIRS_WIN = D:/org/libsdl/include #-ID:/org/lua/src
+GCC_L_DIRS_WIN = D:/org/libsdl/lib #-ID:/org/lua/src
+
+# Needed for Linux if you installed your libraries in your home directory
+GCC_I_DIRS_LIN = #$$HOME/include
+GCC_L_DIRS_LIN = #$$HOME/lib
 
 
 
@@ -101,16 +105,16 @@ ifneq (, $(shell uname -s | grep -E _NT))
 	# -lmingw32 must come before everything else
 	LF_TEMP := $(LF)
 	LF = -lmingw32 $(LF_TEMP)
-	INC += $(foreach DIR,$(GCC_I_DIRS),-I$(DIR))
-	LIB += $(foreach DIR,$(GCC_L_DIRS),-L$(DIR))
+	INC += $(foreach DIR,$(GCC_I_DIRS_WIN),-I$(DIR))
+	LIB += $(foreach DIR,$(GCC_L_DIRS_WIN),-L$(DIR))
 	OPEN = cmd //c start "${@//&/^&}"
 endif
 ifneq (, $(shell uname -s | grep -E Linux))
 	CULT = Linux
 	CF +=
 	LF +=
-	INC +=
-	LIB +=
+	INC += $(foreach DIR,$(GCC_I_DIRS_LIN),-I$(DIR))
+	LIB += $(foreach DIR,$(GCC_L_DIRS_LIN),-L$(DIR))
 	OPEN = xdg-open
 endif
 ifneq (, $(shell uname -s | grep -E Darwin))
