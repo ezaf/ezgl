@@ -37,9 +37,12 @@ void ezdebug_log(ezdebug_log_t type, char *callee, char *message, ...)
         /* Allocate output buffer of necessary size */
         char output[ (strlen(callee)+strlen(message))+8 ];
 
+        char typestr[1];
+        typestr[0] = (char) type;
+
         /* Format it as "[type] (callee) message" */
         strcpy(output, "[");
-        strcat(output, (char) type);
+        strcat(output, typestr);
         strcat(output, "] (");
         strcat(output, callee);
         strcat(output, ") ");
