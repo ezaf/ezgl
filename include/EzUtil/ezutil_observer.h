@@ -1,5 +1,5 @@
-/** @file       ezsdl_event.h
- *  @brief      A linked list event system.
+/** @file       ezutil_observer.h
+ *  @brief      Observer design pattern using a linked list.
  *  
  *  <!---------
  *  Copyright (c) 2018 Kirk Lange
@@ -22,8 +22,8 @@
  *  ---------->
  */
 
-#ifndef EZSDL_EVENT_H
-#define EZSDL_EVENT_H
+#ifndef EZUTIL_OBSERVER_H
+#define EZUTIL_OBSERVER_H
 
 #ifdef __cplusplus
 extern "C"
@@ -36,21 +36,22 @@ extern "C"
 
 
 
-typedef struct ezsdl_event_node
+typedef struct ezutil_observer
 {
-    struct ezsdl_event_node    *prev;
-    struct ezsdl_event_node    *next;
-    void                      (*notify)(struct ezsdl_event_node*);
+    struct ezutil_observer *prev;
+    struct ezutil_observer *next;
+    void (*notify)(void*);
 }
-ezsdl_event_node;
+ezutil_observer;
 
 
 
-uint8_t             ezsdl_event_notifyAllNodes(ezsdl_event_node *head);
-ezsdl_event_node*   ezsdl_event_addNode(ezsdl_event_node *head,
-                                        void (*notify)(ezsdl_event_node*));
-uint8_t             ezsdl_event_removeNode(ezsdl_event_node **node);
-uint8_t             ezsdl_event_removeAllNodes(ezsdl_event_node *head);
+uint8_t             ezutil_observer_notifyAll(ezutil_observer *head,
+                                              void *data);
+ezutil_observer*    ezutil_observer_add(ezutil_observer *head,
+                                        void (*notify)(void*));
+uint8_t             ezutil_observer_remove(ezutil_observer **node);
+uint8_t             ezutil_observer_removeAll(ezutil_observer *head);
 
 
 
@@ -58,4 +59,4 @@ uint8_t             ezsdl_event_removeAllNodes(ezsdl_event_node *head);
 }
 #endif
 
-#endif /* EZSDL_EVENT_H */
+#endif /* EZUTIL_OBSERVER_H */

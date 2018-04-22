@@ -1,5 +1,5 @@
 /** @file       ezsdl_window.h
- *  @brief      Handle SDL windows and renderers.
+ *  @brief      Handle SDL windows, renderers, and events.
  *  
  *  <!---------
  *  Copyright (c) 2018 Kirk Lange
@@ -33,22 +33,23 @@ extern "C"
 
 
 #include "EzSDL/ezsdl.h"
-#include "EzSDL/ezsdl_event.h"
 
 #include <stdint.h>
+
+struct ezutil_observer;
 
 
 
 /* TODO: Document Me! */
 typedef struct ezsdl_window
 {
-    SDL_Window         *window;
-    SDL_Renderer       *renderer;
-    SDL_Event          *event;
-    ezsdl_event_node   *eventHead;
-    SDL_DisplayMode     displayMode;
-    uint8_t             isRunning;
-    uint8_t             isPaused;
+    SDL_Window             *window;
+    SDL_Renderer           *renderer;
+    SDL_Event              *event;
+    struct ezutil_observer *eventObsHead;
+    SDL_DisplayMode         displayMode;
+    uint8_t                 isRunning;
+    uint8_t                 isPaused;
 }
 ezsdl_window;
 
@@ -62,8 +63,7 @@ ezsdl_window;
 ezsdl_window*   ezsdl_window_new();
 uint8_t         ezsdl_window_del(ezsdl_window **self);
 
-uint8_t         ezsdl_window_eventNodePush(ezsdl_window *self);
-uint8_t         ezsdl_window_eventNotifyAll(ezsdl_window *self);
+uint8_t         ezsdl_window_pollEvent(ezsdl_window *self);
 uint8_t         ezsdl_window_clear(ezsdl_window *self);
 uint8_t         ezsdl_window_render(ezsdl_window *self);
 
