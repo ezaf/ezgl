@@ -22,6 +22,7 @@
  */
 
 #include "EzSDL/ezsdl_window.h"
+#include "EzUtil/ezutil_observer.h"
 #include "EzUtil/ezutil_log.h"
 
 #include <SDL2/SDL_image.h>
@@ -55,24 +56,24 @@ ezsdl_window* ezsdl_window_new()
     SDL_SetRenderDrawColor(self->renderer, 0x00, 0x00, 0xFF, 0xFF);
 
     self->event = (SDL_Event*) malloc(sizeof(SDL_Event));
-    self->eventHead = (ezsdl_event_node*) malloc(sizeof(ezsdl_event_node));
-    self->eventHead->prev = 0;
-    self->eventHead->next = 0;
-    self->eventHead->notify = &ezsdl_window_event;
+    self->eventObsHead = (ezutil_observer*) malloc(sizeof(ezutil_observer));
+    self->eventObsHead->prev = 0;
+    self->eventObsHead->next = 0;
+    self->eventObsHead->notify = &ezsdl_window_event;
     self->isRunning = 1;
     self->isPaused = 0;
 
 
     if (error)
     {
-        ezutil_log_log(FATAL, "ezsdl_window_new", "Failed to create "
+        ezutil_log(FATAL, "ezsdl_window_new", "Failed to create "
                 "ezsdl_window instance.");
         free(self);
         self = 0;
     }
     else
     {
-        ezutil_log_log(DEBUG, "ezsdl_window_new", "Successfully created "
+        ezutil_log(DEBUG, "ezsdl_window_new", "Successfully created "
                 "new ezsdl_window instance.");
     }
 
@@ -91,7 +92,7 @@ uint8_t ezsdl_window_del(ezsdl_window **self)
         SDL_Quit();
 
         free((*self)->event);
-        ezsdl_event_removeAllNodes((*self)->window);
+        ezutil_observer_removeAll((*self)->eventObsHead);
         free(*self);
         *self = 0;
 
@@ -99,11 +100,32 @@ uint8_t ezsdl_window_del(ezsdl_window **self)
     }
     else
     {
-        ezutil_log_log(VITAL, "ezsdl_window_del", "Skipped deletion of "
+        ezutil_log(VITAL, "ezsdl_window_del", "Skipped deletion of "
                 "ezsdl_window instance. Cannot free a null pointer.");
         return 0;
     }
 
+}
+
+
+
+uint8_t ezsdl_window_pollEvent(ezsdl_window *self)
+{
+    if (self)
+    {
+        while (SDL_PollEvent(self->event))
+        {
+            ezutil_observer_notifyAll(self->eventObsHead, self);
+        }
+
+        return 1;
+    }
+    else
+    {
+        ezutil_log(MAJOR, __func__, "Skipped event polling. Reference to "
+                "self is null.");
+        return 0;
+    }
 }
 
 

@@ -26,11 +26,12 @@
  */
 
 #include "EzSDL/ezsdl_window.h"
+#include "EzUtil/ezutil_observer.h"
 
 #include <stdio.h>
 
-void sillyEventA(ezsdl_window *window);
-void sillyEventB(ezsdl_window *window);
+void sillyEventA(ezsdl_window *data);
+void sillyEventB(ezsdl_window *data);
 
 
 
@@ -39,12 +40,12 @@ int main(int argc, char *argv[])
     printf("Hello world, I am EzSDL!\n");
 
     ezsdl_window *ezw = ezsdl_window_new();
-    ezsdl_event_addNode(ezw, &sillyEventA);
-    ezsdl_event_addNode(ezw, &sillyEventB);
+    ezutil_observer_add(ezw->eventObsHead, &sillyEventA);
+    ezutil_observer_add(ezw->eventObsHead, &sillyEventB);
 
     while (ezw->isRunning)
     {
-        ezsdl_event_notifyAllNodes(ezw);
+        ezsdl_window_pollEvent(ezw);
         ezsdl_window_clear(ezw);
         /* Draw the game objects here. Something like:
          * player_draw(player, ezw); */
@@ -58,9 +59,9 @@ int main(int argc, char *argv[])
 
 
 
-void sillyEventA(ezsdl_window *window)
+void sillyEventA(ezsdl_window *data)
 {
-    SDL_Event e = *(window->event);
+    SDL_Event e = *(data->event);
 
     switch (e.type)
     {
@@ -77,9 +78,9 @@ void sillyEventA(ezsdl_window *window)
 
 
 
-void sillyEventB(ezsdl_window *window)
+void sillyEventB(ezsdl_window *data)
 {
-    SDL_Event e = *(window->event);
+    SDL_Event e = *(data->event);
     char wasd = '?';
 
     switch (e.type)

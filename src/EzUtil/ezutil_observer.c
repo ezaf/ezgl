@@ -1,4 +1,4 @@
-/*  ezsdl_event.c
+/*  ezutil_observer.c
  *
  *  <!---------
  *  Copyright (c) 2018 Kirk Lange
@@ -21,30 +21,24 @@
  *  ---------->
  */
 
-#include "EzSDL/ezsdl_event.h"
-#include "EzSDL/ezsdl_window.h"
+#include "EzUtil/ezutil_observer.h"
 #include "EzUtil/ezutil_log.h"
 
 
 
-uint8_t ezsdl_event_node_isNull(ezsdl_event_node *head, const char *caller)
+uint8_t ezutil_observer_isNull(ezutil_observer *subject, const char *caller);
 
 
 
-uint8_t ezsdl_event_notifyAllNodes(ezsdl_event_node *head)
+uint8_t ezutil_observer_notifyAll(ezutil_observer *head, void *data)
 {
-    uint8_t error = ezsdl_event_node_isNull(head, __func__);
+    uint8_t error = ezutil_observer_isNull(head, __func__);
 
     if (!error)
     {
-        while (SDL_PollEvent(window->event))
-        {
-            ezsdl_event_node *iter = window->eventHead;
-
-            /* Notify everybody on the linked list. */
-            do iter->notify(window);
-            while (iter = iter->next);
-        }
+        /* Notify everybody on the linked list. */
+        do head->notify(data);
+        while (head = head->next);
     }
     
     return !error;
@@ -52,11 +46,11 @@ uint8_t ezsdl_event_notifyAllNodes(ezsdl_event_node *head)
 
 
 
-ezsdl_event_node* ezsdl_event_addNode(ezsdl_event_node *head,
-        void (*notify)(ezsdl_event_node*))
+ezutil_observer* ezutil_observer_add(ezutil_observer *head,
+        void (*notify)(void*))
 {
-    uint8_t error = ezsdl_event_node_isNull(head, __func__);
-    ezsdl_event_node *self = 0;
+    uint8_t error = ezutil_observer_isNull(head, __func__);
+    ezutil_observer *self = 0;
 
     if (error |= !notify)
     {
@@ -65,13 +59,11 @@ ezsdl_event_node* ezsdl_event_addNode(ezsdl_event_node *head,
 
     if (!error)
     {
-        self = (ezsdl_event_node*) malloc(sizeof(ezsdl_event_node));
-        self->prev = 0;
-        self->next = window->eventHead;
+        self = (ezutil_observer*) malloc(sizeof(ezutil_observer));
+        self->prev = head;
+        self->next = head->next;
         self->notify = notify;
-
-        window->eventHead->prev = self;
-        window->eventHead = self;
+        head->next = self;
     }
 
     return self;
@@ -79,9 +71,9 @@ ezsdl_event_node* ezsdl_event_addNode(ezsdl_event_node *head,
 
 
 
-uint8_t ezsdl_event_removeNode(ezsdl_event_node **node)
+uint8_t ezutil_observer_remove(ezutil_observer **node)
 {
-    uint8_t error = ezsdl_event_node_isNull(*node, __func__);
+    uint8_t error = ezutil_observer_isNull(*node, __func__);
 
     if (!error)
     {
@@ -95,16 +87,16 @@ uint8_t ezsdl_event_removeNode(ezsdl_event_node **node)
 
 
 
-uint8_t ezsdl_event_removeAllNodes(ezsdl_event_node *head)
+uint8_t ezutil_observer_removeAll(ezutil_observer *head)
 {
-    uint8_t error = ezsdl_event_node_isNull(head, __func__);
+    uint8_t error = ezutil_observer_isNull(head, __func__);
 
     if (!error)
     {
-        ezsdl_event_node *iter = head;
-        ezsdl_event_node *next = 0;
+        ezutil_observer *iter = head;
+        ezutil_observer *next = 0;
 
-        /* We know eventHead is not null thanks to earlier error check. */
+        /* We know head is not null thanks to earlier error check. */
         do
         {
             next = iter->next;
@@ -118,13 +110,13 @@ uint8_t ezsdl_event_removeAllNodes(ezsdl_event_node *head)
 
 
 
-uint8_t ezsdl_event_node_isNull(ezsdl_event_node *node, const char *caller)
+uint8_t ezutil_observer_isNull(ezutil_observer *node, const char *caller)
 {
     uint8_t error = 0;
 
     if (error |= !node)
     {
-        ezutil_log(MAJOR, caller, "Node paramter is null.");
+        ezutil_log(MAJOR, caller, "Observer node paramter is null.");
     }
 
     return error;
