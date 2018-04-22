@@ -1,6 +1,5 @@
-/** @file       ezdebug.h
- *  @brief      Helpful tools for debugging such as an assert macro and 
- *              prioritized log messages.
+/** @file       ezutil_log.h
+ *  @brief      Prioritize your log messages.
  *  
  *  <!---------
  *  Copyright (c) 2018 Kirk Lange
@@ -35,37 +34,38 @@ extern "C"
 
 
 
-/* TODO: Placeholder. Replace with OOP-like file I/O system? */
-#ifndef EZDEBUG_OUT
-#define EZDEBUG_OUT stdout
-#endif
-
-/* Probably won't use this, but just in case, I'll keep it in a comment.
-#ifndef EZDEBUG_LOG
-#define EZDEBUG_LOG(severity, message, ...) \
-    ezdebug_log(severity, __func__, message, __VA_ARGS__);
-#endif
-*/
-
-#ifndef ezdebug_assert
-#define ezdebug_assert(expA, op, expB) \
+/* TODO: Move this to its own *.h file `ezutil_assert` */
+#ifndef ezutil_assert
+#define ezutil_assert(expA, op, expB) \
 { \
     if (!( expA op expB )) \
         fprintf(stdout, "FAIL:   !( " #expA " " #op " " #expB " )\n"); \
 }
 #endif /* ezdebug_assert */
 
+/* TODO: Placeholder. Replace with OOP-like file I/O system? */
+#ifndef EZUTIL_LOG_OUT
+#define EZUTIL_LOG_OUT stdout
+#endif
+
+/*
+#ifndef EZUTIL_LOG
+#define EZUTIL_LOG(severity, message, ...) \
+    ezutil_log(severity, __func__, message, __VA_ARGS__);
+#endif
+*/
+
 /* ezdebug_log will only print messages at least as severe as this */
-#ifndef EZDEBUG_VERBOSITY
-#define EZDEBUG_VERBOSITY DEBUG
+#ifndef EZUTIL_LOG_VERBOSITY
+#define EZUTIL_LOG_VERBOSITY DEBUG
 #endif
 
 
 
-typedef enum ezdebug_log_t
+typedef enum ezutil_log_t
 {
     FATAL='X', VITAL='!', MAJOR='>', MINOR='<', DEBUG='-'
-} ezdebug_log_t;
+} ezutil_log_t;
 
 /* ezlog_t Reference
  * 
@@ -93,7 +93,7 @@ typedef enum ezdebug_log_t
 
 
 
-void            ezdebug_log(ezdebug_log_t pType, char *pnCallee,
+void            ezutil_log(ezutil_log_t pType, char *pnCallee,
                             char *pnMessage, ...);
 
 
