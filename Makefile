@@ -28,7 +28,7 @@
 SRC_FILES = main.c
 
 # Directory within src/ for which all *.c files will be added to the build
-SRC_SUBDIRS = EzSDL EzDebug
+SRC_SUBDIRS = EzUtil EzSDL
 
 # All submodule source files within ext/
 EXT_SRC_FILES =
@@ -86,9 +86,9 @@ SRC_DIR = src
 
 
 # Add source directory to source file names
-OBJS = $(foreach OBJ,$(SRC_FILES),$(SRC_DIR)/$(OBJ)) \
+OBJS = $(foreach OBJ,$(EXT_SRC_FILES),$(EXT_DIR)/$(OBJ)) \
 	   $(foreach DIR,$(SRC_SUBDIRS),$(wildcard $(SRC_DIR)/$(DIR)/*.c)) \
-	   $(foreach OBJ,$(EXT_SRC_FILES),$(EXT_DIR)/$(OBJ))
+	   $(foreach OBJ,$(SRC_FILES),$(SRC_DIR)/$(OBJ))
 
 # Include and library flags
 INC = -I$(INC_DIR) $(foreach DIR,$(EXT_INC_DIRS),-I$(EXT_DIR)/$(DIR))

@@ -1,4 +1,4 @@
-/*  ezdebug.c
+/*  ezutil_log.c
  *
  *  <!---------
  *  Copyright (c) 2018 Kirk Lange
@@ -21,7 +21,7 @@
  *  ---------->
  */
 
-#include "EzDebug/ezdebug.h"
+#include "EzUtil/ezutil_log.h"
 
 #include <stdarg.h>
 #include <stdint.h>
@@ -30,9 +30,10 @@
 
 
 
-void ezdebug_log(ezdebug_log_t type, char *callee, char *message, ...)
+void ezutil_log(ezutil_log_t type,
+        char *callee, char *message, ...)
 {
-    if (EZDEBUG_VERBOSITY >= type)
+    if (EZUTIL_LOG_VERBOSITY >= type)
     {
         /* Allocate output buffer of necessary size */
         char output[ (strlen(callee)+strlen(message))+8 ];
@@ -52,6 +53,6 @@ void ezdebug_log(ezdebug_log_t type, char *callee, char *message, ...)
         /* Pass on any printf args */
         va_list args;
         va_start(args, message);
-        vfprintf(EZDEBUG_OUT, output, args);
+        vfprintf(EZUTIL_LOG_OUT, output, args);
     }
 }
