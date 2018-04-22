@@ -27,13 +27,13 @@
 
 
 
-uint8_t error_check_window_ptr(ezsdl_window *window, const char *caller);
+uint8_t ezsdl_window_isNull(ezsdl_window *window, const char *caller);
 
 
 
-uint8_t ezsdl_event_notifyAll(ezsdl_window *window)
+uint8_t ezsdl_event_notifyAllNodes(ezsdl_window *window)
 {
-    uint8_t error = error_check_window_ptr(window, __func__);
+    uint8_t error = ezsdl_window_isNull(window, __func__);
 
     if (!error)
     {
@@ -55,7 +55,7 @@ uint8_t ezsdl_event_notifyAll(ezsdl_window *window)
 ezsdl_event_node* ezsdl_event_addNode(ezsdl_window *window,
         void (*notify)(ezsdl_window*))
 {
-    uint8_t error = error_check_window_ptr(window, __func__);
+    uint8_t error = ezsdl_window_isNull(window, __func__);
     ezsdl_event_node *self = 0;
 
     if (error |= !notify)
@@ -79,13 +79,14 @@ ezsdl_event_node* ezsdl_event_addNode(ezsdl_window *window,
 
 
 
-uint8_t ezsdl_event_removeNode(ezsdl_event_node *node)
+uint8_t ezsdl_event_removeNode(ezsdl_event_node **node)
 {
-    if (node)
+    if (*node)
     {
-        if (node->prev) node->prev->next = node->next;
-        if (node->next) node->next->prev = node->prev;
-        free(node);
+        if ((*node)->prev) (*node)->prev->next = (*node)->next;
+        if ((*node)->next) (*node)->next->prev = (*node)->prev;
+        free(*node);
+
         return 1;
     }
     else
@@ -97,7 +98,30 @@ uint8_t ezsdl_event_removeNode(ezsdl_event_node *node)
 
 
 
-uint8_t error_check_window_ptr(ezsdl_window *window, const char *caller)
+uint8_t ezsdl_event_removeAllNodes(ezsdl_window *window)
+{
+    uint8_t error = ezsdl_window_isNull(window, __func__);
+
+    if (!error)
+    {
+        ezsdl_event_node *iter = window->eventHead;
+        ezsdl_event_node *next = 0;
+
+        /* We know eventHead is not null thanks to earlier error check. */
+        do
+        {
+            next = iter->next;
+            free(iter);
+        }
+        while (iter = next);
+    }
+
+    return !error;
+}
+
+
+
+uint8_t ezsdl_window_isNull(ezsdl_window *window, const char *caller)
 {
     uint8_t error = 0;
 

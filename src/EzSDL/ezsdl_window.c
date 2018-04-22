@@ -91,6 +91,7 @@ uint8_t ezsdl_window_del(ezsdl_window **self)
         SDL_Quit();
 
         free((*self)->event);
+        ezsdl_event_removeAllNodes((*self)->window);
         free(*self);
         *self = 0;
 

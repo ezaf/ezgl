@@ -51,10 +51,11 @@ ezsdl_event_node;
 
 
 
-uint8_t             ezsdl_event_notifyAll(ezsdl_window *window);
+uint8_t             ezsdl_event_notifyAllNodes(ezsdl_window *window);
 ezsdl_event_node*   ezsdl_event_addNode(ezsdl_window *window,
                                         void (*notify)(ezsdl_window*));
-uint8_t             ezsdl_event_removeNode(ezsdl_event_node *node);
+uint8_t             ezsdl_event_removeNode(ezsdl_event_node **node);
+uint8_t             ezsdl_event_removeAllNodes(ezsdl_window *window);
 
 
 
