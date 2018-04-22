@@ -29,21 +29,24 @@
 
 #include <stdio.h>
 
-void sillyEvent(ezsdl_window *window);
+void sillyEventA(ezsdl_window *window);
+void sillyEventB(ezsdl_window *window);
 
 
 
 int main(int argc, char *argv[])
 {
-    printf("Hello world, I am ezsdl!\n");
+    printf("Hello world, I am EzSDL!\n");
 
     ezsdl_window *ezw = ezsdl_window_new();
-    ezsdl_event_addNode(ezw, &sillyEvent);
+    ezsdl_event_addNode(ezw, &sillyEventA);
+    ezsdl_event_addNode(ezw, &sillyEventB);
+
     while (ezw->isRunning)
     {
-        ezsdl_event_notifyAll(ezw);
+        ezsdl_event_notifyAllNodes(ezw);
         ezsdl_window_clear(ezw);
-        /* Draw the game objects. Something like:
+        /* Draw the game objects here. Something like:
          * player_draw(player, ezw); */
 
         ezsdl_window_render(ezw);
@@ -55,9 +58,8 @@ int main(int argc, char *argv[])
 
 
 
-void sillyEvent(ezsdl_window *window)
+void sillyEventA(ezsdl_window *window)
 {
-    /* So that I don't have to keep typing this darn function call */
     SDL_Event e = *(window->event);
 
     switch (e.type)
@@ -69,6 +71,37 @@ void sillyEvent(ezsdl_window *window)
                     printf("You pressed space bar!\n");
                     break;
             }
+            break;
+    }
+}
+
+
+
+void sillyEventB(ezsdl_window *window)
+{
+    SDL_Event e = *(window->event);
+    char wasd = '?';
+
+    switch (e.type)
+    {
+        case SDL_KEYDOWN:
+            switch (e.key.keysym.scancode)
+            {
+                case SDL_SCANCODE_W:
+                    wasd = 'W';
+                    break;
+                case SDL_SCANCODE_A:
+                    wasd = 'A';
+                    break;
+                case SDL_SCANCODE_S:
+                    wasd = 'S';
+                    break;
+                case SDL_SCANCODE_D:
+                    wasd = 'D';
+                    break;
+            }
+
+            if (wasd != '?') printf("You pressed %c!\n", wasd);
             break;
     }
 }
