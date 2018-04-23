@@ -4,4 +4,9 @@ O="${1}"
 F="${2}*"
 A=`find ./src -name $F`
 B=`find ./include -name $F`
-vim -$O $A $B
+if [ "$O" == "tab" ]; then
+    O="-p";
+elif [ "$O" == "vs" ]; then
+    O="-O";
+fi
+vim $O $A $B
