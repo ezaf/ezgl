@@ -66,15 +66,14 @@ ezsdl_window* ezsdl_window_new()
 
     if (error)
     {
-        ezutil_log(FATAL, "ezsdl_window_new", "Failed to create "
-                "ezsdl_window instance.");
+        ezutil_log(FATAL, __func__, "Failed to create ezsdl_window instance.");
         free(self);
         self = 0;
     }
     else
     {
-        ezutil_log(DEBUG, "ezsdl_window_new", "Successfully created "
-                "new ezsdl_window instance.");
+        ezutil_log(DEBUG, __func__, "Successfully created new ezsdl_window "
+                "instance.");
     }
 
     return self;
@@ -100,8 +99,8 @@ uint8_t ezsdl_window_del(ezsdl_window **self)
     }
     else
     {
-        ezutil_log(VITAL, "ezsdl_window_del", "Skipped deletion of "
-                "ezsdl_window instance. Cannot free a null pointer.");
+        ezutil_log(VITAL, __func__, "Skipped deletion of ezsdl_window "
+                "instance. Cannot free a null pointer.");
         return 0;
     }
 
