@@ -24,19 +24,24 @@
 ##############################  Standard Options  #############################
 ###############################################################################
 
-# Source files within src/ to be added to the build
-SRC_FILES = main.c
+# Directory within examples/ of the example project that you want to build
+MPL_SUBDIR = hello
 
 # Directory within src/ for which all *.c files will be added to the build
 SRC_SUBDIRS = EzUtil EzSDL
 
-# All submodule source files within ext/
-EXT_SRC_FILES =
-
-# All submodule include directories within ext/
+# Needed submodule include directories within ext/
 EXT_INC_DIRS =
 
-# Name for the executable file created in build/ (file extension not necessary)
+# Needed submodule source directories within ext/
+EXT_SRC_DIRS =
+
+# If the submodule has its test source files in the same directory as its
+#   actual API source files (facepalm), then you may want to manually specify
+#   individual source files here
+EXT_SRC_FILES =
+
+# Name for the build subdirectory and executable (file extension not necessary)
 OUT = debug
 
 
@@ -66,29 +71,35 @@ GCC_L_DIRS_LIN = #$$HOME/lib
 ##############################  Advanced Options  #############################
 ###############################################################################
 
+# Root directory
+ROOT = .
+
 # Binaries
-BIN_DIR = bin
+BIN_DIR = $(ROOT)/bin
 # Build
-BLD_DIR = build
+BLD_DIR = $(ROOT)/build
 # Documentation
-DOC_DIR = docs
+DOC_DIR = $(ROOT)/docs
 # External (git submodule)
-EXT_DIR = ext
+EXT_DIR = $(ROOT)/ext
 # Include
-INC_DIR = include
+INC_DIR = $(ROOT)/include
 # Libraries
-LIB_DIR = lib
+LIB_DIR = $(ROOT)/lib
+# Examples
+MPL_DIR = $(ROOT)/examples
 # Resources (config, textures, etc)
-RES_DIR = res
+RES_DIR = $(ROOT)/res
 # Source
-SRC_DIR = src
+SRC_DIR = $(ROOT)/src
 
 
 
 # Add source directory to source file names
 OBJS = $(foreach OBJ,$(EXT_SRC_FILES),$(EXT_DIR)/$(OBJ)) \
+	   $(foreach DIR,$(EXT_SUBDIRS),$(wildcard $(EXT_DIR)/$(DIR)/*.c)) \
 	   $(foreach DIR,$(SRC_SUBDIRS),$(wildcard $(SRC_DIR)/$(DIR)/*.c)) \
-	   $(foreach OBJ,$(SRC_FILES),$(SRC_DIR)/$(OBJ))
+	   $(foreach DIR,$(MPL_SUBDIR),$(wildcard $(MPL_DIR)/$(DIR)/*.c)) \
 
 # Include and library flags
 INC = -I$(INC_DIR) $(foreach DIR,$(EXT_INC_DIRS),-I$(EXT_DIR)/$(DIR))
@@ -101,7 +112,7 @@ LIB =
 ifneq (, $(shell uname -s | grep -E _NT))
 	CULT = windows
 	# Uncomment to remove console window
-	CF += #-Wl,-subsystem,windows
+	#CF += -Wl,-subsystem,windows
 	# -lmingw32 must come before everything else
 	LF_TEMP := $(LF)
 	LF = -lmingw32 $(LF_TEMP)
@@ -110,7 +121,7 @@ ifneq (, $(shell uname -s | grep -E _NT))
 	OPEN = cmd //c start "${@//&/^&}"
 endif
 ifneq (, $(shell uname -s | grep -E Linux))
-	CULT = Linux
+	CULT = linux
 	CF +=
 	LF +=
 	INC += $(foreach DIR,$(GCC_I_DIRS_LIN),-I$(DIR))
@@ -175,8 +186,8 @@ $(BLD_DIR) :
 	mkdir -p $(BIN_DIR)
 	mkdir -p $(BLD_DIR)
 	mkdir -p $(RES_DIR)
-	cp -R $(BIN_DIR)/. $(BLD_DIR)
-	cp -R $(RES_DIR)/. $(BLD_DIR)
+	cp -R $(BIN_DIR)/. $(BLD_DIR)/$(OUT)/
+	cp -R $(RES_DIR) $(BLD_DIR)/$(OUT)/
 	$(MAKE) $(EXT_DIR)
 	$(MAKE) compile
 
@@ -185,11 +196,11 @@ $(EXT_DIR) :
 	git submodule update
 
 compile : $(OBJS)
-	$(CC) $(OBJS) $(INC) $(LIB) $(CF) $(LF) -o $(BLD_DIR)/$(OUT)
+	$(CC) $(OBJS) $(INC) $(LIB) $(CF) $(LF) -o $(BLD_DIR)/$(OUT)/$(OUT)
 
 run :
 	@echo
-	./$(BLD_DIR)/$(OUT)
+	$(BLD_DIR)/$(OUT)/$(OUT)
 	@echo
 
 clean :
