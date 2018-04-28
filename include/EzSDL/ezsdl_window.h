@@ -54,6 +54,7 @@ typedef struct ezsdl_window
     struct ezutil_observer *headDraw;
     uint8_t                 isRunning;
     uint8_t                 isPaused;
+    uint32_t                prevFrame;
 }
 ezsdl_window;
 

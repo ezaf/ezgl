@@ -21,12 +21,13 @@
  *  ---------->
  */
 
-#define PADDLE_VELOCITY 10
+#define PADDLE_VELOCITY 2.0
 
 #include "EzSDL/ezsdl_window.h"
 #include "EzUtil/ezutil_observer.h"
 #include "pong_paddle.h"
 
+#include <math.h>
 #include <stdio.h>
 
 
@@ -36,9 +37,10 @@ pong_paddle* pong_paddle_new(uint16_t keyUp, uint16_t keyDown,
         SDL_Color *color, ezsdl_window *window)
 {
     pong_paddle *self = (pong_paddle*) malloc(sizeof(pong_paddle));
-    self->x = self->y = self->dy = self->score = 0;
+    self->x = self->y = self->dy = 0.0;
     self->w = window->displayMode->w * 0.01;
     self->h = window->displayMode->h * 0.1;
+    self->score = 0;
     self->keyUp = keyUp;
     self->keyDown = keyDown;
     self->color = color;
@@ -89,10 +91,12 @@ uint8_t pong_paddle_update(pong_paddle *self)
 {
     if (self)
     {
-        self->y += self->dy;
+        float delta = (float) (SDL_GetTicks() - self->window->prevFrame);
+
+        self->y += self->dy * delta;
 
         if (self->y < 0) self->y = 0;
-        else if (self->y + self->h > self->window->displayMode->h)
+        else if (self->y > self->window->displayMode->h - self->h)
             self->y = self->window->displayMode->h - self->h;
 
         snprintf(self->scoreStr, 8, "%i", self->score);
@@ -110,8 +114,8 @@ uint8_t pong_paddle_draw(pong_paddle *self)
 {
     if (self)
     {
-        ezsdl_window_drawRect(self->window, self->color, self->x, self->y,
-                self->w, self->h);
+        ezsdl_window_drawRect(self->window, self->color,
+                self->x, self->y, self->w, self->h);
         return 1;
     }
     else

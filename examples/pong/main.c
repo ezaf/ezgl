@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
     while (ezw->isRunning)
     {
         ezsdl_window_pollEvent(ezw);
-        if (!ezw->isPaused) ezsdl_window_updateAll(ezw);
+        ezsdl_window_updateAll(ezw);
         ezsdl_window_clear(ezw);
         
         ezsdl_window_drawText(ezw, paddleLeft->scoreStr,

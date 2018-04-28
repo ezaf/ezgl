@@ -69,6 +69,7 @@ ezsdl_window* ezsdl_window_new()
 
     self->isRunning = 1;
     self->isPaused = 0;
+    self->prevFrame = 0;
 
 
     if (error)
@@ -148,7 +149,9 @@ uint8_t ezsdl_window_updateAll(ezsdl_window *self)
 {
     if (self)
     {
-        ezutil_observer_notifyAll(self->headUpdate);
+        if (self->prevFrame == 0) self->prevFrame = SDL_GetTicks();
+        if (!self->isPaused) ezutil_observer_notifyAll(self->headUpdate);
+        self->prevFrame = SDL_GetTicks();
         return 1;
     }
     else
