@@ -43,7 +43,8 @@ typedef struct SDL_Color SDL_Color;
 
 typedef struct pong_paddle
 {
-    int16_t         x, y, w, h, dy;
+    float           x, y, dy;
+    uint16_t        w, h;
     uint16_t        score;
     char            scoreStr[8];
     int16_t         scoreX, scoreY;
