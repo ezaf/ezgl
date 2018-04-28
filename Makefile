@@ -25,7 +25,7 @@
 ###############################################################################
 
 # Directory within examples/ of the example project that you want to build
-MPL_SUBDIR = hello
+MPL_SUBDIR = pong
 
 # Directory within src/ for which all *.c files will be added to the build
 SRC_SUBDIRS = EzUtil EzSDL
@@ -42,7 +42,7 @@ EXT_SRC_DIRS =
 EXT_SRC_FILES =
 
 # Name for the build subdirectory and executable (file extension not necessary)
-OUT = debug
+OUT = $(MPL_SUBDIR)
 
 
 
@@ -53,7 +53,7 @@ OUT = debug
 # Compiler and linker settings
 CC = gcc
 CF = -std=c89 -pedantic -O3 -w
-LF = -lSDL2main -lSDL2 -lSDL2_image
+LF = -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf
 
 # ALWAYS NECESSARY FOR WINDOWS!!!
 # Outside include and lib directories for `gcc` such as the paths to the SDL2
