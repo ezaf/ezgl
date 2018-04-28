@@ -1,4 +1,4 @@
-/** @file       main.cpp
+/** @file       main.c
  *  @brief      Example main function for EzSDL.
  *  @details    None of this code is part of the engine itself. Instead, treat
  *              this as an example or template for basing your future projects
@@ -27,82 +27,46 @@
 
 #include "EzSDL/ezsdl_window.h"
 #include "EzUtil/ezutil_observer.h"
+#include "pong_paddle.h"
 
 #include <stdio.h>
-
-void sillyEventA(ezsdl_window *data);
-void sillyEventB(ezsdl_window *data);
 
 
 
 int main(int argc, char *argv[])
 {
-    printf("Hello world, I am EzSDL!\n");
-
     ezsdl_window *ezw = ezsdl_window_new();
-    ezutil_observer_add(ezw->eventObsHead, &sillyEventA);
-    ezutil_observer_add(ezw->eventObsHead, &sillyEventB);
+
+    SDL_Color white = {255,255,255};
+
+    pong_paddle *paddleLeft = pong_paddle_new(
+            SDL_SCANCODE_W, SDL_SCANCODE_S, &white, ezw);
+    
+    pong_paddle *paddleRight = pong_paddle_new(
+            SDL_SCANCODE_I, SDL_SCANCODE_K, &white, ezw);
+
+    paddleLeft->x = ezw->displayMode->w * 0.04;
+    paddleRight->x = ezw->displayMode->w - paddleLeft->x - paddleRight->w;
+
+    uint16_t leftScoreX = ezw->displayMode->w * 0.4,
+             rightScoreX = ezw->displayMode->w * 0.55,
+             allScoreY = ezw->displayMode->h * 0.01;
 
     while (ezw->isRunning)
     {
         ezsdl_window_pollEvent(ezw);
+        if (!ezw->isPaused) ezsdl_window_updateAll(ezw);
         ezsdl_window_clear(ezw);
-        /* Draw the game objects here. Something like:
-         * player_draw(player, ezw); */
+        
+        ezsdl_window_drawText(ezw, paddleLeft->scoreStr,
+                &white, leftScoreX, allScoreY);
+        ezsdl_window_drawText(ezw, paddleRight->scoreStr,
+                &white, rightScoreX, allScoreY);
 
+        ezsdl_window_drawAll(ezw);
         ezsdl_window_render(ezw);
     }
+
     ezsdl_window_del(&ezw);
-
     return 0;
-}
-
-
-
-void sillyEventA(ezsdl_window *data)
-{
-    SDL_Event e = *(data->event);
-
-    switch (e.type)
-    {
-        case SDL_KEYDOWN:
-            switch (e.key.keysym.scancode)
-            {
-                case SDL_SCANCODE_SPACE:
-                    printf("You pressed space bar!\n");
-                    break;
-            }
-            break;
-    }
-}
-
-
-
-void sillyEventB(ezsdl_window *data)
-{
-    SDL_Event e = *(data->event);
-    char wasd = '?';
-
-    switch (e.type)
-    {
-        case SDL_KEYDOWN:
-            switch (e.key.keysym.scancode)
-            {
-                case SDL_SCANCODE_W:
-                    wasd = 'W';
-                    break;
-                case SDL_SCANCODE_A:
-                    wasd = 'A';
-                    break;
-                case SDL_SCANCODE_S:
-                    wasd = 'S';
-                    break;
-                case SDL_SCANCODE_D:
-                    wasd = 'D';
-                    break;
-            }
-
-            if (wasd != '?') printf("You pressed %c!\n", wasd);
-            break;
-    }
 }
