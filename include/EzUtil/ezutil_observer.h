@@ -38,20 +38,22 @@ extern "C"
 
 typedef struct ezutil_observer
 {
-    struct ezutil_observer *prev;
-    struct ezutil_observer *next;
-    void (*notify)(void*);
+    struct ezutil_observer     *prev;
+    struct ezutil_observer     *next;
+    void                      (*notify)(void*);
+    void                       *data;
 }
 ezutil_observer;
 
 
 
-uint8_t             ezutil_observer_notifyAll(ezutil_observer *head,
-                                              void *data);
+ezutil_observer*    ezutil_observer_new();
+uint8_t             ezutil_observer_del(ezutil_observer **head);
+
+uint8_t             ezutil_observer_notifyAll(ezutil_observer *head);
 ezutil_observer*    ezutil_observer_add(ezutil_observer *head,
-                                        void (*notify)(void*));
+                                        void (*notify)(void*), void *data);
 uint8_t             ezutil_observer_remove(ezutil_observer **node);
-uint8_t             ezutil_observer_removeAll(ezutil_observer *head);
 
 
 

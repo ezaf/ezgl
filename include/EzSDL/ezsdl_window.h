@@ -33,6 +33,7 @@ extern "C"
 
 
 #include "EzSDL/ezsdl.h"
+#include <SDL2/SDL_ttf.h>
 
 #include <stdint.h>
 
@@ -44,10 +45,13 @@ struct ezutil_observer;
 typedef struct ezsdl_window
 {
     SDL_Window             *window;
+    SDL_DisplayMode        *displayMode;
     SDL_Renderer           *renderer;
+    TTF_Font               *font;
     SDL_Event              *event;
-    struct ezutil_observer *eventObsHead;
-    SDL_DisplayMode         displayMode;
+    struct ezutil_observer *headEvent;
+    struct ezutil_observer *headUpdate;
+    struct ezutil_observer *headDraw;
     uint8_t                 isRunning;
     uint8_t                 isPaused;
 }
@@ -64,8 +68,16 @@ ezsdl_window*   ezsdl_window_new();
 uint8_t         ezsdl_window_del(ezsdl_window **self);
 
 uint8_t         ezsdl_window_pollEvent(ezsdl_window *self);
+uint8_t         ezsdl_window_updateAll(ezsdl_window *self);
+uint8_t         ezsdl_window_drawAll(ezsdl_window *self);
 uint8_t         ezsdl_window_clear(ezsdl_window *self);
 uint8_t         ezsdl_window_render(ezsdl_window *self);
+
+/* These are quick-and-dirty interfaces and implementations. Polish later. */
+uint8_t         ezsdl_window_drawText(ezsdl_window *self, const char *text,
+                        SDL_Color *color, int16_t x, int16_t y);
+uint8_t         ezsdl_window_drawRect(ezsdl_window *self, SDL_Color *color,
+                        int16_t x, int16_t y, int16_t w, int16_t h);
 
 
 

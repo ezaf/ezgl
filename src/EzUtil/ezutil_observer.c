@@ -30,14 +30,49 @@ uint8_t ezutil_observer_isNull(ezutil_observer *subject, const char *caller);
 
 
 
-uint8_t ezutil_observer_notifyAll(ezutil_observer *head, void *data)
+ezutil_observer* ezutil_observer_new()
+{
+    ezutil_observer *self = (ezutil_observer*) malloc(sizeof(ezutil_observer));
+    self->prev = self->next = self->notify = self->data = 0;
+    return self;
+}
+
+
+
+uint8_t ezutil_observer_del(ezutil_observer **head)
+{
+    uint8_t error = ezutil_observer_isNull(*head, __func__);
+
+    if (!error)
+    {
+        ezutil_observer *iter = *head;
+        ezutil_observer *next = 0;
+
+        /* We know head is not null thanks to earlier error check. */
+        do
+        {
+            next = iter->next;
+            free(iter);
+        }
+        while (iter = next);
+
+        free(*head);
+        *head = 0;
+    }
+
+    return !error;
+}
+
+
+
+uint8_t ezutil_observer_notifyAll(ezutil_observer *head)
 {
     uint8_t error = ezutil_observer_isNull(head, __func__);
 
     if (!error)
     {
         /* Notify everybody on the linked list. */
-        do head->notify(data);
+        do if (head->notify) head->notify(head->data);
         while (head = head->next);
     }
     
@@ -47,7 +82,7 @@ uint8_t ezutil_observer_notifyAll(ezutil_observer *head, void *data)
 
 
 ezutil_observer* ezutil_observer_add(ezutil_observer *head,
-        void (*notify)(void*))
+        void (*notify)(void*), void *data)
 {
     uint8_t error = ezutil_observer_isNull(head, __func__);
     ezutil_observer *self = 0;
@@ -63,6 +98,7 @@ ezutil_observer* ezutil_observer_add(ezutil_observer *head,
         self->prev = head;
         self->next = head->next;
         self->notify = notify;
+        self->data = data;
         head->next = self;
     }
 
@@ -82,29 +118,6 @@ uint8_t ezutil_observer_remove(ezutil_observer **node)
         free(*node);
     }
     
-    return !error;
-}
-
-
-
-uint8_t ezutil_observer_removeAll(ezutil_observer *head)
-{
-    uint8_t error = ezutil_observer_isNull(head, __func__);
-
-    if (!error)
-    {
-        ezutil_observer *iter = head;
-        ezutil_observer *next = 0;
-
-        /* We know head is not null thanks to earlier error check. */
-        do
-        {
-            next = iter->next;
-            free(iter);
-        }
-        while (iter = next);
-    }
-
     return !error;
 }
 
