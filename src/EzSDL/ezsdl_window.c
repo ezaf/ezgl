@@ -41,25 +41,32 @@ ezsdl_window* ezsdl_window_new()
 
     SDL_Init(SDL_INIT_VIDEO);
     IMG_Init(IMG_INIT_PNG);
-    SDL_GetDesktopDisplayMode(0, &self->displayMode);
+    TTF_Init();
+
+    self->displayMode = (SDL_DisplayMode*) malloc(sizeof(SDL_DisplayMode));
+    SDL_GetDesktopDisplayMode(0, self->displayMode);
 
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
     
     self->window = SDL_CreateWindow( "EzSDL",
-            SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-            640, 480,
-            SDL_WINDOW_SHOWN );
+            SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 0, 0,
+            SDL_WINDOW_SHOWN | SDL_WINDOW_INPUT_FOCUS |
+                SDL_WINDOW_FULLSCREEN_DESKTOP );
 
     self->renderer = SDL_CreateRenderer( self->window,
             -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC );
 
-    SDL_SetRenderDrawColor(self->renderer, 0x00, 0x00, 0xFF, 0xFF);
+    SDL_SetRenderDrawColor(self->renderer, 0x00, 0x00, 0x00, 0xFF);
 
+    self->font = TTF_OpenFont("res/UbuntuMono-R.ttf", self->displayMode->w/30);
     self->event = (SDL_Event*) malloc(sizeof(SDL_Event));
-    self->eventObsHead = (ezutil_observer*) malloc(sizeof(ezutil_observer));
-    self->eventObsHead->prev = 0;
-    self->eventObsHead->next = 0;
-    self->eventObsHead->notify = &ezsdl_window_event;
+
+    self->headEvent = ezutil_observer_new();
+    self->headEvent->notify = &ezsdl_window_event;
+    self->headEvent->data = self;
+    self->headUpdate = ezutil_observer_new();
+    self->headDraw = ezutil_observer_new();
+
     self->isRunning = 1;
     self->isPaused = 0;
 
@@ -87,11 +94,19 @@ uint8_t ezsdl_window_del(ezsdl_window **self)
     {
         SDL_DestroyRenderer((*self)->renderer);
         SDL_DestroyWindow((*self)->window);
+        TTF_CloseFont((*self)->font);
+
+        TTF_Quit();
         IMG_Quit();
         SDL_Quit();
 
+        free((*self)->displayMode);
         free((*self)->event);
-        ezutil_observer_removeAll((*self)->eventObsHead);
+
+        ezutil_observer_del((*self)->headEvent);
+        ezutil_observer_del((*self)->headUpdate);
+        ezutil_observer_del((*self)->headDraw);
+
         free(*self);
         *self = 0;
 
@@ -114,7 +129,7 @@ uint8_t ezsdl_window_pollEvent(ezsdl_window *self)
     {
         while (SDL_PollEvent(self->event))
         {
-            ezutil_observer_notifyAll(self->eventObsHead, self);
+            ezutil_observer_notifyAll(self->headEvent);
         }
 
         return 1;
@@ -129,13 +144,45 @@ uint8_t ezsdl_window_pollEvent(ezsdl_window *self)
 
 
 
+uint8_t ezsdl_window_updateAll(ezsdl_window *self)
+{
+    if (self)
+    {
+        ezutil_observer_notifyAll(self->headUpdate);
+        return 1;
+    }
+    else
+    {
+        ezutil_log(MAJOR, __func__, "Skipped updating. Reference to self is "
+                "null.");
+        return 0;
+    }
+}
+
+
+
+uint8_t ezsdl_window_drawAll(ezsdl_window *self)
+{
+    if (self)
+    {
+        ezutil_observer_notifyAll(self->headDraw);
+        return 1;
+    }
+    else
+    {
+        ezutil_log(MAJOR, __func__, "Skipped drawing. Reference to self is "
+                "null.");
+        return 0;
+    }
+}
+
+
+
 uint8_t ezsdl_window_clear(ezsdl_window *self)
 {
     /* TODO: add error checking */
 
-    /* TODO: For now it's obnoxious and bright blue so that it's obvious
-     * when the bare background is exposed. Replace later with black. */
-    SDL_SetRenderDrawColor(self->renderer, 0x00, 0x00, 0xFF, 0xFF);
+    SDL_SetRenderDrawColor(self->renderer, 0x00, 0x00, 0x00, 0xFF);
     SDL_RenderClear(self->renderer);
 }
 
@@ -169,8 +216,8 @@ void ezsdl_window_event(ezsdl_window *self)
                 case SDL_SCANCODE_ESCAPE:
                     self->isRunning = 0;
                     break;
-
-                default:
+                case SDL_SCANCODE_SPACE:
+                    self->isPaused = !self->isPaused;
                     break;
             }
             break;
@@ -194,4 +241,32 @@ void ezsdl_window_event(ezsdl_window *self)
         default:
             break;
     }
+}
+
+
+
+uint8_t ezsdl_window_drawText(ezsdl_window *self, const char *text,
+        SDL_Color *color, int16_t x, int16_t y)
+{
+    SDL_Surface *textSurface = TTF_RenderText_Solid(self->font, text, *color);
+    SDL_Texture *texture =
+        SDL_CreateTextureFromSurface(self->renderer, textSurface);
+    SDL_Rect renderQuad = {x, y, textSurface->w, textSurface->h};
+    SDL_RenderCopyEx(self->renderer, texture, 0, &renderQuad, 0, 0, 0);
+
+    SDL_FreeSurface(textSurface);
+    SDL_DestroyTexture(texture);
+    textSurface = 0;
+    texture = 0;
+}
+
+
+
+
+uint8_t ezsdl_window_drawRect(ezsdl_window *self, SDL_Color *color,
+        int16_t x, int16_t y, int16_t w, int16_t h)
+{
+    SDL_Rect rect = {x, y, w, h};
+    SDL_SetRenderDrawColor(self->renderer, color->r, color->g, color->b, 0xFF);
+    SDL_RenderFillRect(self->renderer, &rect);
 }
