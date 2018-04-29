@@ -21,11 +21,10 @@
  *  ---------->
  */
 
-#define PADDLE_VELOCITY 2.0
-
 #include "EzSDL/ezsdl_window.h"
 #include "EzUtil/ezutil_log.h"
 #include "EzUtil/ezutil_observer.h"
+#include "pong_ball.h"
 #include "pong_paddle.h"
 
 #include <math.h>
@@ -35,20 +34,22 @@
 
 
 pong_paddle* pong_paddle_new(uint16_t keyUp, uint16_t keyDown,
-        SDL_Color *color, ezsdl_window *window)
+        pong_ball *ball, SDL_Color *color, ezsdl_window *window)
 {
     pong_paddle *self = (pong_paddle*) malloc(sizeof(pong_paddle));
-    self->x = self->y = self->dy = 0.0;
-    self->w = window->displayMode->w * 0.015;
-    self->h = window->displayMode->h * 0.15;
+    self->window = window;
+    self->color = color;
+    self->ball = ball;
+    self->x = self->dy = 0.0;
+    self->w = self->window->displayMode->w * 0.02;
+    self->h = self->window->displayMode->h * 0.15;
+    self->y = (self->window->displayMode->h/2) - (self->h/2);
     self->keyUp = keyUp;
     self->keyDown = keyDown;
-    self->color = color;
-    self->window = window;
 
-    ezutil_observer_add(window->headEvent, &pong_paddle_event, self);
-    ezutil_observer_add(window->headUpdate, &pong_paddle_update, self);
-    ezutil_observer_add(window->headDraw, &pong_paddle_draw, self);
+    ezutil_observer_add(self->window->headEvent, &pong_paddle_event, self);
+    ezutil_observer_add(self->window->headUpdate, &pong_paddle_update, self);
+    ezutil_observer_add(self->window->headDraw, &pong_paddle_draw, self);
 
     return self;
 }
@@ -84,10 +85,16 @@ uint8_t pong_paddle_event(pong_paddle *self)
         switch (e.type)
         {
             case SDL_KEYDOWN:
+                self->dy = ((float) self->window->displayMode->h / 1080.0) *
+                    PONG_PADDLE_VEL;
+
                 if (e.key.keysym.scancode == self->keyUp)
-                    self->dy = -PADDLE_VELOCITY;
+                    self->dy *= -1;
                 else if (e.key.keysym.scancode == self->keyDown)
-                    self->dy = PADDLE_VELOCITY;
+                    self->dy *= 1;
+                else
+                    self->dy *= 0;
+
                 break;
             case SDL_KEYUP:
                 if (e.key.keysym.scancode == self->keyUp ||
@@ -113,9 +120,41 @@ uint8_t pong_paddle_update(pong_paddle *self)
     {
         self->y += self->dy * self->window->delta;
 
+        if (self->ball->pauseTime)
+            self->y = (self->window->displayMode->h/2) - (self->h/2);
+
         if (self->y < 0) self->y = 0;
         else if (self->y > self->window->displayMode->h - self->h)
             self->y = self->window->displayMode->h - self->h;
+
+        if (self->ball->x < self->x+self->w &&
+                self->ball->x+self->ball->r > self->x &&
+                self->ball->y+self->ball->r > self->y &&
+                self->ball->y < self->y+self->h)
+        {
+            float dxSign = self->ball->dx>0 ? -1 : 1;
+            float angleIn = RTOD(atan(self->ball->dy/self->ball->dx)) * dxSign;
+
+            float angleMult =
+                ( ((self->y+(self->h/2)) - (self->ball->y+(self->ball->r/2))) /
+                (self->h/2) ) / 2.0;
+
+            float angleOut = angleIn - ((90.0-abs(angleIn))*angleMult);
+            if (angleOut<-60.0) angleOut = -60.0;
+            else if (angleOut>60.0) angleOut = 60.0;
+
+            float windowRatio = (float) self->window->displayMode->w / 1920.0;
+
+            self->ball->dx =
+                dxSign * cos(DTOR(angleOut)) * windowRatio * PONG_BALL_VEL;
+            self->ball->dy =
+                -sin(DTOR(angleOut)) * windowRatio * PONG_BALL_VEL;
+
+            if (self->ball->dx > 0)
+                self->ball->x = self->x+self->w+1;
+            else
+                self->ball->x = self->x-self->ball->r-1;
+        }
     }
     else
     {
