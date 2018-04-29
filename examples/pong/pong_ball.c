@@ -21,8 +21,6 @@
  *  ---------->
  */
 
-#define BALL_VELOCITY 0.5
-
 #include "EzSDL/ezsdl_window.h"
 #include "EzUtil/ezutil_log.h"
 #include "EzUtil/ezutil_observer.h"
@@ -41,18 +39,20 @@ uint8_t pong_ball_reset(pong_ball *self, int8_t direction)
         self->x = (self->window->displayMode->w/2) - (self->r/2);
         self->y = (self->window->displayMode->h/2) - (self->r/2);
 
+        float angle = (rand() % 10) - 5,
+              windowRatio = (float) self->window->displayMode->w / 1920.0;
+
+        self->dx = cos(DTOR(angle)) * windowRatio * PONG_BALL_VEL;
+
         if (direction)
-        {
-            self->dx = (direction/abs(direction)) * BALL_VELOCITY;
-        }
-        else
-        {
-            if (rand() % 2) self->dx = BALL_VELOCITY;
-            else self->dx = -BALL_VELOCITY;
-        }
-            
-        if (rand() % 2) self->dy = BALL_VELOCITY;
-        else self->dy = -BALL_VELOCITY;
+            self->dx *= (direction/abs(direction));
+        else if (rand() % 2)
+            self->dx *= -1;
+        
+        self->dy = sin(DTOR(angle)) * windowRatio * PONG_BALL_VEL;
+
+        if (rand() % 2)
+            self->dy *= -1;
 
         self->pauseTime = 2000;
 
@@ -73,12 +73,12 @@ pong_ball* pong_ball_new(SDL_Color *color, ezsdl_window *window)
     self->window = window;
     self->color = color;
     self->winner = 0;
-    self->r = window->displayMode->w * 0.01;
+    self->r = self->window->displayMode->w * 0.01;
     pong_ball_reset(self, 0);
 
-    ezutil_observer_add(window->headEvent, &pong_ball_event, self);
-    ezutil_observer_add(window->headUpdate, &pong_ball_update, self);
-    ezutil_observer_add(window->headDraw, &pong_ball_draw, self);
+    ezutil_observer_add(self->window->headEvent, &pong_ball_event, self);
+    ezutil_observer_add(self->window->headUpdate, &pong_ball_update, self);
+    ezutil_observer_add(self->window->headDraw, &pong_ball_draw, self);
 
     return self;
 }
@@ -198,6 +198,12 @@ uint8_t pong_ball_draw(pong_ball *self)
         ezsdl_window_drawText(self->window, self->scoreStrR, &white,
                 self->window->displayMode->w * 0.55,
                 self->window->displayMode->h * 0.01);
+
+        ezsdl_window_drawRect(self->window, self->color,
+                0, 0, self->window->displayMode->w, 2);
+        ezsdl_window_drawRect(self->window, self->color,
+                0, self->window->displayMode->h-2,
+                self->window->displayMode->w, 2);
 
         if (self->winner == 0)
         {

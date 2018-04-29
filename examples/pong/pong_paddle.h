@@ -34,10 +34,13 @@ extern "C"
 
 #include <stdint.h>
 
+#define PONG_PADDLE_VEL 0.8
 
 
-typedef struct ezsdl_window ezsdl_window;
+
+typedef struct pong_ball pong_ball;
 typedef struct SDL_Color SDL_Color;
+typedef struct ezsdl_window ezsdl_window;
 
 
 
@@ -47,6 +50,7 @@ typedef struct pong_paddle
     uint16_t        w, h;
     int16_t         scoreX, scoreY;
     uint16_t        keyUp, keyDown;
+    pong_ball      *ball;
     SDL_Color      *color;
     ezsdl_window   *window;
 }
@@ -55,7 +59,8 @@ pong_paddle;
 
 
 pong_paddle*    pong_paddle_new(uint16_t keyUp, uint16_t keyDown,
-                        SDL_Color *color, ezsdl_window *window);
+                        pong_ball *ball, SDL_Color *color,
+                        ezsdl_window *window);
 uint8_t         pong_paddle_del(pong_paddle **self);
 
 uint8_t         pong_paddle_event(pong_paddle *self);

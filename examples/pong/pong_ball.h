@@ -34,6 +34,11 @@ extern "C"
 
 #include <stdint.h>
 
+#define PONG_BALL_VEL 1.2
+#define PI 3.14159265
+#define DTOR(angle) ((angle*PI)/180.0)
+#define RTOD(rad) ((rad*180.0)/PI)
+
 
 
 typedef struct ezsdl_window ezsdl_window;

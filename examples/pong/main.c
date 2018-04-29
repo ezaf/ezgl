@@ -44,16 +44,16 @@ int main(int argc, char *argv[])
     /* Setting up all the game objects */
     ezsdl_window *ezw = ezsdl_window_new();
 
-    pong_paddle *paddleLeft =
-        pong_paddle_new(SDL_SCANCODE_W, SDL_SCANCODE_S, &blue, ezw);
-    
-    pong_paddle *paddleRight =
-        pong_paddle_new(SDL_SCANCODE_I, SDL_SCANCODE_K, &red, ezw);
-
-    paddleLeft->x = ezw->displayMode->w * 0.04;
-    paddleRight->x = ezw->displayMode->w - paddleLeft->x - paddleRight->w;
-
     pong_ball *ball = pong_ball_new(&white, ezw);
+
+    pong_paddle *paddleL0 =
+        pong_paddle_new(SDL_SCANCODE_W, SDL_SCANCODE_S, ball, &blue, ezw);
+   
+    pong_paddle *paddleR0 =
+        pong_paddle_new(SDL_SCANCODE_I, SDL_SCANCODE_K, ball, &red, ezw);
+
+    paddleL0->x = ezw->displayMode->w * 0.04;
+    paddleR0->x = ezw->displayMode->w - paddleL0->x - paddleR0->w;
 
 
     /* Running the game */
@@ -69,8 +69,8 @@ int main(int argc, char *argv[])
 
     /* Deleting all the game objects */
     pong_ball_del(&ball);
-    pong_paddle_del(&paddleLeft);
-    pong_paddle_del(&paddleRight);
+    pong_paddle_del(&paddleL0);
+    pong_paddle_del(&paddleR0);
     ezsdl_window_del(&ezw);
 
     return 0;
