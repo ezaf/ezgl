@@ -24,6 +24,7 @@
 #define PADDLE_VELOCITY 2.0
 
 #include "EzSDL/ezsdl_window.h"
+#include "EzUtil/ezutil_log.h"
 #include "EzUtil/ezutil_observer.h"
 #include "pong_paddle.h"
 
@@ -38,9 +39,8 @@ pong_paddle* pong_paddle_new(uint16_t keyUp, uint16_t keyDown,
 {
     pong_paddle *self = (pong_paddle*) malloc(sizeof(pong_paddle));
     self->x = self->y = self->dy = 0.0;
-    self->w = window->displayMode->w * 0.01;
-    self->h = window->displayMode->h * 0.1;
-    self->score = 0;
+    self->w = window->displayMode->w * 0.015;
+    self->h = window->displayMode->h * 0.15;
     self->keyUp = keyUp;
     self->keyDown = keyDown;
     self->color = color;
@@ -51,6 +51,26 @@ pong_paddle* pong_paddle_new(uint16_t keyUp, uint16_t keyDown,
     ezutil_observer_add(window->headDraw, &pong_paddle_draw, self);
 
     return self;
+}
+
+
+
+uint8_t pong_paddle_del(pong_paddle **self)
+{
+    if (*self)
+    {
+        free(*self);
+        *self = 0;
+
+        return 1;
+    }
+    else
+    {
+        ezutil_log(VITAL, __func__, "Skipped deletion of pong_paddle "
+                "instance. Cannot free a null pointer.");
+        return 0;
+    }
+
 }
 
 
@@ -91,15 +111,11 @@ uint8_t pong_paddle_update(pong_paddle *self)
 {
     if (self)
     {
-        float delta = (float) (SDL_GetTicks() - self->window->prevFrame);
-
-        self->y += self->dy * delta;
+        self->y += self->dy * self->window->delta;
 
         if (self->y < 0) self->y = 0;
         else if (self->y > self->window->displayMode->h - self->h)
             self->y = self->window->displayMode->h - self->h;
-
-        snprintf(self->scoreStr, 8, "%i", self->score);
     }
     else
     {

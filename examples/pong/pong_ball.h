@@ -1,4 +1,4 @@
-/** @file       pong_paddle.h
+/** @file       pong_ball.h
  *  @brief      Functions and structures for pong paddle.
  *  
  *  <!---------
@@ -22,8 +22,8 @@
  *  ---------->
  */
 
-#ifndef PONG_PADDLE_H
-#define PONG_PADDLE_H
+#ifndef PONG_BALL_H
+#define PONG_BALL_H
 
 #ifdef __cplusplus
 extern "C"
@@ -41,26 +41,27 @@ typedef struct SDL_Color SDL_Color;
 
 
 
-typedef struct pong_paddle
+typedef struct pong_ball
 {
-    float           x, y, dy;
-    uint16_t        w, h;
-    int16_t         scoreX, scoreY;
-    uint16_t        keyUp, keyDown;
+    float           x, y, dx, dy;
+    uint16_t        r;
+    uint8_t         scoreL, scoreR;
+    char            scoreStrL[8], scoreStrR[8], winnerStr[16];
+    int8_t          winner; /* -1: left, 0: none, 1: right */
+    int32_t        pauseTime;
     SDL_Color      *color;
     ezsdl_window   *window;
 }
-pong_paddle;
+pong_ball;
 
 
 
-pong_paddle*    pong_paddle_new(uint16_t keyUp, uint16_t keyDown,
-                        SDL_Color *color, ezsdl_window *window);
-uint8_t         pong_paddle_del(pong_paddle **self);
+pong_ball*      pong_ball_new(SDL_Color *color, ezsdl_window *window);
+uint8_t         pong_ball_del(pong_ball **self);
 
-uint8_t         pong_paddle_event(pong_paddle *self);
-uint8_t         pong_paddle_update(pong_paddle *self);
-uint8_t         pong_paddle_draw(pong_paddle *self);
+uint8_t         pong_ball_event(pong_ball *self);
+uint8_t         pong_ball_update(pong_ball *self);
+uint8_t         pong_ball_draw(pong_ball *self);
 
 
 
@@ -68,4 +69,4 @@ uint8_t         pong_paddle_draw(pong_paddle *self);
 }
 #endif
 
-#endif /* PONG_PADDLE_H */
+#endif /* PONG_BALL_H */

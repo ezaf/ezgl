@@ -28,6 +28,7 @@
 #include "EzSDL/ezsdl_window.h"
 #include "EzUtil/ezutil_observer.h"
 #include "pong_paddle.h"
+#include "pong_ball.h"
 
 #include <stdio.h>
 
@@ -35,38 +36,42 @@
 
 int main(int argc, char *argv[])
 {
+    SDL_Color white = {255,255,255};
+    SDL_Color red = {255,0,0};
+    SDL_Color blue = {0,0,255};
+
+    
+    /* Setting up all the game objects */
     ezsdl_window *ezw = ezsdl_window_new();
 
-    SDL_Color white = {255,255,255};
-
-    pong_paddle *paddleLeft = pong_paddle_new(
-            SDL_SCANCODE_W, SDL_SCANCODE_S, &white, ezw);
+    pong_paddle *paddleLeft =
+        pong_paddle_new(SDL_SCANCODE_W, SDL_SCANCODE_S, &blue, ezw);
     
-    pong_paddle *paddleRight = pong_paddle_new(
-            SDL_SCANCODE_I, SDL_SCANCODE_K, &white, ezw);
+    pong_paddle *paddleRight =
+        pong_paddle_new(SDL_SCANCODE_I, SDL_SCANCODE_K, &red, ezw);
 
     paddleLeft->x = ezw->displayMode->w * 0.04;
     paddleRight->x = ezw->displayMode->w - paddleLeft->x - paddleRight->w;
 
-    uint16_t leftScoreX = ezw->displayMode->w * 0.4,
-             rightScoreX = ezw->displayMode->w * 0.55,
-             allScoreY = ezw->displayMode->h * 0.01;
+    pong_ball *ball = pong_ball_new(&white, ezw);
 
+
+    /* Running the game */
     while (ezw->isRunning)
     {
         ezsdl_window_pollEvent(ezw);
         ezsdl_window_updateAll(ezw);
         ezsdl_window_clear(ezw);
-        
-        ezsdl_window_drawText(ezw, paddleLeft->scoreStr,
-                &white, leftScoreX, allScoreY);
-        ezsdl_window_drawText(ezw, paddleRight->scoreStr,
-                &white, rightScoreX, allScoreY);
-
         ezsdl_window_drawAll(ezw);
         ezsdl_window_render(ezw);
     }
 
+
+    /* Deleting all the game objects */
+    pong_ball_del(&ball);
+    pong_paddle_del(&paddleLeft);
+    pong_paddle_del(&paddleRight);
     ezsdl_window_del(&ezw);
+
     return 0;
 }
