@@ -29,6 +29,11 @@
 
 
 
+/* Anonymous previous frame time holder.
+ * WARNING: I'm pretty sure this is global to all ezsdl_windows.
+ * Need to implement a better solution later... */
+uint32_t PREV_FRAME;
+
 /* Anonymous window event handler function. */
 void ezsdl_window_event(ezsdl_window *self);
 
@@ -53,6 +58,8 @@ ezsdl_window* ezsdl_window_new()
             SDL_WINDOW_SHOWN | SDL_WINDOW_INPUT_FOCUS |
                 SDL_WINDOW_FULLSCREEN_DESKTOP );
 
+    SDL_ShowCursor(SDL_DISABLE);
+
     self->renderer = SDL_CreateRenderer( self->window,
             -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC );
 
@@ -69,7 +76,8 @@ ezsdl_window* ezsdl_window_new()
 
     self->isRunning = 1;
     self->isPaused = 0;
-    self->prevFrame = 0;
+    self->delta = 0;
+    PREV_FRAME = 0;
 
 
     if (error)
@@ -149,9 +157,11 @@ uint8_t ezsdl_window_updateAll(ezsdl_window *self)
 {
     if (self)
     {
-        if (self->prevFrame == 0) self->prevFrame = SDL_GetTicks();
+        if (PREV_FRAME != 0) self->delta = SDL_GetTicks() - PREV_FRAME;
+        PREV_FRAME = SDL_GetTicks();
+
         if (!self->isPaused) ezutil_observer_notifyAll(self->headUpdate);
-        self->prevFrame = SDL_GetTicks();
+
         return 1;
     }
     else
