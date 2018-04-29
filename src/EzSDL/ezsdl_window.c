@@ -229,7 +229,7 @@ void ezsdl_window_event(ezsdl_window *self)
                 case SDL_SCANCODE_ESCAPE:
                     self->isRunning = 0;
                     break;
-                case SDL_SCANCODE_SPACE:
+                case SDL_SCANCODE_GRAVE:
                     self->isPaused = !self->isPaused;
                     break;
             }
