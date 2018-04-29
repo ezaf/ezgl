@@ -50,11 +50,12 @@ ezsdl_window* ezsdl_window_new()
 
     self->displayMode = (SDL_DisplayMode*) malloc(sizeof(SDL_DisplayMode));
     SDL_GetDesktopDisplayMode(0, self->displayMode);
-
+    
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
     
     self->window = SDL_CreateWindow( "EzSDL",
-            SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 0, 0,
+            SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+            self->displayMode->w, self->displayMode->h,
             SDL_WINDOW_SHOWN | SDL_WINDOW_INPUT_FOCUS |
                 SDL_WINDOW_FULLSCREEN_DESKTOP );
 
