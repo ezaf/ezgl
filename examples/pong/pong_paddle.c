@@ -81,19 +81,18 @@ uint8_t pong_paddle_event(pong_paddle *self)
     if (self)
     {
         SDL_Event e = *(self->window->event);
+        float abs_dy;
 
         switch (e.type)
         {
             case SDL_KEYDOWN:
-                self->dy = ((float) self->window->displayMode->h / 1080.0) *
+                abs_dy = ((float) self->window->displayMode->h / 1080.0) *
                     PONG_PADDLE_VEL;
 
                 if (e.key.keysym.scancode == self->keyUp)
-                    self->dy *= -1;
+                    self->dy = -abs_dy;
                 else if (e.key.keysym.scancode == self->keyDown)
-                    self->dy *= 1;
-                else
-                    self->dy *= 0;
+                    self->dy = abs_dy;
 
                 break;
             case SDL_KEYUP:
