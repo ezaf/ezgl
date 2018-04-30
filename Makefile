@@ -53,7 +53,7 @@ OUT = $(MPL_SUBDIR)
 # Compiler and linker settings
 CC = gcc
 CF = -std=c89 -pedantic -O3 -w
-LF = -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf
+LF = -lm -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf
 
 # ALWAYS NECESSARY FOR WINDOWS!!!
 # Outside include and lib directories for `gcc` such as the paths to the SDL2
