@@ -39,8 +39,10 @@ uint8_t pong_ball_reset(pong_ball *self, int8_t direction)
         self->x = (self->window->displayMode->w/2) - (self->r/2);
         self->y = (self->window->displayMode->h/2) - (self->r/2);
 
-        float angle = (rand() % 10) - 5,
-              windowRatio = (float) self->window->displayMode->w / 1920.0;
+        float angle;
+        float windowRatio = (float) self->window->displayMode->w / 1920.0;
+
+        while ((angle = (rand()%10)-5) == 0);
 
         self->dx = cos(DTOR(angle)) * windowRatio * PONG_BALL_VEL;
 
