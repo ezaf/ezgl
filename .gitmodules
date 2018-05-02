@@ -4,3 +4,6 @@
 [submodule "ext/m.css"]
 	path = ext/m.css
 	url = https://github.com/mosra/m.css.git
+[submodule "ext/ezc"]
+	path = ext/ezc
+	url = https://github.com/ezaf/ezc.git
