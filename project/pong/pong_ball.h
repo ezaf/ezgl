@@ -49,7 +49,7 @@ typedef struct SDL_Color SDL_Color;
 typedef struct pong_ball
 {
     float           x, y, dx, dy;
-    uint16_t        r;
+    uint16_t        d;
     uint8_t         scoreL, scoreR;
     char            scoreStrL[8], scoreStrR[8], winnerStr[16];
     int8_t          winner; /* -1: left, 0: none, 1: right */
