@@ -30,8 +30,7 @@
 
 
 
-void ezutil_log(ezutil_log_t type,
-        char *callee, char *message, ...)
+void ezutil_log(ezutil_log_t type, char *callee, char *message, ...)
 {
     if (EZUTIL_LOG_VERBOSITY >= type)
     {
