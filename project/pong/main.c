@@ -48,15 +48,19 @@ int main(int argc, char *argv[])
 
     pong_ball *ball = pong_ball_new(&white, ezw);
 
-    pong_paddle *paddleL0 =
-        pong_paddle_new(SDL_SCANCODE_W, SDL_SCANCODE_S, ball, &blue, ezw);
-    pong_paddle *paddleL1 =
-        pong_paddle_new(SDL_SCANCODE_E, SDL_SCANCODE_D, ball, &cyan, ezw);
+    pong_paddle *paddleL0 = pong_paddle_new(
+            SDL_SCANCODE_Q, SDL_SCANCODE_W, SDL_SCANCODE_S,
+            ball, &blue, ezw);
+    pong_paddle *paddleL1 = pong_paddle_new(
+            SDL_SCANCODE_R, SDL_SCANCODE_E, SDL_SCANCODE_D,
+            ball, &cyan, ezw);
   
-    pong_paddle *paddleR0 =
-        pong_paddle_new(SDL_SCANCODE_I, SDL_SCANCODE_K, ball, &red, ezw);
-    pong_paddle *paddleR1 =
-        pong_paddle_new(SDL_SCANCODE_U, SDL_SCANCODE_J, ball, &orange, ezw);
+    pong_paddle *paddleR0 = pong_paddle_new(
+            SDL_SCANCODE_O, SDL_SCANCODE_I, SDL_SCANCODE_K,
+            ball, &red, ezw);
+    pong_paddle *paddleR1 = pong_paddle_new(
+            SDL_SCANCODE_Y, SDL_SCANCODE_U, SDL_SCANCODE_J,
+            ball, &orange, ezw);
 
 
     paddleL0->x = ezw->displayMode->w * 0.04;

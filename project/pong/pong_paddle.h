@@ -35,6 +35,8 @@ extern "C"
 #include <stdint.h>
 
 #define PONG_PADDLE_VEL 0.8
+#define PONG_PADDLE_AI_SLEEP_TIME 250
+#define PONG_PADDLE_AI_REDIR_TIME 250
 
 
 
@@ -48,8 +50,9 @@ typedef struct pong_paddle
 {
     float           x, y, dy;
     uint16_t        w, h;
-    int16_t         scoreX, scoreY;
-    uint16_t        keyUp, keyDown;
+    uint16_t        keyUp, keyDown, keyToggleAI;
+    uint8_t         isAI;
+    uint32_t        AI_sleepTime, AI_redirTime;
     pong_ball      *ball;
     SDL_Color      *color;
     ezsdl_window   *window;
@@ -58,7 +61,8 @@ pong_paddle;
 
 
 
-pong_paddle*    pong_paddle_new(uint16_t keyUp, uint16_t keyDown,
+pong_paddle*    pong_paddle_new(uint16_t keyToggleAI,
+                        uint16_t keyUp, uint16_t keyDown,
                         pong_ball *ball, SDL_Color *color,
                         ezsdl_window *window);
 uint8_t         pong_paddle_del(pong_paddle **self);

@@ -29,11 +29,12 @@
 
 #include <math.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 
 
-
-pong_paddle* pong_paddle_new(uint16_t keyUp, uint16_t keyDown,
+pong_paddle* pong_paddle_new(
+        uint16_t keyToggleAI, uint16_t keyUp, uint16_t keyDown,
         pong_ball *ball, SDL_Color *color, ezsdl_window *window)
 {
     pong_paddle *self = (pong_paddle*) malloc(sizeof(pong_paddle));
@@ -46,6 +47,10 @@ pong_paddle* pong_paddle_new(uint16_t keyUp, uint16_t keyDown,
     self->y = (self->window->displayMode->h/2) - (self->h/2);
     self->keyUp = keyUp;
     self->keyDown = keyDown;
+    self->keyToggleAI = keyToggleAI;
+    self->AI_sleepTime = rand() % PONG_PADDLE_AI_SLEEP_TIME;
+    self->AI_redirTime = 0;
+    self->isAI = 1;
 
     ezutil_observer_add(self->window->headEvent, &pong_paddle_event, self);
     ezutil_observer_add(self->window->headUpdate, &pong_paddle_update, self);
@@ -93,6 +98,8 @@ uint8_t pong_paddle_event(pong_paddle *self)
                     self->dy = -abs_dy;
                 else if (e.key.keysym.scancode == self->keyDown)
                     self->dy = abs_dy;
+                else if (e.key.keysym.scancode == self->keyToggleAI)
+                    self->isAI = !self->isAI;
 
                 break;
             case SDL_KEYUP:
@@ -117,6 +124,42 @@ uint8_t pong_paddle_update(pong_paddle *self)
 {
     if (self)
     {
+        if (self->isAI)
+        {
+            if (self->AI_redirTime >= PONG_PADDLE_AI_REDIR_TIME &&
+                    self->AI_sleepTime >= PONG_PADDLE_AI_SLEEP_TIME)
+            {
+                /* TODO: create screen width and screen height mult fns */
+                float old_dy = self->dy;
+                float abs_dy = ((float) self->window->displayMode->h / 1080.0) *
+                    PONG_PADDLE_VEL;
+                
+                if (self->ball->y+self->ball->d < self->y+(self->h*0.25))
+                    self->dy = -abs_dy;
+                else if (self->ball->y > self->y+(self->h*0.75))
+                    self->dy = abs_dy;
+                else
+                    self->dy = 0;
+                
+                uint8_t isLeft = self->x < (self->window->displayMode->w/2);
+                if ((self->ball->x < self->x) == isLeft ||
+                        (self->ball->x > self->x) == !isLeft)
+                    self->dy = -self->dy;
+
+                if (old_dy != self->dy)
+                    self->AI_redirTime = 0;
+            }
+
+            self->AI_sleepTime += self->window->delta;
+            self->AI_redirTime += self->window->delta;
+            
+            if (self->AI_sleepTime >= PONG_PADDLE_AI_SLEEP_TIME*4)
+                    self->AI_sleepTime = 0;
+        }
+        
+        /* End AI-related control */
+        /* Begin physics and collision code */
+
         self->y += self->dy * self->window->delta;
 
         if (self->ball->pauseTime)
@@ -127,15 +170,15 @@ uint8_t pong_paddle_update(pong_paddle *self)
             self->y = self->window->displayMode->h - self->h;
 
         if (self->ball->x < self->x+self->w &&
-                self->ball->x+self->ball->r > self->x &&
-                self->ball->y+self->ball->r > self->y &&
+                self->ball->x+self->ball->d > self->x &&
+                self->ball->y+self->ball->d > self->y &&
                 self->ball->y < self->y+self->h)
         {
             float dxSign = self->ball->dx>0 ? -1 : 1;
             float angleIn = RTOD(atan(self->ball->dy/self->ball->dx)) * dxSign;
 
             float angleMult =
-                ( ((self->y+(self->h/2)) - (self->ball->y+(self->ball->r/2))) /
+                ( ((self->y+(self->h/2)) - (self->ball->y+(self->ball->d/2))) /
                 (self->h/2) ) / 2.0;
 
             float angleOut = angleIn - ((90.0-abs(angleIn))*angleMult);
@@ -152,7 +195,7 @@ uint8_t pong_paddle_update(pong_paddle *self)
             if (self->ball->dx > 0)
                 self->ball->x = self->x+self->w+1;
             else
-                self->ball->x = self->x-self->ball->r-1;
+                self->ball->x = self->x-self->ball->d-1;
         }
     }
     else
