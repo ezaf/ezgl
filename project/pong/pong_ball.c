@@ -36,8 +36,8 @@ uint8_t pong_ball_reset(pong_ball *self, int8_t direction)
 {
     if (self)
     {
-        self->x = (self->window->displayMode->w/2) - (self->r/2);
-        self->y = (self->window->displayMode->h/2) - (self->r/2);
+        self->x = (self->window->displayMode->w/2) - (self->d/2);
+        self->y = (self->window->displayMode->h/2) - (self->d/2);
 
         float angle;
         float windowRatio = (float) self->window->displayMode->w / 1920.0;
@@ -75,7 +75,7 @@ pong_ball* pong_ball_new(SDL_Color *color, ezsdl_window *window)
     self->window = window;
     self->color = color;
     self->winner = 0;
-    self->r = self->window->displayMode->w * 0.01;
+    self->d = self->window->displayMode->w * 0.01;
     pong_ball_reset(self, 0);
 
     ezutil_observer_add(self->window->headEvent, &pong_ball_event, self);
@@ -152,13 +152,13 @@ uint8_t pong_ball_update(pong_ball *self)
                 self->y = 0;
                 self->dy = -self->dy;
             }
-            else if (self->y > self->window->displayMode->h - self->r)
+            else if (self->y > self->window->displayMode->h - self->d)
             {
-                self->y = self->window->displayMode->h - self->r;
+                self->y = self->window->displayMode->h - self->d;
                 self->dy = -self->dy;
             }
 
-            if (self->x < 0 - self->r)
+            if (self->x < 0 - self->d)
             {
                 if (++self->scoreR == 11) self->winner = 1;
                 else pong_ball_reset(self, -1);
@@ -210,7 +210,7 @@ uint8_t pong_ball_draw(pong_ball *self)
         if (self->winner == 0)
         {
             ezsdl_window_drawRect(self->window, self->color,
-                    self->x, self->y, self->r, self->r);
+                    self->x, self->y, self->d, self->d);
         }
         else
         {
