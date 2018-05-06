@@ -38,7 +38,9 @@ int main(int argc, char *argv[])
 {
     SDL_Color white = {255,255,255};
     SDL_Color red = {255,0,0};
+    SDL_Color orange = {255,127,0};
     SDL_Color blue = {0,0,255};
+    SDL_Color cyan = {0,191,255};
 
     
     /* Setting up all the game objects */
@@ -48,12 +50,19 @@ int main(int argc, char *argv[])
 
     pong_paddle *paddleL0 =
         pong_paddle_new(SDL_SCANCODE_W, SDL_SCANCODE_S, ball, &blue, ezw);
-   
+    pong_paddle *paddleL1 =
+        pong_paddle_new(SDL_SCANCODE_E, SDL_SCANCODE_D, ball, &cyan, ezw);
+  
     pong_paddle *paddleR0 =
         pong_paddle_new(SDL_SCANCODE_I, SDL_SCANCODE_K, ball, &red, ezw);
+    pong_paddle *paddleR1 =
+        pong_paddle_new(SDL_SCANCODE_U, SDL_SCANCODE_J, ball, &orange, ezw);
+
 
     paddleL0->x = ezw->displayMode->w * 0.04;
+    paddleL1->x = ezw->displayMode->w * 0.24;
     paddleR0->x = ezw->displayMode->w - paddleL0->x - paddleR0->w;
+    paddleR1->x = ezw->displayMode->w - paddleL1->x - paddleR1->w;
 
 
     /* Running the game */
@@ -70,7 +79,9 @@ int main(int argc, char *argv[])
     /* Deleting all the game objects */
     pong_ball_del(&ball);
     pong_paddle_del(&paddleL0);
+    pong_paddle_del(&paddleL1);
     pong_paddle_del(&paddleR0);
+    pong_paddle_del(&paddleR1);
     ezsdl_window_del(&ezw);
 
     return 0;
