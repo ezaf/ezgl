@@ -25,7 +25,7 @@
 ###############################################################################
 
 # Directory within project/ of the example project that you want to build
-PRJ_SUBDIR = pong
+MAIN_SUBDIR = pong
 
 # Directory within src/ for which all *.c files will be added to the build
 SRC_SUBDIRS = EzUtil EzSDL
@@ -42,7 +42,7 @@ EXT_SRC_DIRS =
 EXT_SRC_FILES =
 
 # Name for the build subdirectory and executable (file extension not necessary)
-OUT = $(PRJ_SUBDIR)
+OUT = $(MAIN_SUBDIR)
 
 
 
@@ -70,7 +70,7 @@ GCC_L_DIRS_LIN = #$$HOME/lib
 ROOT = .
 
 # External (git submodule) directory
-EXT_DIR = $(ROOT)/ext
+SUB_DIR = $(ROOT)/sub
 
 
 
@@ -81,14 +81,15 @@ EXT_DIR = $(ROOT)/ext
 .PHONY : init
 
 init :
-	@rm -rf $(EXT_DIR)/ezc
-	@rm -rf $(EXT_DIR)/m.css
-	@rm -rf .git/modules/ext/ezc
-	@rm -rf .git/modules/ext/m.css
-	git submodule add -f https://github.com/ezaf/ezc.git $(EXT_DIR)/ezc
-	git submodule add -f https://github.com/mosra/m.css.git $(EXT_DIR)/m.css
+	@rm -rf $(SUB_DIR)/ezc
+	@rm -rf $(SUB_DIR)/m.css
+	@rm -rf .git/modules/$(SUB_DIR)/ezc
+	@rm -rf .git/modules/$(SUB_DIR)/m.css
+	@git rm -r --cached --ignore-unmatch $(SUB_DIR)
+	git submodule add -f https://github.com/ezaf/ezc.git $(SUB_DIR)/ezc
+	git submodule add -f https://github.com/mosra/m.css.git $(SUB_DIR)/m.css
 	@rm -f script/ezc.mk
 	@mkdir -p script
 	@rmdir --ignore-fail-on-non-empty script
 
--include $(EXT_DIR)/ezc/script/ezc.mk
+-include $(SUB_DIR)/ezc/script/ezc.mk
