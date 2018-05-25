@@ -31,10 +31,10 @@ MAIN_SUBDIR = pong
 SRC_SUBDIRS = EzUtil EzSDL
 
 # Needed submodule include directories within ext/
-EXT_INC_DIRS =
+SUB_INC_DIRS =
 
 # Needed submodule source directories within ext/
-EXT_SRC_DIRS =
+SUB_SRC_DIRS =
 
 # If the submodule has its test source files in the same directory as its
 #   actual API source files (facepalm), then you may want to manually specify
@@ -52,15 +52,27 @@ OUT = $(MAIN_SUBDIR)
 
 # Compiler and linker settings
 # In many cases the order in which your `-l`s appear matters!
-CC = gcc
-CF = -std=c89 -pedantic -O3 -w
-LF = -lm -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf
+# The gcc and emcc options can easily be toggled by changing the ifeq check
+# WARNING: EzC's emcc mode only supports libc, libc++, and SDL2 right now
+ifeq (1,1)
+	CC = gcc
+	CF = -std=c11 -O3 -Werror
+	LF = -lm -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf
+else
+	CC = emcc
+	CF = -O3
+	LF = -s USE_SDL=2 -s USE_SDL_IMAGE=2 -s USE_SDL_TTF=2
+endif
 
-# ALWAYS NECESSARY FOR WINDOWS!!!
+# The possible source file extensions
+SRC_EXTS = c cpp
+
+# May be necessary if building on Windows without MSYS2.
 # Outside include and lib directories for `gcc` such as the paths to the SDL2
 # Change the path to match where you have installed the stuff on your machine
-GCC_I_DIRS_WIN = D:/org/libsdl/include #D:/org/lua/src
-GCC_L_DIRS_WIN = D:/org/libsdl/lib #D:/org/lua/src
+# Commented out are examples for luac
+GCC_I_DIRS_WIN = #D:/org/lua/src
+GCC_L_DIRS_WIN = #D:/org/lua/src
 
 # Needed for Linux if you installed your libraries in your home directory
 GCC_I_DIRS_LIN = #$$HOME/include
@@ -69,7 +81,8 @@ GCC_L_DIRS_LIN = #$$HOME/lib
 # Root directory
 ROOT = .
 
-# External (git submodule) directory
+# Submodule directory
+# WARNING: Changing this may cause a lot of headache!
 SUB_DIR = $(ROOT)/sub
 
 
