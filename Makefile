@@ -56,7 +56,7 @@ OUT = $(MAIN_SUBDIR)
 # WARNING: EzC's emcc mode only supports libc, libc++, and SDL2 right now
 ifeq (1,1)
 	CC = gcc
-	CF = -std=c11 -O3 -Werror
+	CF = -std=c11 -O3 -w
 	LF = -lm -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf
 else
 	CC = emcc
@@ -67,12 +67,11 @@ endif
 # The possible source file extensions
 SRC_EXTS = c cpp
 
-# May be necessary if building on Windows without MSYS2.
+# May be necessary if building on MSYS2/Windows.
 # Outside include and lib directories for `gcc` such as the paths to the SDL2
 # Change the path to match where you have installed the stuff on your machine
-# Commented out are examples for luac
-GCC_I_DIRS_WIN = #D:/org/lua/src
-GCC_L_DIRS_WIN = #D:/org/lua/src
+GCC_I_DIRS_WIN = /usr/include
+GCC_L_DIRS_WIN = /usr/lib
 
 # Needed for Linux if you installed your libraries in your home directory
 GCC_I_DIRS_LIN = #$$HOME/include
