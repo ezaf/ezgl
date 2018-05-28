@@ -24,25 +24,34 @@
 ##############################  Standard Options  #############################
 ###############################################################################
 
-# Directory within project/ of the example project that you want to build
-MAIN_SUBDIR = pong
+# Directory within /src of the app, example, and test that you want to build.
+# TODO: Allow compilation of multiple mains. This will require compiling the
+# shared API part of the code into a shared library.
+MAIN_SUBDIRS = pong
 
-# Directory within src/ for which all *.c files will be added to the build
+# Name of the one application that you want to run when you call `make run`.
+# This should be equivalent to one of the items in `MAIN_SUBDIRS`.
+RUNME = pong
+
+# Source subdirectories. Shared among the apps, examples, and tests.
 SRC_SUBDIRS = EzUtil EzSDL
 
-# Needed submodule include directories within ext/
+# Packages that you want to include in your project.
+# If `pkg-config` cannot find the package, `-I$(PREFIX)/include/$(PKG)` and
+# `-l$(PKG)` will be added to the build instead, for each PKG in PKGS and for
+# each PREFIX in PREFIXES. Commented out are examples.
+PKGS = SDL2 SDL2_image SDL2_ttf
+
+# Needed submodule include directories within /sub
 SUB_INC_DIRS =
 
-# Needed submodule source directories within ext/
+# Needed submodule source directories within /sub
 SUB_SRC_DIRS =
 
 # If the submodule has its test source files in the same directory as its
-#   actual API source files (facepalm), then you may want to manually specify
-#   individual source files here
-EXT_SRC_FILES =
-
-# Name for the build subdirectory and executable (file extension not necessary)
-OUT = $(MAIN_SUBDIR)
+# actual API source files (facepalm), then you may want to manually specify
+# individual source files here (including the file extension).
+SUB_SRC_FILES =
 
 
 
@@ -50,32 +59,28 @@ OUT = $(MAIN_SUBDIR)
 ##############################  Advanced Options  #############################
 ###############################################################################
 
-# Compiler and linker settings
+# Compiler
+CC = gcc
+#CC = emcc
+
+# C-Flags and library (`-l` only) settings
 # In many cases the order in which your `-l`s appear matters!
-# The gcc and emcc options can easily be toggled by changing the ifeq check
-# WARNING: EzC's emcc mode only supports libc, libc++, and SDL2 right now
-ifeq (1,1)
-	CC = gcc
-	CF = -std=c11 -O3 -w
-	LF = -lm -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf
-else
-	CC = emcc
+# WARNING: EzC's emcc mode only supports libc, libc++, and SDL2 at the moment.
+ifeq ($(CC),emcc)
 	CF = -O3
 	LF = -s USE_SDL=2 -s USE_SDL_IMAGE=2 -s USE_SDL_TTF=2
+else
+	CF = -std=c11 -O3 -w
+	# The rest of LF will be taken care of by pkg-config
+	LF = -lm
 endif
 
-# The possible source file extensions
-SRC_EXTS = c cpp
+# Source file extensions you want compiled.
+SRC_EXTS = c #cpp
 
-# May be necessary if building on MSYS2/Windows.
-# Outside include and lib directories for `gcc` such as the paths to the SDL2
-# Change the path to match where you have installed the stuff on your machine
-GCC_I_DIRS_WIN = /usr/include
-GCC_L_DIRS_WIN = /usr/lib
-
-# Needed for Linux if you installed your libraries in your home directory
-GCC_I_DIRS_LIN = #$$HOME/include
-GCC_L_DIRS_LIN = #$$HOME/lib
+# Location(s) where EzC should look for `include` and `lib` subdirectories.
+# No biggie if the directory doesn't exist.
+PREFIXES = /usr /mingw64 /mingw32 $$HOME
 
 # Root directory
 ROOT = .
