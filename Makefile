@@ -40,7 +40,7 @@ SRC_SUBDIRS = EzUtil EzSDL
 # If `pkg-config` cannot find the package, `-I$(PREFIX)/include/$(PKG)` and
 # `-l$(PKG)` will be added to the build instead, for each PKG in PKGS and for
 # each PREFIX in PREFIXES. Commented out are examples.
-PKGS = SDL2 SDL2_image SDL2_ttf
+PKGS = sdl2 SDL2_image SDL2_ttf
 
 # Needed submodule include directories within /sub
 SUB_INC_DIRS =
