@@ -24,14 +24,17 @@
 ##############################  Standard Options  #############################
 ###############################################################################
 
+# Name for your shared library code.
+LIB_NAME = ezsdl
+
+# Name of the one application that you want to run when you call `make run`.
+# This should be equivalent to one of the items in `MAIN_SUBDIRS`.
+EXEC_ME = pong
+
 # Directory within /src of the app, example, and test that you want to build.
 # TODO: Allow compilation of multiple mains. This will require compiling the
 # shared API part of the code into a shared library.
 MAIN_SUBDIRS = pong
-
-# Name of the one application that you want to run when you call `make run`.
-# This should be equivalent to one of the items in `MAIN_SUBDIRS`.
-RUNME = pong
 
 # Source subdirectories. Shared among the apps, examples, and tests.
 SRC_SUBDIRS = EzUtil EzSDL
@@ -39,7 +42,8 @@ SRC_SUBDIRS = EzUtil EzSDL
 # Packages that you want to include in your project.
 # If `pkg-config` cannot find the package, `-I$(PREFIX)/include/$(PKG)` and
 # `-l$(PKG)` will be added to the build instead, for each PKG in PKGS and for
-# each PREFIX in PREFIXES. Commented out are examples.
+# each PREFIX in PREFIXES. These are CASE SENSITIVE! Double check the correct
+# case for your library. Commented out are examples.
 PKGS = sdl2 SDL2_image SDL2_ttf
 
 # Needed submodule include directories within /sub
@@ -62,6 +66,11 @@ SUB_SRC_FILES =
 # Compiler
 CC = gcc
 #CC = emcc
+
+# Compile API code to a dynamic (shared) library or static library.
+# When using dynamic mode, beware of DLL Hell.
+MODE = static
+#MODE = dynamic
 
 # C-Flags and library (`-l` only) settings
 # In many cases the order in which your `-l`s appear matters!

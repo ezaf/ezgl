@@ -15,4 +15,7 @@ install:
 - pushd SDL2_mixer-* && ./configure && make && sudo make install && popd
 - pushd SDL2_net-* && ./configure && make && sudo make install && popd
 - pushd SDL2_ttf-* && ./configure && make && sudo make install && popd
-script: make build
+script:
+- make init
+- make dirs
+- make compile
