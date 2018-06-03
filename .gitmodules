@@ -4,6 +4,6 @@
 [submodule "sub/m.css"]
 	path = sub/m.css
 	url = https://github.com/mosra/m.css.git
-[submodule "sub/ezc"]
-	path = sub/ezc
-	url = https://github.com/ezaf/ezc.git
+[submodule "sub/ezmake"]
+	path = sub/ezmake
+	url = https://github.com/ezaf/ezmake.git
