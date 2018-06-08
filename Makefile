@@ -27,24 +27,25 @@
 # Name for your shared library code.
 LIB_NAME = ezsdl
 
-# Name of the one application that you want to run when you call `make run`.
-# This should be equivalent to one of the items in `MAIN_SUBDIRS`.
-EXEC_ME = pong
+# Directories within /src of your library code.
+# Code in these subdirectories are meant to be shared among all apps and tests.
+SRC_SUBDIRS = EzSDL EzUtil
 
-# Directory within /src of the app, example, and test that you want to build.
-# TODO: Allow compilation of multiple mains. This will require compiling the
-# shared API part of the code into a shared library.
+# Directories within /src of the apps and tests that you want to build.
 MAIN_SUBDIRS = pong
 
-# Source subdirectories. Shared among the apps, examples, and tests.
-SRC_SUBDIRS = EzUtil EzSDL
+# Name of the application(s) you want to test when you call `make test`.
+TEST =
+
+# Name of the application (singular!) you want to run when you call `make run`.
+RUN = pong
 
 # Packages that you want to include in your project.
 # If `pkg-config` cannot find the package, `-I$(PREFIX)/include/$(PKG)` and
 # `-l$(PKG)` will be added to the build instead, for each PKG in PKGS and for
 # each PREFIX in PREFIXES. These are CASE SENSITIVE! Double check the correct
 # case for your library. Commented out are examples.
-PKGS = sdl2 SDL2_image SDL2_ttf
+PKGS = sdl2 SDL2_image SDL2_ttf #glfw3 gtk+-3.0
 
 # Needed submodule include directories within /sub
 SUB_INC_DIRS =
@@ -73,25 +74,20 @@ MODE = static
 #MODE = dynamic
 
 # C-Flags and library (`-l` only) settings
-# In many cases the order in which your `-l`s appear matters!
-# WARNING: EzC's emcc mode only supports libc, libc++, and SDL2 at the moment.
-ifeq ($(CC),emcc)
-	CF = -O3
-	LF = -s USE_SDL=2 -s USE_SDL_IMAGE=2 -s USE_SDL_TTF=2
-else
-	CF = -std=c11 -O3 -w
-	# The rest of LF will be taken care of by pkg-config
-	LF = -lm
-endif
+# In many cases the order in which your `-l`s appear matters! One limitation of
+# EzMake is that we assume all tests/mains use the same compiler flags. If this
+# becomes a big enough issue, this will be amended in a future version.
+CF = -std=c11 -O3 -w
+LF = -lm
 
 # Source file extensions you want compiled.
 SRC_EXTS = c #cpp
 
-# Location(s) where EzC should look for `include` and `lib` subdirectories.
+# Location(s) where EzMake should look for `include` and `lib` subdirectories
 # No biggie if the directory doesn't exist.
 PREFIXES = /usr /mingw64 /mingw32 $$HOME
 
-# Root directory
+# Project root directory
 ROOT = .
 
 # Submodule directory
@@ -101,10 +97,16 @@ SUB_DIR = $(ROOT)/sub
 
 
 ###############################################################################
-##########################  Initialize EzC Framework  #########################
+#########################  Initialize EzMake Framework  #######################
 ###############################################################################
 
-.PHONY : init
+.PHONY : default init
+
+default :
+	@echo
+	@echo "Run 'make init' if you haven't already to initialize the EzMake" \
+		"framework, then run 'make help' for further instruction."
+	@echo
 
 init :
 	@rm -rf $(SUB_DIR)/ezmake
@@ -112,9 +114,10 @@ init :
 	@rm -rf .git/modules/$(SUB_DIR)/ezmake
 	@rm -rf .git/modules/$(SUB_DIR)/m.css
 	@git rm -r --cached --ignore-unmatch $(SUB_DIR)
-	git submodule add -f https://github.com/ezaf/ezmake.git $(SUB_DIR)/ezmake
+	git submodule add -f https://gitlab.com/ezaf/ezmake.git $(SUB_DIR)/ezmake
 	git submodule add -f https://github.com/mosra/m.css.git $(SUB_DIR)/m.css
 	@rm -f script/ezmake.mk
+	@rm -f script/ezmake_open.sh
 	@mkdir -p script
 	@rmdir --ignore-fail-on-non-empty script
 
