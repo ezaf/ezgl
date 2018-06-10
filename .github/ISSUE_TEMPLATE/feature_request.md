@@ -4,14 +4,14 @@ about: Suggest an idea for this project
 
 ---
 
-**Feature Rationale**
-A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+## Feature Rationale  
+A brief description of what the problem is.
 
-**Proposed Solution**
-A clear and concise description of what you want to happen.
+## Proposed Solution  
+Outline what you want to happen.
 
-**Possible Alternatives**
-A clear and concise description of any alternative solutions or features you've considered.
+## Possible Alternatives  
+Describe alternative solutions you've considered.
 
-**Additional Context**
+## Additional Context  
 Add any other context or screenshots about the feature request here.
