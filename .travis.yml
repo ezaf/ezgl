@@ -17,4 +17,8 @@ install:
 - pushd SDL2_ttf-* && ./configure && make && sudo make install && popd
 script:
 - make init
-- make build
+- make build MODE=static
+- make clean
+- make init
+- make build MODE=dynamic
+- make clean

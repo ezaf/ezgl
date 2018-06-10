@@ -1,0 +1,10 @@
+before_script:
+
+test_build:
+  script:
+    - make init
+    - make build MODE=static
+    - make clean
+    - make init
+    - make build MODE=dynamic
+    - make clean
