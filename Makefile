@@ -32,10 +32,10 @@ LIB_NAME = ezsdl
 SRC_SUBDIRS = EzSDL EzUtil
 
 # Directories within /src of the apps and tests that you want to build.
-MAIN_SUBDIRS = pong
+MAIN_SUBDIRS = pong test_hello
 
 # Name of the application(s) you want to test when you call `make test`.
-TEST =
+TEST = test_hello
 
 # Name of the application (singular!) you want to run when you call `make run`.
 RUN = pong
