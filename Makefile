@@ -29,7 +29,7 @@ LIB_NAME = ezsdl
 
 # Directories within /src of your library code.
 # Code in these subdirectories are meant to be shared among all apps and tests.
-SRC_SUBDIRS = EzSDL EzUtil
+LIB_SUBDIR = EzSDL EzUtil
 
 # Directories within /src of the apps and tests that you want to build.
 MAIN_SUBDIRS = pong test_hello
@@ -77,7 +77,7 @@ MODE = static
 # In many cases the order in which your `-l`s appear matters! One limitation of
 # EzMake is that we assume all tests/mains use the same compiler flags. If this
 # becomes a big enough issue, this will be amended in a future version.
-CF = -std=c11 -O3 -w
+CF = -std=c89 -pedantic -O3 -w
 LF = -lm
 
 # Source file extensions you want compiled.
