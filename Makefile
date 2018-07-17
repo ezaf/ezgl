@@ -70,8 +70,8 @@ CC = gcc
 
 # Compile API code to a dynamic (shared) library or static library.
 # When using dynamic mode, beware of DLL Hell.
-MODE = static
-#MODE = dynamic
+#MODE = static
+MODE = dynamic
 
 # C-Flags and library (`-l` only) settings
 # In many cases the order in which your `-l`s appear matters! One limitation of
@@ -110,10 +110,8 @@ default :
 
 init :
 	@rm -rf $(SUB_DIR)/ezmake
-	@rm -rf $(SUB_DIR)/m.css
 	@rm -rf .git/modules/$(SUB_DIR)/ezmake
-	@rm -rf .git/modules/$(SUB_DIR)/m.css
-	@git rm -r --cached --ignore-unmatch $(SUB_DIR)
+	@git rm -r --cached --ignore-unmatch $(SUB_DIR)/ezmake
 	git submodule add -f https://github.com/ezaf/ezmake.git $(SUB_DIR)/ezmake
 	@rm -f script/ezmake.mk
 	@rm -f script/ezmake_open.sh
