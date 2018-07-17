@@ -1,17 +1,7 @@
-/** @file       ezsdl.h
- *  @brief      Include SDL2 and fix its non-C89-compliant macro.
- *  @details    If C89 compliance is desired, be sure to use
- *              @code{.c} #include "EzSDL/ezsdl.h" @endcode
- *              instead of
- *              @code{.c} #include <SDL2/SDL.h> @endcode
- *              This ensures that `SDL_FORCE_INLINE` gets defined before
- *              SDL2 gets included. At least on my machine with Windows 10,
- *              this macro was triggering errors while I was compiling with
- *              `gcc -std=c89 -pedantic`.
+/*  ezsdl.h
  *
- *  <!---------
- *  Copyright (c) 2018 Kirk Lange
- *  
+ *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
+ *
  *  This software is provided 'as-is', without any express or implied
  *  warranty.  In no event will the authors be held liable for any damages
  *  arising from the use of this software.
@@ -27,11 +17,22 @@
  *  2. Altered source versions must be plainly marked as such, and must not be
  *     misrepresented as being the original software.
  *  3. This notice may not be removed or altered from any source distribution.
- *  ---------->
  */
 
 #ifndef EZSDL_H
 #define EZSDL_H
+
+/** @file       ezsdl.h
+ *  @brief      Include SDL2 and fix its non-GNU-C89-compliant macro.
+ *  @details    If C89 compliance with GNU GCC is desired, be sure to use
+ *              @code{.c} #include "EzSDL/ezsdl.h" @endcode
+ *              instead of
+ *              @code{.c} #include <SDL2/SDL.h> @endcode
+ *              This ensures that `SDL_FORCE_INLINE` gets defined before
+ *              SDL2 gets included. At least on my machine with Windows 10,
+ *              this macro was triggering errors while I was compiling with
+ *              `gcc -std=c89 -pedantic`.
+ */
 
 #ifdef __cplusplus
 extern "C"

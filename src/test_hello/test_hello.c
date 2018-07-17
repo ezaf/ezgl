@@ -1,9 +1,7 @@
-/** @file       main.c
- *  @brief      Hello world example for EzSDL.
+/*  main.c
  *
- *  <!---------
  *  Copyright (c) 2018 Kirk Lange
- *  
+ *
  *  This software is provided 'as-is', without any express or implied
  *  warranty.  In no event will the authors be held liable for any damages
  *  arising from the use of this software.
@@ -19,24 +17,28 @@
  *  2. Altered source versions must be plainly marked as such, and must not be
  *     misrepresented as being the original software.
  *  3. This notice may not be removed or altered from any source distribution.
- *  ---------->
+ */
+
+/** @file       main.c
+ *  @brief      Hello world example for EzSDL.
  */
 
 #include "EzSDL/ezsdl_window.h"
-#include "EzUtil/ezutil_observer.h"
+#include "EzC/ezc_list.h"
+#include "EzC/ezc_callback.h"
 
 #include <stdio.h>
 
 
 
-uint8_t silly_event();
+uint8_t silly_event(ezsdl_window *window);
 
 
 
 int main(int argc, char *argv[])
 {
     ezsdl_window *ezw = ezsdl_window_new();
-    ezutil_observer_add(ezw->headEvent, &silly_event, ezw);
+    ezc_list_push_back(ezw->headEvent, ezc_callback_new(&silly_event, ezw));
 
     while (ezw->isRunning)
     {
@@ -47,7 +49,8 @@ int main(int argc, char *argv[])
         ezsdl_window_render(ezw);
     }
 
-    ezsdl_window_del(&ezw);
+    ezsdl_window_delete(&ezw);
+
     return 0;
 }
 

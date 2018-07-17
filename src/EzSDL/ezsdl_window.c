@@ -1,8 +1,7 @@
 /*  ezsdl_window.c
  *
- *  <!---------
- *  Copyright (c) 2018 Kirk Lange
- *  
+ *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
+ *
  *  This software is provided 'as-is', without any express or implied
  *  warranty.  In no event will the authors be held liable for any damages
  *  arising from the use of this software.
@@ -18,12 +17,12 @@
  *  2. Altered source versions must be plainly marked as such, and must not be
  *     misrepresented as being the original software.
  *  3. This notice may not be removed or altered from any source distribution.
- *  ---------->
  */
 
 #include "EzSDL/ezsdl_window.h"
-#include "EzUtil/ezutil_observer.h"
-#include "EzUtil/ezutil_log.h"
+#include "EzC/ezc_callback.h"
+#include "EzC/ezc_list.h"
+#include "EzC/ezc_log.h"
 
 #include <SDL2/SDL_image.h>
 
@@ -50,9 +49,9 @@ ezsdl_window* ezsdl_window_new()
 
     self->displayMode = (SDL_DisplayMode*) malloc(sizeof(SDL_DisplayMode));
     SDL_GetDesktopDisplayMode(0, self->displayMode);
-    
+
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
-    
+
     self->window = SDL_CreateWindow( "EzSDL",
             SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
             self->displayMode->w, self->displayMode->h,
@@ -69,11 +68,11 @@ ezsdl_window* ezsdl_window_new()
     self->font = TTF_OpenFont("res/UbuntuMono-R.ttf", self->displayMode->w/30);
     self->event = (SDL_Event*) malloc(sizeof(SDL_Event));
 
-    self->headEvent = ezutil_observer_new();
-    self->headEvent->notify = &ezsdl_window_event;
-    self->headEvent->data = self;
-    self->headUpdate = ezutil_observer_new();
-    self->headDraw = ezutil_observer_new();
+    self->headEvent = ezc_list_new(
+            ezc_callback_new(&ezsdl_window_event, self));
+
+    /* self->headUpdate = ezc_list_new(); */
+    /* self->headDraw = ezc_list_new(); */
 
     self->isRunning = 1;
     self->isPaused = 0;
@@ -81,15 +80,16 @@ ezsdl_window* ezsdl_window_new()
     PREV_FRAME = 0;
 
 
+    /* Currently, `error` is unused. */
     if (error)
     {
-        ezutil_log(FATAL, __func__, "Failed to create ezsdl_window instance.");
+        ezc_log(EZC_LOG_FATAL, "Failed to create ezsdl_window instance.");
         free(self);
         self = 0;
     }
     else
     {
-        ezutil_log(DEBUG, __func__, "Successfully created new ezsdl_window "
+        ezc_log(EZC_LOG_INFO, "Successfully created new ezsdl_window "
                 "instance.");
     }
 
@@ -98,7 +98,7 @@ ezsdl_window* ezsdl_window_new()
 
 
 
-uint8_t ezsdl_window_del(ezsdl_window **self)
+uint8_t ezsdl_window_delete(ezsdl_window **self)
 {
     if (*self)
     {
@@ -113,9 +113,13 @@ uint8_t ezsdl_window_del(ezsdl_window **self)
         free((*self)->displayMode);
         free((*self)->event);
 
-        ezutil_observer_del((*self)->headEvent);
-        ezutil_observer_del((*self)->headUpdate);
-        ezutil_observer_del((*self)->headDraw);
+        ezc_list_map((*self)->headEvent, ezc_callback_delete);
+        ezc_list_map((*self)->headUpdate, ezc_callback_delete);
+        ezc_list_map((*self)->headDraw, ezc_callback_delete);
+
+        ezc_list_delete((*self)->headEvent);
+        ezc_list_delete((*self)->headUpdate);
+        ezc_list_delete((*self)->headDraw);
 
         free(*self);
         *self = 0;
@@ -124,8 +128,8 @@ uint8_t ezsdl_window_del(ezsdl_window **self)
     }
     else
     {
-        ezutil_log(VITAL, __func__, "Skipped deletion of ezsdl_window "
-                "instance. Cannot free a null pointer.");
+        ezc_log(EZC_LOG_ERROR, "Skipped deletion of ezsdl_window instance. "
+                "Cannot free a null pointer.");
         return 0;
     }
 
@@ -139,14 +143,14 @@ uint8_t ezsdl_window_pollEvent(ezsdl_window *self)
     {
         while (SDL_PollEvent(self->event))
         {
-            ezutil_observer_notifyAll(self->headEvent);
+            ezc_list_map(self->headEvent, ezc_callback_call);
         }
 
         return 1;
     }
     else
     {
-        ezutil_log(MAJOR, __func__, "Skipped event polling. Reference to "
+        ezc_log(EZC_LOG_WARN, __func__, "Skipped event polling. Reference to "
                 "self is null.");
         return 0;
     }
@@ -161,14 +165,14 @@ uint8_t ezsdl_window_updateAll(ezsdl_window *self)
         if (PREV_FRAME != 0) self->delta = SDL_GetTicks() - PREV_FRAME;
         PREV_FRAME = SDL_GetTicks();
 
-        if (!self->isPaused) ezutil_observer_notifyAll(self->headUpdate);
+        if (!self->isPaused) ezc_list_map(self->headUpdate, ezc_callback_call);
 
         return 1;
     }
     else
     {
-        ezutil_log(MAJOR, __func__, "Skipped updating. Reference to self is "
-                "null.");
+        ezc_log(EZC_LOG_WARN, __func__, "Skipped updating. Reference to self "
+                "is null.");
         return 0;
     }
 }
@@ -179,13 +183,13 @@ uint8_t ezsdl_window_drawAll(ezsdl_window *self)
 {
     if (self)
     {
-        ezutil_observer_notifyAll(self->headDraw);
+        ezc_list_map(self->headDraw, ezc_callback_call);
         return 1;
     }
     else
     {
-        ezutil_log(MAJOR, __func__, "Skipped drawing. Reference to self is "
-                "null.");
+        ezc_log(EZC_LOG_WARN, __func__, "Skipped drawing. Reference to self "
+                "is null.");
         return 0;
     }
 }
