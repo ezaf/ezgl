@@ -29,10 +29,10 @@ LIB_NAME = ezsdl
 
 # Directories within /src of your library code.
 # Code in these subdirectories are meant to be shared among all apps and tests.
-LIB_SUBDIR = EzSDL EzUtil
+LIB_SUBDIR = EzSDL
 
 # Directories within /src of the apps and tests that you want to build.
-MAIN_SUBDIRS = pong test_hello
+MAIN_SUBDIRS = test_hello
 
 # Name of the application(s) you want to test when you call `make test`.
 TEST = test_hello
@@ -48,10 +48,10 @@ RUN = pong
 PKGS = sdl2 SDL2_image SDL2_ttf #glfw3 gtk+-3.0
 
 # Needed submodule include directories within /sub
-SUB_INC_DIRS =
+SUB_INC_DIRS = ezc/include
 
 # Needed submodule source directories within /sub
-SUB_SRC_DIRS =
+SUB_SRC_DIRS = ezc/src/EzC
 
 # If the submodule has its test source files in the same directory as its
 # actual API source files (facepalm), then you may want to manually specify

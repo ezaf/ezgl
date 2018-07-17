@@ -1,9 +1,7 @@
-/** @file       ezsdl_window.h
- *  @brief      Handle SDL windows, renderers, and events.
- *  
- *  <!---------
- *  Copyright (c) 2018 Kirk Lange
- *  
+/*  ezsdl_window.h
+ *
+ *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
+ *
  *  This software is provided 'as-is', without any express or implied
  *  warranty.  In no event will the authors be held liable for any damages
  *  arising from the use of this software.
@@ -19,11 +17,15 @@
  *  2. Altered source versions must be plainly marked as such, and must not be
  *     misrepresented as being the original software.
  *  3. This notice may not be removed or altered from any source distribution.
- *  ---------->
  */
 
 #ifndef EZSDL_WINDOW_H
 #define EZSDL_WINDOW_H
+
+/** @file       ezsdl_window.h
+ *  @brief      Handle SDL windows, renderers, and events.
+ *  @details    TODO: seperate input management into another module.
+ */
 
 #ifdef __cplusplus
 extern "C"
@@ -37,7 +39,7 @@ extern "C"
 
 #include <stdint.h>
 
-struct ezutil_observer;
+struct ezc_list;
 
 
 
@@ -49,9 +51,9 @@ typedef struct ezsdl_window
     SDL_Renderer           *renderer;
     TTF_Font               *font;
     SDL_Event              *event;
-    struct ezutil_observer *headEvent;
-    struct ezutil_observer *headUpdate;
-    struct ezutil_observer *headDraw;
+    struct ezc_list        *headEvent;
+    struct ezc_list        *headUpdate;
+    struct ezc_list        *headDraw;
     uint8_t                 isRunning;
     uint8_t                 isPaused;
     uint32_t                delta;
@@ -66,7 +68,7 @@ ezsdl_window;
  *  @details    Some pretty prose here...
  */
 ezsdl_window*   ezsdl_window_new();
-uint8_t         ezsdl_window_del(ezsdl_window **self);
+uint8_t         ezsdl_window_delete(ezsdl_window **self);
 
 uint8_t         ezsdl_window_pollEvent(ezsdl_window *self);
 uint8_t         ezsdl_window_updateAll(ezsdl_window *self);
