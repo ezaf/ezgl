@@ -115,7 +115,6 @@ init :
 	@rm -rf .git/modules/$(SUB_DIR)/m.css
 	@git rm -r --cached --ignore-unmatch $(SUB_DIR)
 	git submodule add -f https://github.com/ezaf/ezmake.git $(SUB_DIR)/ezmake
-	git submodule add -f https://github.com/mosra/m.css.git $(SUB_DIR)/m.css
 	@rm -f script/ezmake.mk
 	@rm -f script/ezmake_open.sh
 	@mkdir -p script
