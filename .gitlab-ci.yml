@@ -1,0 +1,32 @@
+image: alpine
+
+before_script:
+- apk update
+- apk add doxygen
+- apk add make
+- apk add git
+#- apk add gcc
+#- apk add libc-dev
+
+# EzMake defaults to building and running all tests
+# test_all:
+#   script:
+#   - make init
+#   - make build MODE=static
+#   - make test
+#   - make clean
+#   - make init
+#   - make build MODE=dynamic
+#   - make test
+#   - make clean
+
+pages:
+  script:
+  - make init
+  - doxygen
+  - mv docs/ public/
+  artifacts:
+    paths:
+    - public
+  only:
+  - master
