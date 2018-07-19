@@ -1,9 +1,7 @@
-/** @file       pong_ball.h
- *  @brief      Functions and structures for pong paddle.
- *  
- *  <!---------
- *  Copyright (c) 2018 Kirk Lange
- *  
+/*  pong_ball.h
+ *
+ *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
+ *
  *  This software is provided 'as-is', without any express or implied
  *  warranty.  In no event will the authors be held liable for any damages
  *  arising from the use of this software.
@@ -19,11 +17,14 @@
  *  2. Altered source versions must be plainly marked as such, and must not be
  *     misrepresented as being the original software.
  *  3. This notice may not be removed or altered from any source distribution.
- *  ---------->
  */
 
 #ifndef PONG_BALL_H
 #define PONG_BALL_H
+
+/** @file       pong_ball.h
+ *  @brief      Pong ball module.
+ */
 
 #ifdef __cplusplus
 extern "C"
@@ -62,7 +63,7 @@ pong_ball;
 
 
 pong_ball*      pong_ball_new(SDL_Color *color, ezsdl_window *window);
-uint8_t         pong_ball_del(pong_ball **self);
+uint8_t         pong_ball_delete(pong_ball **self);
 
 uint8_t         pong_ball_event(pong_ball *self);
 uint8_t         pong_ball_update(pong_ball *self);

@@ -32,7 +32,7 @@ LIB_NAME = ezsdl
 LIB_SUBDIR = EzSDL
 
 # Directories within /src of the apps and tests that you want to build.
-MAIN_SUBDIRS = test_hello
+MAIN_SUBDIRS = test_hello pong
 
 # Name of the application(s) you want to test when you call `make test`.
 TEST = test_hello
@@ -56,7 +56,7 @@ SUB_SRC_DIRS = ezc/src/EzC
 # If the submodule has its test source files in the same directory as its
 # actual API source files (facepalm), then you may want to manually specify
 # individual source files here (including the file extension).
-SUB_SRC_FILES =
+SUB_SRC_FILES = #parson/parson.c
 
 
 
