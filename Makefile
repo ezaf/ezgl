@@ -77,7 +77,7 @@ MODE = dynamic
 # In many cases the order in which your `-l`s appear matters! One limitation of
 # EzMake is that we assume all tests/mains use the same compiler flags. If this
 # becomes a big enough issue, this will be amended in a future version.
-CF = -std=c89 -pedantic -O3 -w
+CF = -std=c89 -pedantic -O3 -w #-g
 LF = -lm
 
 # Source file extensions you want compiled.
