@@ -1,9 +1,6 @@
 [submodule "sub/ezmake"]
 	path = sub/ezmake
 	url = https://github.com/ezaf/ezmake.git
-[submodule "sub/parson"]
-	path = sub/parson
-	url = https://github.com/kgabis/parson.git
 [submodule "sub/ezc"]
 	path = sub/ezc
 	url = https://github.com/ezaf/ezc.git

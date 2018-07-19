@@ -64,9 +64,11 @@ ezsdl_window* ezsdl_window_new()
     self->renderer = SDL_CreateRenderer( self->window,
             -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC );
 
-    SDL_SetRenderDrawColor(self->renderer, 0x00, 0x00, 0xFF, 0xFF);
+    SDL_SetRenderDrawColor(self->renderer, 0x00, 0x00, 0x00, 0xFF);
 
-    self->font = TTF_OpenFont("res/UbuntuMono-R.ttf", self->displayMode->w/30);
+    self->font = TTF_OpenFont("data/UbuntuMono-R.ttf",
+            self->displayMode->w/30);
+
     self->event = (SDL_Event*) malloc(sizeof(SDL_Event));
 
     ezc_list_push_back(self->headEvent,
@@ -211,7 +213,7 @@ uint8_t ezsdl_window_render(ezsdl_window *self)
 {
     /* TODO: add error checking */
 
-    SDL_SetRenderDrawColor(self->renderer, 0x00, 0x00, 0xFF, 0xFF);
+    SDL_SetRenderDrawColor(self->renderer, 0x00, 0x00, 0x00, 0xFF);
     SDL_RenderPresent(self->renderer);
 }
 
