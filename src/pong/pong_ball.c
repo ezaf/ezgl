@@ -1,8 +1,7 @@
 /*  pong_ball.c
  *
- *  <!---------
- *  Copyright (c) 2018 Kirk Lange
- *  
+ *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
+ *
  *  This software is provided 'as-is', without any express or implied
  *  warranty.  In no event will the authors be held liable for any damages
  *  arising from the use of this software.
@@ -18,13 +17,15 @@
  *  2. Altered source versions must be plainly marked as such, and must not be
  *     misrepresented as being the original software.
  *  3. This notice may not be removed or altered from any source distribution.
- *  ---------->
  */
 
-#include "EzSDL/ezsdl_window.h"
-#include "EzUtil/ezutil_log.h"
-#include "EzUtil/ezutil_observer.h"
 #include "pong_ball.h"
+
+#include "EzSDL/ezsdl_window.h"
+
+#include "EzC/ezc_callback.h"
+#include "EzC/ezc_list.h"
+#include "EzC/ezc_log.h"
 
 #include <math.h>
 #include <stdlib.h>
@@ -50,7 +51,7 @@ uint8_t pong_ball_reset(pong_ball *self, int8_t direction)
             self->dx *= (direction/abs(direction));
         else if (rand() % 2)
             self->dx *= -1;
-        
+
         self->dy = sin(DTOR(angle)) * windowRatio * PONG_BALL_VEL;
 
         if (rand() % 2)
@@ -78,16 +79,19 @@ pong_ball* pong_ball_new(SDL_Color *color, ezsdl_window *window)
     self->d = self->window->displayMode->w * 0.01;
     pong_ball_reset(self, 0);
 
-    ezutil_observer_add(self->window->headEvent, &pong_ball_event, self);
-    ezutil_observer_add(self->window->headUpdate, &pong_ball_update, self);
-    ezutil_observer_add(self->window->headDraw, &pong_ball_draw, self);
+    ezc_list_push_back(self->window->headEvent,
+            ezc_callback_new(&pong_ball_event, self));
+    ezc_list_push_back(self->window->headUpdate,
+            ezc_callback_new(&pong_ball_update, self));
+    ezc_list_push_back(self->window->headDraw,
+            ezc_callback_new(&pong_ball_draw, self));
 
     return self;
 }
 
 
 
-uint8_t pong_ball_del(pong_ball **self)
+uint8_t pong_ball_delete(pong_ball **self)
 {
     if (*self)
     {
@@ -98,8 +102,7 @@ uint8_t pong_ball_del(pong_ball **self)
     }
     else
     {
-        ezutil_log(VITAL, __func__, "Skipped deletion of pong_ball "
-                "instance. Cannot free a null pointer.");
+        /* TODO: error handling */
         return 0;
     }
 
@@ -174,7 +177,7 @@ uint8_t pong_ball_update(pong_ball *self)
             if ((self->pauseTime -= self->window->delta) <= 0)
                 self->pauseTime = 0;
         }
-        
+
         snprintf(self->scoreStrL, 8, "%i", self->scoreL);
         snprintf(self->scoreStrR, 8, "%i", self->scoreR);
 
@@ -221,7 +224,7 @@ uint8_t pong_ball_draw(pong_ball *self)
                     self->window->displayMode->w * 0.425,
                     self->window->displayMode->h * 0.8);
         }
-        
+
         return 1;
     }
     else

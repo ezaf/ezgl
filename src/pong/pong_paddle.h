@@ -1,9 +1,7 @@
-/** @file       pong_paddle.h
- *  @brief      Functions and structures for pong paddle.
- *  
- *  <!---------
- *  Copyright (c) 2018 Kirk Lange
- *  
+/*  pong_paddle.h
+ *
+ *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
+ *
  *  This software is provided 'as-is', without any express or implied
  *  warranty.  In no event will the authors be held liable for any damages
  *  arising from the use of this software.
@@ -19,11 +17,14 @@
  *  2. Altered source versions must be plainly marked as such, and must not be
  *     misrepresented as being the original software.
  *  3. This notice may not be removed or altered from any source distribution.
- *  ---------->
  */
 
 #ifndef PONG_PADDLE_H
 #define PONG_PADDLE_H
+
+/** @file       pong_paddle.h
+ *  @brief      Pong paddle module.
+ */
 
 #ifdef __cplusplus
 extern "C"
@@ -65,7 +66,7 @@ pong_paddle*    pong_paddle_new(uint16_t keyToggleAI,
                         uint16_t keyUp, uint16_t keyDown,
                         pong_ball *ball, SDL_Color *color,
                         ezsdl_window *window);
-uint8_t         pong_paddle_del(pong_paddle **self);
+uint8_t         pong_paddle_delete(pong_paddle **self);
 
 uint8_t         pong_paddle_event(pong_paddle *self);
 uint8_t         pong_paddle_update(pong_paddle *self);

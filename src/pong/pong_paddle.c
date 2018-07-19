@@ -1,8 +1,7 @@
 /*  pong_paddle.c
  *
- *  <!---------
- *  Copyright (c) 2018 Kirk Lange
- *  
+ *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
+ *
  *  This software is provided 'as-is', without any express or implied
  *  warranty.  In no event will the authors be held liable for any damages
  *  arising from the use of this software.
@@ -18,14 +17,17 @@
  *  2. Altered source versions must be plainly marked as such, and must not be
  *     misrepresented as being the original software.
  *  3. This notice may not be removed or altered from any source distribution.
- *  ---------->
  */
 
-#include "EzSDL/ezsdl_window.h"
-#include "EzUtil/ezutil_log.h"
-#include "EzUtil/ezutil_observer.h"
-#include "pong_ball.h"
 #include "pong_paddle.h"
+#include "pong_ball.h"
+
+#include "EzSDL/ezsdl_window.h"
+
+#include "EzC/ezc_assert.h"
+#include "EzC/ezc_callback.h"
+#include "EzC/ezc_list.h"
+#include "EzC/ezc_log.h"
 
 #include <math.h>
 #include <stdio.h>
@@ -52,31 +54,26 @@ pong_paddle* pong_paddle_new(
     self->AI_redirTime = 0;
     self->isAI = 1;
 
-    ezutil_observer_add(self->window->headEvent, &pong_paddle_event, self);
-    ezutil_observer_add(self->window->headUpdate, &pong_paddle_update, self);
-    ezutil_observer_add(self->window->headDraw, &pong_paddle_draw, self);
+    ezc_list_push_back(self->window->headEvent,
+            ezc_callback_new(&pong_paddle_event, self));
+    ezc_list_push_back(self->window->headUpdate,
+            ezc_callback_new(&pong_paddle_update, self));
+    ezc_list_push_back(self->window->headDraw,
+            ezc_callback_new(&pong_paddle_draw, self));
 
     return self;
 }
 
 
 
-uint8_t pong_paddle_del(pong_paddle **self)
+uint8_t pong_paddle_delete(pong_paddle **self)
 {
-    if (*self)
-    {
-        free(*self);
-        *self = 0;
+    assert(self != NULL && *self != NULL);
 
-        return 1;
-    }
-    else
-    {
-        ezutil_log(VITAL, __func__, "Skipped deletion of pong_paddle "
-                "instance. Cannot free a null pointer.");
-        return 0;
-    }
+    free(*self);
+    *self = 0;
 
+    return 1;
 }
 
 
@@ -133,14 +130,14 @@ uint8_t pong_paddle_update(pong_paddle *self)
                 float old_dy = self->dy;
                 float abs_dy = ((float) self->window->displayMode->h / 1080.0) *
                     PONG_PADDLE_VEL;
-                
+
                 if (self->ball->y+self->ball->d < self->y+(self->h*0.25))
                     self->dy = -abs_dy;
                 else if (self->ball->y > self->y+(self->h*0.75))
                     self->dy = abs_dy;
                 else
                     self->dy = 0;
-                
+
                 uint8_t isLeft = self->x < (self->window->displayMode->w/2);
                 if ((self->ball->x < self->x) == isLeft ||
                         (self->ball->x > self->x) == !isLeft)
@@ -152,11 +149,11 @@ uint8_t pong_paddle_update(pong_paddle *self)
 
             self->AI_sleepTime += self->window->delta;
             self->AI_redirTime += self->window->delta;
-            
+
             if (self->AI_sleepTime >= PONG_PADDLE_AI_SLEEP_TIME*4)
                     self->AI_sleepTime = 0;
         }
-        
+
         /* End AI-related control */
         /* Begin physics and collision code */
 

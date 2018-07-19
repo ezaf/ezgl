@@ -20,6 +20,7 @@
  */
 
 #include "EzSDL/ezsdl_window.h"
+
 #include "EzC/ezc_callback.h"
 #include "EzC/ezc_list.h"
 #include "EzC/ezc_log.h"
@@ -63,14 +64,15 @@ ezsdl_window* ezsdl_window_new()
     self->renderer = SDL_CreateRenderer( self->window,
             -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC );
 
-    SDL_SetRenderDrawColor(self->renderer, 0x00, 0x00, 0x00, 0xFF);
+    SDL_SetRenderDrawColor(self->renderer, 0x00, 0x00, 0xFF, 0xFF);
 
     self->font = TTF_OpenFont("res/UbuntuMono-R.ttf", self->displayMode->w/30);
     self->event = (SDL_Event*) malloc(sizeof(SDL_Event));
 
-    self->headEvent = ezc_list_new(
+    ezc_list_push_back(self->headEvent,
             ezc_callback_new(&ezsdl_window_event, self));
 
+    /* self->headEvent = ezc_list_new(); */
     /* self->headUpdate = ezc_list_new(); */
     /* self->headDraw = ezc_list_new(); */
 
@@ -200,7 +202,6 @@ uint8_t ezsdl_window_clear(ezsdl_window *self)
 {
     /* TODO: add error checking */
 
-    SDL_SetRenderDrawColor(self->renderer, 0x00, 0x00, 0x00, 0xFF);
     SDL_RenderClear(self->renderer);
 }
 
@@ -210,6 +211,7 @@ uint8_t ezsdl_window_render(ezsdl_window *self)
 {
     /* TODO: add error checking */
 
+    SDL_SetRenderDrawColor(self->renderer, 0x00, 0x00, 0xFF, 0xFF);
     SDL_RenderPresent(self->renderer);
 }
 
