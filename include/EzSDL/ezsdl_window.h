@@ -1,3 +1,5 @@
+#if 0
+
 /*  ezsdl_window.h
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
@@ -89,3 +91,5 @@ uint8_t         ezsdl_window_drawRect(ezsdl_window *self, SDL_Color *color,
 #endif
 
 #endif /* EZSDL_WINDOW_H */
+
+#endif
