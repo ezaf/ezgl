@@ -109,10 +109,6 @@ default :
 	@echo
 
 init :
-	@rm -rf $(SUB_DIR)/ezmake
-	@rm -rf .git/modules/$(SUB_DIR)/ezmake
-	@git rm -r --cached --ignore-unmatch $(SUB_DIR)/ezmake
-	git submodule add -f https://github.com/ezaf/ezmake.git $(SUB_DIR)/ezmake
-	git submodule update --remote --force
+	git submodule update --init --remote --force
 
 -include $(SUB_DIR)/ezmake/script/ezmake.mk
