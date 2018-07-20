@@ -32,13 +32,13 @@ LIB_NAME = ezsdl
 LIB_SUBDIR = EzSDL
 
 # Directories within /src of the apps and tests that you want to build.
-MAIN_SUBDIRS = test_hello pong
+MAIN_SUBDIRS = test_hello
 
 # Name of the application(s) you want to test when you call `make test`.
 TEST = test_hello
 
 # Name of the application (singular!) you want to run when you call `make run`.
-RUN = pong
+RUN =
 
 # Packages that you want to include in your project.
 # If `pkg-config` cannot find the package, `-I$(PREFIX)/include/$(PKG)` and
@@ -48,15 +48,15 @@ RUN = pong
 PKGS = sdl2 SDL2_image SDL2_ttf #glfw3 gtk+-3.0
 
 # Needed submodule include directories within /sub
-SUB_INC_DIRS = ezc/include
+SUB_INC_DIRS =
 
 # Needed submodule source directories within /sub
-SUB_SRC_DIRS = ezc/src/EzC
+SUB_SRC_DIRS =
 
 # If the submodule has its test source files in the same directory as its
 # actual API source files (facepalm), then you may want to manually specify
 # individual source files here (including the file extension).
-SUB_SRC_FILES = #parson/parson.c
+SUB_SRC_FILES = parson/parson.c
 
 
 
@@ -65,7 +65,7 @@ SUB_SRC_FILES = #parson/parson.c
 ###############################################################################
 
 # Compiler
-CC = gcc
+CC = g++
 #CC = emcc
 
 # Compile API code to a dynamic (shared) library or static library.
@@ -77,11 +77,11 @@ MODE = dynamic
 # In many cases the order in which your `-l`s appear matters! One limitation of
 # EzMake is that we assume all tests/mains use the same compiler flags. If this
 # becomes a big enough issue, this will be amended in a future version.
-CF = -std=c89 -pedantic -O3 -w #-g
-LF = -lm
+CF = -std=c++11 -O3 -w #-g
+LF = #-lm
 
 # Source file extensions you want compiled.
-SRC_EXTS = c #cpp
+SRC_EXTS = c cpp
 
 # Location(s) where EzMake should look for `include` and `lib` subdirectories
 # No biggie if the directory doesn't exist.
@@ -113,9 +113,6 @@ init :
 	@rm -rf .git/modules/$(SUB_DIR)/ezmake
 	@git rm -r --cached --ignore-unmatch $(SUB_DIR)/ezmake
 	git submodule add -f https://github.com/ezaf/ezmake.git $(SUB_DIR)/ezmake
-	@rm -f script/ezmake.mk
-	@rm -f script/ezmake_open.sh
-	@mkdir -p script
-	@rmdir --ignore-fail-on-non-empty script
+	git submodule update --remote --force
 
 -include $(SUB_DIR)/ezmake/script/ezmake.mk

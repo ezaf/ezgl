@@ -1,3 +1,5 @@
+#if 0
+
 /*  ezsdl_window.c
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
@@ -292,3 +294,5 @@ uint8_t ezsdl_window_drawRect(ezsdl_window *self, SDL_Color *color,
     SDL_SetRenderDrawColor(self->renderer, color->r, color->g, color->b, 0xFF);
     SDL_RenderFillRect(self->renderer, &rect);
 }
+
+#endif

@@ -1,4 +1,4 @@
-/*  main.c
+/*  test_hello.cpp
  *
  *  Copyright (c) 2018 Kirk Lange
  *
@@ -19,58 +19,50 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-/** @file       main.c
+/** @file       test_hello.cpp
  *  @brief      Hello world example for EzSDL.
  */
 
-#include "EzSDL/ezsdl_window.h"
-#include "EzC/ezc_list.h"
-#include "EzC/ezc_callback.h"
+#include "EzSDL/Window.hpp"
 
-#include <stdio.h>
+#include <SDL2/SDL.h>
 
+#include <iostream>
 
-
-uint8_t silly_event(ezsdl_window *window);
+void sillyEvent(EzSDL::WindowPtr window);
 
 
 
 int main(int argc, char *argv[])
 {
-    ezsdl_window *ezw = ezsdl_window_new();
-    ezc_list_push_back(ezw->headEvent, ezc_callback_new(&silly_event, ezw));
+    SDL_Init(SDL_INIT_EVERYTHING);
 
-    while (ezw->isRunning)
-    {
-        ezsdl_window_pollEvent(ezw);
-        ezsdl_window_updateAll(ezw);
-        ezsdl_window_clear(ezw);
-        ezsdl_window_drawAll(ezw);
-        ezsdl_window_render(ezw);
-    }
+    EzSDL::WindowPtr window(EzSDL::Window::create("default.json"));
 
-    ezsdl_window_delete(&ezw);
+    SDL_Delay(3000);
+
+    window.reset();
+
+    SDL_Quit();
 
     return 0;
 }
 
 
 
-uint8_t silly_event(ezsdl_window *window)
+void sillyEvent(EzSDL::WindowPtr window)
 {
-    SDL_Event e = *(window->event);
+    SDL_Event e; /* TODO: get event from window!!! */
 
     switch (e.type)
     {
         case SDL_KEYDOWN:
             if (e.key.keysym.scancode == SDL_SCANCODE_SPACE)
-                printf("Silly event down!\n");
+                std::cout << "Silly spacebar event down!" << std::endl;
             break;
         case SDL_KEYUP:
             if (e.key.keysym.scancode == SDL_SCANCODE_SPACE)
-                printf("Silly event up!\n");
+                std::cout << "Silly spacebar event up!" << std::endl;
             break;
     }
-
-    return 1;
 }
