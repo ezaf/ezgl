@@ -23,34 +23,33 @@
  *  @brief      Hello world example for EzSDL.
  */
 
-#include "EzSDL/Window.hpp"
+#include "EzSDL/WindowFactory.hpp"
 
 #include <SDL2/SDL.h>
 
 #include <iostream>
 
-void sillyEvent(EzSDL::WindowPtr window);
+void sillyEvent(EzSDL::Window window);
 
 
 
 int main(int argc, char *argv[])
 {
-    SDL_Init(SDL_INIT_EVERYTHING);
+    EzSDL::Window windowA(EzSDL::WindowFactory::create("default.json"));
 
-    EzSDL::WindowPtr window(EzSDL::Window::create("default.json"));
-
+    SDL_Init(SDL_INIT_TIMER);
     SDL_Delay(3000);
 
-    window.reset();
+    EzSDL::Window windowB(EzSDL::WindowFactory::create("default.json"));
 
-    SDL_Quit();
+    SDL_Delay(3000);
 
     return 0;
 }
 
 
 
-void sillyEvent(EzSDL::WindowPtr window)
+void sillyEvent(EzSDL::Window window)
 {
     SDL_Event e; /* TODO: get event from window!!! */
 
