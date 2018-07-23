@@ -1,4 +1,4 @@
-/*  EzSDL/Window.cpp
+/*  EzSDL/WindowFactory.cpp
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -19,32 +19,52 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-#include "EzSDL/Window.hpp"
+#include "EzSDL/WindowFactory.hpp"
 
-#include <SDL2/SDL_log.h>
+#include <SDL2/SDL.h>
+
+#include <cstdlib>
 
 namespace EzSDL
 {
 
 
 
-WindowPtr Window::create(std::string const &file)
+int WindowFactory::instances = 0;
+
+
+
+Window WindowFactory::create(std::string const &file)
 {
-    return WindowPtr(new Window(file));
+    return Window(new WindowFactory(file));
 }
 
 
 
-Window::Window(std::string const &file) :
+WindowFactory::WindowFactory(std::string const &file) :
     window(nullptr, SDL_DestroyWindow)
 {
+    // Initialize SDL video if necessary
+    if (WindowFactory::instances == 0 && SDL_WasInit(SDL_INIT_VIDEO) == 0)
+    {
+#ifndef NDEBUG // Make all logs visible when debugging
+        SDL_LogSetAllPriority(SDL_LOG_PRIORITY_WARN);
+#endif
+
+        SDL_Init(SDL_INIT_VIDEO);
+        atexit(SDL_Quit);
+        SDL_LogMessage(SDL_LOG_CATEGORY_VIDEO, SDL_LOG_PRIORITY_INFO,
+                "Initialized SDL video subsystem.\n");
+    }
+
+    // Create actual window
     window.reset(SDL_CreateWindow("EzSDL Demo",
             SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
             640, 480,
             SDL_WINDOW_RESIZABLE |
-            SDL_WINDOW_INPUT_GRABBED |
             SDL_WINDOW_ALLOW_HIGHDPI));
 
+    // Error checking
     if (window.get() == nullptr)
     {
         SDL_LogMessage(SDL_LOG_CATEGORY_VIDEO, SDL_LOG_PRIORITY_ERROR,
@@ -52,6 +72,7 @@ Window::Window(std::string const &file) :
     }
     else
     {
+        WindowFactory::instances++;
         SDL_LogMessage(SDL_LOG_CATEGORY_VIDEO, SDL_LOG_PRIORITY_INFO,
                 "Sucessfully created window.\n");
     }
@@ -59,8 +80,17 @@ Window::Window(std::string const &file) :
 
 
 
-Window::~Window()
+WindowFactory::~WindowFactory()
 {
+    WindowFactory::instances--;
+
+    if (WindowFactory::instances <= 0)
+    {
+        SDL_QuitSubSystem(SDL_INIT_VIDEO);
+        SDL_LogMessage(SDL_LOG_CATEGORY_VIDEO, SDL_LOG_PRIORITY_INFO,
+                "Quit SDL video subsystem.\n");
+        /* No need to call `SDL_Quit()`, we already did `atexit(SDL_Quit)`. */
+    }
 }
 
 
