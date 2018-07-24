@@ -23,7 +23,7 @@
 
 #include <SDL2/SDL.h>
 
-#include <cstdlib>
+#include <iostream>
 
 namespace EzSDL
 {
@@ -42,7 +42,10 @@ Window WindowFactory::create(std::string const &file)
 
 
 WindowFactory::WindowFactory(std::string const &file) :
-    window(nullptr, SDL_DestroyWindow)
+    window(nullptr, SDL_DestroyWindow),
+    renderer(nullptr, SDL_DestroyRenderer),
+    isPaused(false),
+    prevFrameTime(SDL_GetTicks())
 {
     // Initialize SDL video if necessary
     if (WindowFactory::instances == 0 && SDL_WasInit(SDL_INIT_VIDEO) == 0)
@@ -51,30 +54,57 @@ WindowFactory::WindowFactory(std::string const &file) :
         SDL_LogSetAllPriority(SDL_LOG_PRIORITY_WARN);
 #endif
 
-        SDL_Init(SDL_INIT_VIDEO);
-        atexit(SDL_Quit);
-        SDL_LogMessage(SDL_LOG_CATEGORY_VIDEO, SDL_LOG_PRIORITY_INFO,
-                "Initialized SDL video subsystem.\n");
+        SDL_Init(SDL_INIT_EVERYTHING);
+
+        SDL_version linked;
+        SDL_GetVersion(&linked);
+
+        std::cout << "Using SDL version " <<
+            static_cast<int>(linked.major) << "." <<
+            static_cast<int>(linked.minor) << "." <<
+            static_cast<int>(linked.patch) << "." << std::endl <<
+            "Initialized all SDL systems." << std::endl;
+    }
+
+    // TODO: parse a json config file
+    bool enableFullscreen = true;
+
+    SDL_DisplayMode displayMode;
+    if (SDL_GetDesktopDisplayMode(0, &displayMode) != 0)
+    {
+        enableFullscreen = false;
+        std::cout << "Failed to get desktop display mode: " <<
+            SDL_GetError() << std::endl;
     }
 
     // Create actual window
-    window.reset(SDL_CreateWindow("EzSDL Demo",
-            SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-            640, 480,
-            SDL_WINDOW_RESIZABLE |
-            SDL_WINDOW_ALLOW_HIGHDPI));
+    window.reset(
+            SDL_CreateWindow("EzSDL Demo",
+                SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+                enableFullscreen ? displayMode.w : 640,
+                enableFullscreen ? displayMode.h : 480,
+                SDL_WINDOW_BORDERLESS |
+                SDL_WINDOW_ALLOW_HIGHDPI));
+
+    renderer.reset(
+            SDL_CreateRenderer(getWindow(), -1,
+                SDL_RENDERER_ACCELERATED |
+                SDL_RENDERER_PRESENTVSYNC));
+
+    SDL_SetRenderDrawColor(getRenderer(), 0x00, 0x00, 0x00, 0xFF);
 
     // Error checking
-    if (window.get() == nullptr)
+    if (getWindow() != nullptr && getRenderer() != nullptr)
     {
-        SDL_LogMessage(SDL_LOG_CATEGORY_VIDEO, SDL_LOG_PRIORITY_ERROR,
-                "Failed to create window: %s\n", SDL_GetError());
+        WindowFactory::instances++;
+        std::cout << "Successfully created window and its renderer." <<
+            std::endl;
     }
     else
     {
-        WindowFactory::instances++;
-        SDL_LogMessage(SDL_LOG_CATEGORY_VIDEO, SDL_LOG_PRIORITY_INFO,
-                "Sucessfully created window.\n");
+        std::cout << "Failed to create window and/or renderer: " <<
+            SDL_GetError() << std::endl;
+
     }
 }
 
@@ -86,11 +116,23 @@ WindowFactory::~WindowFactory()
 
     if (WindowFactory::instances <= 0)
     {
-        SDL_QuitSubSystem(SDL_INIT_VIDEO);
-        SDL_LogMessage(SDL_LOG_CATEGORY_VIDEO, SDL_LOG_PRIORITY_INFO,
-                "Quit SDL video subsystem.\n");
-        /* No need to call `SDL_Quit()`, we already did `atexit(SDL_Quit)`. */
+        SDL_Quit();
+        std::cout << "Quit all SDL systems." << std::endl;
     }
+}
+
+
+
+SDL_Window* WindowFactory::getWindow() const
+{
+    return window.get();
+}
+
+
+
+SDL_Renderer* WindowFactory::getRenderer() const
+{
+    return renderer.get();
 }
 
 

@@ -33,6 +33,7 @@
  *              that is still reachable.
  */
 
+#include <SDL2/SDL_render.h>
 #include <SDL2/SDL_video.h>
 
 #include <memory>
@@ -67,7 +68,8 @@ public:
      */
     virtual ~WindowFactory();
 
-    SDL_Window* get() const;
+    SDL_Window* getWindow() const;
+    SDL_Renderer* getRenderer() const;
 
 protected:
 
@@ -76,9 +78,15 @@ private:
     WindowFactory(WindowFactory const &other) = delete;
     WindowFactory& operator=(WindowFactory const &other) = delete;
 
+    // Count of how many windows produced by this factory are currently alive.
     static int instances;
 
+    // Pointer to SDL modules themselves
     std::unique_ptr<SDL_Window, decltype(&SDL_DestroyWindow)> window;
+    std::unique_ptr<SDL_Renderer, decltype(&SDL_DestroyRenderer)> renderer;
+
+    bool isPaused;
+    unsigned long prevFrameTime;
 };
 
 }; /* namespace EzSDL */

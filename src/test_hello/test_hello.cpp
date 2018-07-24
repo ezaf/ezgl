@@ -35,14 +35,17 @@ void sillyEvent(EzSDL::Window window);
 
 int main(int argc, char *argv[])
 {
-    EzSDL::Window windowA(EzSDL::WindowFactory::create("default.json"));
+    EzSDL::Window window(EzSDL::WindowFactory::create("default.json"));
 
-    SDL_Init(SDL_INIT_TIMER);
-    SDL_Delay(3000);
+    long ms = 3000;
 
-    EzSDL::Window windowB(EzSDL::WindowFactory::create("default.json"));
-
-    SDL_Delay(3000);
+    while (ms > 0)
+    {
+        SDL_RenderClear(window->getRenderer());
+        SDL_RenderPresent(window->getRenderer());
+        SDL_Delay(10);
+        ms -= 10;
+    }
 
     return 0;
 }
