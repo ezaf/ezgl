@@ -1,4 +1,4 @@
-/*  EzSDL/WindowFactory.hpp
+/*  EzSDL/Window.hpp
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -19,16 +19,12 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef EZSDL_WINDOWFACTORY_HPP
-#define EZSDL_WINDOWFACTORY_HPP
+#ifndef EZSDL_WINDOW_HPP
+#define EZSDL_WINDOW_HPP
 
-/** @file       EzSDL/WindowFactory.hpp
- *  @brief      SDL_Window factory and adapter.
- *  @details    I know from an implementation standpoint the naming of what
- *              is the window and what is the factory may seem backwards,
- *              but from the user's point of view, this interface naming scheme
- *              makes the most sense IMHO.<br>
- *              When using valgrind, note that SDL itself leaks memory. It
+/** @file       EzSDL/Window.hpp
+ *  @brief      SDL_Window adapter.
+ *  @details    When using valgrind, note that SDL itself leaks memory. It
  *              definitely leaks 8.4kb, indirectly leaks 1.7kb, and has 120kb
  *              that is still reachable.
  */
@@ -45,28 +41,28 @@ namespace EzSDL
 {
 
 /** @brief      Window object smart pointer. */
-typedef std::shared_ptr<class WindowFactory> Window;
+typedef std::unique_ptr<class Window> WindowPtr;
 
 /** @brief      SDL_Window adapter and smart pointer factory.
- *  @details    This class is not copyable.
+ *  @details    This class is not copyable nor inheritable.
  */
-class WindowFactory
+class Window final
 {
 public:
-    /** @brief      Window factory method.
+    /** @brief      Window smart pointer factory method.
      *  @details    TODO: exception safety? no-throw? JSON config file specs?
      *              Initializes SDL subsystems on-demand.
      *  @returns    Smart pointer (`std::shared_ptr`) to the newly created
      *              window instance.
      */
-    static Window create(std::string const &file);
+    static WindowPtr create(std::string const &file);
 
     /** @brief      Window destructor that you should never have to call.
-     *  @details    Assuming you're using the `EzSDL::Window` smart pointer,
+     *  @details    Assuming you're using the `EzSDL::WindowPtr` smart pointer,
      *              you should never have to explicitly call this destructor
      *              unless you need to prematurely delete your window instance.
      */
-    virtual ~WindowFactory();
+    virtual ~Window();
 
     SDL_Window* getWindow() const;
     SDL_Renderer* getRenderer() const;
@@ -74,9 +70,9 @@ public:
 protected:
 
 private:
-    WindowFactory(std::string const &file);
-    WindowFactory(WindowFactory const &other) = delete;
-    WindowFactory& operator=(WindowFactory const &other) = delete;
+    Window(std::string const &file);
+    Window(Window const &other) = delete;
+    Window& operator=(Window const &other) = delete;
 
     // Count of how many windows produced by this factory are currently alive.
     static int instances;
@@ -93,4 +89,4 @@ private:
 
 
 
-#endif /* EZSDL_WINDOWFACTORY_HPP */
+#endif /* EZSDL_WINDOW_HPP */
