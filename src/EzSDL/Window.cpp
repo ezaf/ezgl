@@ -1,4 +1,4 @@
-/*  EzSDL/WindowFactory.cpp
+/*  EzSDL/Window.cpp
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -19,7 +19,7 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-#include "EzSDL/WindowFactory.hpp"
+#include "EzSDL/Window.hpp"
 
 #include <SDL2/SDL.h>
 
@@ -30,25 +30,25 @@ namespace EzSDL
 
 
 
-int WindowFactory::instances = 0;
+int Window::instances = 0;
 
 
 
-Window WindowFactory::create(std::string const &file)
+WindowPtr Window::create(std::string const &file)
 {
-    return Window(new WindowFactory(file));
+    return WindowPtr(new Window(file));
 }
 
 
 
-WindowFactory::WindowFactory(std::string const &file) :
+Window::Window(std::string const &file) :
     window(nullptr, SDL_DestroyWindow),
     renderer(nullptr, SDL_DestroyRenderer),
     isPaused(false),
     prevFrameTime(SDL_GetTicks())
 {
     // Initialize SDL video if necessary
-    if (WindowFactory::instances == 0 && SDL_WasInit(SDL_INIT_VIDEO) == 0)
+    if (Window::instances == 0 && SDL_WasInit(SDL_INIT_VIDEO) == 0)
     {
 #ifndef NDEBUG // Make all logs visible when debugging
         SDL_LogSetAllPriority(SDL_LOG_PRIORITY_WARN);
@@ -96,7 +96,7 @@ WindowFactory::WindowFactory(std::string const &file) :
     // Error checking
     if (getWindow() != nullptr && getRenderer() != nullptr)
     {
-        WindowFactory::instances++;
+        Window::instances++;
         std::cout << "Successfully created window and its renderer." <<
             std::endl;
     }
@@ -110,11 +110,11 @@ WindowFactory::WindowFactory(std::string const &file) :
 
 
 
-WindowFactory::~WindowFactory()
+Window::~Window()
 {
-    WindowFactory::instances--;
+    Window::instances--;
 
-    if (WindowFactory::instances <= 0)
+    if (Window::instances <= 0)
     {
         SDL_Quit();
         std::cout << "Quit all SDL systems." << std::endl;
@@ -123,14 +123,14 @@ WindowFactory::~WindowFactory()
 
 
 
-SDL_Window* WindowFactory::getWindow() const
+SDL_Window* Window::getWindow() const
 {
     return window.get();
 }
 
 
 
-SDL_Renderer* WindowFactory::getRenderer() const
+SDL_Renderer* Window::getRenderer() const
 {
     return renderer.get();
 }
