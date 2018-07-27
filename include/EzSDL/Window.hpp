@@ -29,6 +29,7 @@
  *              that is still reachable.
  */
 
+#include <SDL2/SDL_events.h>
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_video.h>
 
@@ -41,7 +42,7 @@ namespace EzSDL
 {
 
 /** @brief      Window object smart pointer. */
-typedef std::unique_ptr<class Window> WindowPtr;
+using WindowPtr = std::unique_ptr<class Window>;
 
 /** @brief      SDL_Window adapter and smart pointer factory.
  *  @details    This class is not copyable nor inheritable.
@@ -80,6 +81,7 @@ private:
     // Pointer to SDL modules themselves
     std::unique_ptr<SDL_Window, decltype(&SDL_DestroyWindow)> window;
     std::unique_ptr<SDL_Renderer, decltype(&SDL_DestroyRenderer)> renderer;
+    std::unique_ptr<SDL_Event> event;
 
     bool isPaused;
     unsigned long prevFrameTime;
