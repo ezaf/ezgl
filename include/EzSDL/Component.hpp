@@ -39,10 +39,8 @@ namespace EzSDL
 class Object;
 
 /** @brief      Component smart pointer. */
-typedef std::unique_ptr<class Component> ComponentPtr;
+using ComponentPtr = std::unique_ptr<class Component>;
 
-/** @brief      Key/ID type used when enlisting and creating components. */
-using Key = unsigned long;
 
 /** @brief      Component template class and smart pointer factory.
  *  @details    Components can be any one of the parts of the MVC model.
@@ -53,6 +51,9 @@ using Key = unsigned long;
 class Component
 {
 public:
+    /** @brief      Key/ID type used when enlisting and creating components. */
+    using Key = unsigned long;
+
     Component() = default;
     virtual ~Component() = default;
     virtual void update(Object &obj) = 0;
