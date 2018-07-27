@@ -1,4 +1,4 @@
-/*  EzSDL/Coordinate.hpp
+/*  EzSDL/Dimension.hpp
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -19,10 +19,10 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef EZSDL_COORDINATE_HPP
-#define EZSDL_COORDINATE_HPP
+#ifndef EZSDL_DIMENSION_HPP
+#define EZSDL_DIMENSION_HPP
 
-/** @file       EzSDL/Coordinate.hpp
+/** @file       EzSDL/Dimension.hpp
  *  @brief      Lorem ipsum
  *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
  */
@@ -40,7 +40,7 @@ namespace EzSDL
  *              eiusmod tempor incididunt ut labore et dolore magna aliqua.
  */
 template <typename T>
-class Coordinate
+class Dimension
 {
 public:
     enum Key
@@ -50,27 +50,32 @@ public:
         D2X, D2Y, D2Z, D2W, D2H, D2D
     };
 
-    using CoordinatePtr = std::unique_ptr<Coordinate<T>>;
-    static CoordinatePtr create();
+    using DimensionPtr = std::unique_ptr<Dimension<T>>;
+    static DimensionPtr create();
 
     T& operator[](Key const &key);
     T& at(Key const &key);
 
-    virtual ~Coordinate();
+    virtual ~Dimension() = default;
 
 protected:
 
 private:
-    Coordinate() = default;
-    Coordinate(Coordinate const &other) = delete;
-    Coordinate& operator=(Coordinate const &other) = delete;
+    Dimension() = default;
+    Dimension(Dimension const &other) = delete;
+    Dimension& operator=(Dimension const &other) = delete;
 
-    using CoordinateMap = std::map<Key, T>;
-    CoordinateMap coordinateMap;
+    using DimensionMap = std::map<Key, T>;
+    DimensionMap dimensionMap;
 };
+
+using DDimensionPtr = Dimension<double>::DimensionPtr;
+using FDimensionPtr = Dimension<float>::DimensionPtr;
+using LDimensionPtr = Dimension<long>::DimensionPtr;
+using IDimensionPtr = Dimension<int>::DimensionPtr;
 
 }; /* namespace EzSDL */
 
 
 
-#endif /* EZSDL_COORDINATE_HPP */
+#endif /* EZSDL_DIMENSION_HPP */

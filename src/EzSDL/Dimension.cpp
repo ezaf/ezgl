@@ -1,4 +1,4 @@
-/*  EzSDL/Coordinate.cpp
+/*  EzSDL/Dimension.cpp
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -19,7 +19,7 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-#include "EzSDL/Coordinate.hpp"
+#include "EzSDL/Dimension.hpp"
 
 namespace EzSDL
 {
@@ -27,23 +27,23 @@ namespace EzSDL
 
 
 template <class T>
-typename Coordinate<T>::CoordinatePtr Coordinate<T>::create()
+typename Dimension<T>::DimensionPtr Dimension<T>::create()
 {
-    return CoordinatePtr(new Coordinate());
+    return DimensionPtr(new Dimension());
 }
 
 
 
 template <class T>
-T& Coordinate<T>::operator[](Coordinate::Key const &key)
+T& Dimension<T>::operator[](Dimension::Key const &key)
 {
-    return this->coordinateMap[key];
+    return this->dimensionMap[key];
 }
 
 
 
 template <class T>
-T& Coordinate<T>::at(Coordinate::Key const &key)
+T& Dimension<T>::at(Dimension::Key const &key)
 {
     return (*this)[key];
 }
