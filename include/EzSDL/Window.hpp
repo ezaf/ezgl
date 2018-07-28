@@ -29,9 +29,9 @@
  *              that is still reachable.
  */
 
-#include <SDL2/SDL_events.h>
-#include <SDL2/SDL_render.h>
-#include <SDL2/SDL_video.h>
+#include "EzSDL/Object.hpp"
+
+#include <SDL2/SDL.h>
 
 #include <memory>
 #include <string>
@@ -47,7 +47,7 @@ using WindowPtr = std::unique_ptr<class Window>;
 /** @brief      SDL_Window adapter and smart pointer factory.
  *  @details    This class is not copyable nor inheritable.
  */
-class Window final
+class Window final : private Object
 {
 public:
     /** @brief      Window smart pointer factory method.
@@ -56,7 +56,7 @@ public:
      *  @returns    Smart pointer (`std::shared_ptr`) to the newly created
      *              window instance.
      */
-    static WindowPtr create(std::string const &file);
+    static WindowPtr create(ComponentPtrList componentDeps);
 
     /** @brief      Window destructor that you should never have to call.
      *  @details    Assuming you're using the `EzSDL::WindowPtr` smart pointer,
@@ -65,26 +65,30 @@ public:
      */
     virtual ~Window();
 
+    void addObject(ObjectPtr object);
+    void run();
+
     SDL_Window* getWindow() const;
     SDL_Renderer* getRenderer() const;
+    std::vector<SDL_Event> getEvents() const;
 
 protected:
+    Window(ComponentPtrList componentDeps);
 
 private:
-    Window(std::string const &file);
     Window(Window const &other) = delete;
     Window& operator=(Window const &other) = delete;
 
     // Count of how many windows produced by this factory are currently alive.
-    static int instances;
+    static int instanceCount;
 
     // Pointer to SDL modules themselves
     std::unique_ptr<SDL_Window, decltype(&SDL_DestroyWindow)> window;
     std::unique_ptr<SDL_Renderer, decltype(&SDL_DestroyRenderer)> renderer;
-    std::unique_ptr<SDL_Event> event;
+    std::vector<SDL_Event> events;
 
-    bool isPaused;
-    unsigned long prevFrameTime;
+    // Objects besides this window itself
+    std::vector<ObjectPtr> objects;
 };
 
 }; /* namespace EzSDL */

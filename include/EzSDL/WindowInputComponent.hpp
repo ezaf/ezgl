@@ -29,10 +29,14 @@
 
 #include "EzSDL/InputComponent.hpp"
 
+#include <SDL2/SDL_events.h>
+
 
 
 namespace EzSDL
 {
+
+typename Component::Key const WindowInputComponentID = 1;
 
 /** @brief      Lorem ipsum
  *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
@@ -44,7 +48,7 @@ public:
     WindowInputComponent() = default;
     virtual ~WindowInputComponent() = default;
 
-    void implementation(Object &obj);
+    void implementation(Object &object, SDL_Event &event);
 
 protected:
 
@@ -52,6 +56,7 @@ private:
     WindowInputComponent(WindowInputComponent const &other);
     WindowInputComponent& operator=(WindowInputComponent const &other);
 };
+
 
 }; /* namespace EzSDL */
 

@@ -27,6 +27,7 @@
  *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
  */
 
+#include <initializer_list>
 #include <map>
 #include <memory>
 
@@ -35,12 +36,14 @@
 namespace EzSDL
 {
 
-/** @brief      Forward declaration of generic engine object. */
 class Object;
+class Window;
 
 /** @brief      Component smart pointer. */
-using ComponentPtr = std::unique_ptr<class Component>;
+using ComponentPtr = std::shared_ptr<class Component>;
 
+/** @brief      */
+using ComponentPtrList = std::initializer_list<ComponentPtr>;
 
 /** @brief      Component template class and smart pointer factory.
  *  @details    Components can be any one of the parts of the MVC model.
@@ -56,13 +59,16 @@ public:
 
     Component() = default;
     virtual ~Component() = default;
-    virtual void update(Object &obj) = 0;
+    virtual void update(Object &object, Window &window) = 0;
 
     static ComponentPtr create(Key const &key);
 
-    /* TODO: Remark that T must have a T::create (static fn) */
+    /* TODO: Remark that T must have a static T::create() */
     template <Key K, class T>
-    static void enlist();
+    static void enlist()
+    {
+        Component::enlisted[K] = T::create;
+    };
 
 protected:
 

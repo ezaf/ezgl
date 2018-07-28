@@ -21,8 +21,6 @@
 
 #include "EzSDL/Window.hpp"
 
-#include <SDL2/SDL.h>
-
 #include <iostream>
 
 namespace EzSDL
@@ -30,30 +28,26 @@ namespace EzSDL
 
 
 
-int Window::instances = 0;
+int Window::instanceCount = 0;
 
 
 
-WindowPtr Window::create(std::string const &file)
+WindowPtr Window::create(ComponentPtrList componentDeps)
 {
-    return WindowPtr(new Window(file));
+    return WindowPtr(new Window(componentDeps));
 }
 
 
 
-Window::Window(std::string const &file) :
+Window::Window(ComponentPtrList componentDeps) :
+    Object(componentDeps),
     window(nullptr, SDL_DestroyWindow),
     renderer(nullptr, SDL_DestroyRenderer),
-    isPaused(false),
-    prevFrameTime(SDL_GetTicks())
+    events()
 {
     // Initialize SDL video if necessary
-    if (Window::instances == 0 && SDL_WasInit(SDL_INIT_VIDEO) == 0)
+    if (Window::instanceCount == 0 && SDL_WasInit(SDL_INIT_VIDEO) == 0)
     {
-#ifndef NDEBUG // Make all logs visible when debugging
-        SDL_LogSetAllPriority(SDL_LOG_PRIORITY_WARN);
-#endif
-
         SDL_Init(SDL_INIT_EVERYTHING);
 
         SDL_version linked;
@@ -77,8 +71,10 @@ Window::Window(std::string const &file) :
             SDL_GetError() << std::endl;
     }
 
+    this->dimension->at(DimensionKey::Z) = 60; // Hz
+
     // Create actual window
-    window.reset(
+    this->window.reset(
             SDL_CreateWindow("EzSDL Demo",
                 SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
                 enableFullscreen ? displayMode.w : 640,
@@ -86,17 +82,17 @@ Window::Window(std::string const &file) :
                 SDL_WINDOW_BORDERLESS |
                 SDL_WINDOW_ALLOW_HIGHDPI));
 
-    renderer.reset(
+    this->renderer.reset(
             SDL_CreateRenderer(getWindow(), -1,
                 SDL_RENDERER_ACCELERATED |
                 SDL_RENDERER_PRESENTVSYNC));
 
-    SDL_SetRenderDrawColor(getRenderer(), 0x00, 0x00, 0x00, 0xFF);
+    SDL_SetRenderDrawColor(this->getRenderer(), 0x00, 0x00, 0x00, 0xFF);
 
     // Error checking
-    if (getWindow() != nullptr && getRenderer() != nullptr)
+    if (getWindow() != nullptr && this->getRenderer() != nullptr)
     {
-        Window::instances++;
+        Window::instanceCount++;
         std::cout << "Successfully created window and its renderer." <<
             std::endl;
     }
@@ -104,7 +100,6 @@ Window::Window(std::string const &file) :
     {
         std::cout << "Failed to create window and/or renderer: " <<
             SDL_GetError() << std::endl;
-
     }
 }
 
@@ -112,9 +107,9 @@ Window::Window(std::string const &file) :
 
 Window::~Window()
 {
-    Window::instances--;
+    Window::instanceCount--;
 
-    if (Window::instances <= 0)
+    if (Window::instanceCount <= 0)
     {
         SDL_Quit();
         std::cout << "Quit all SDL systems." << std::endl;
@@ -123,16 +118,66 @@ Window::~Window()
 
 
 
+void Window::addObject(ObjectPtr object)
+{
+    objects.push_back(std::move(object));
+}
+
+
+
+void Window::run()
+{
+    SDL_Event event;
+
+    /*  Let Z be used to indicate refresh rate, where
+     *      =0 : quit signal
+     *      <0 : pause
+     */
+    while (this->dimension->at(DimensionKey::Z) != 0)
+    {
+        while (SDL_PollEvent(&event) != 0)
+        {
+            events.push_back(event);
+        }
+
+        if (this->dimension->at(DimensionKey::Z) > 0)
+        {
+            for (auto &it : this->objects)
+            {
+                it->update(*this);
+            }
+        }
+
+        this->update(*this);
+
+        // temporary
+        SDL_RenderClear(this->getRenderer());
+        SDL_RenderPresent(this->getRenderer());
+        SDL_Delay(10);
+
+        events.clear();
+    }
+}
+
+
+
 SDL_Window* Window::getWindow() const
 {
-    return window.get();
+    return this->window.get();
 }
 
 
 
 SDL_Renderer* Window::getRenderer() const
 {
-    return renderer.get();
+    return this->renderer.get();
+}
+
+
+
+std::vector<SDL_Event> Window::getEvents() const
+{
+    return this->events;
 }
 
 

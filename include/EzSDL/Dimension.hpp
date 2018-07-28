@@ -35,6 +35,13 @@
 namespace EzSDL
 {
 
+enum DimensionKey
+{
+    X, Y, Z, W, H, D,
+    DX, DY, DZ, DW, DH, DD,
+    D2X, D2Y, D2Z, D2W, D2H, D2D
+};
+
 /** @brief      Lorem ipsum
  *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
  *              eiusmod tempor incididunt ut labore et dolore magna aliqua.
@@ -43,18 +50,22 @@ template <typename T>
 class Dimension
 {
 public:
-    enum Key
+    using DimensionPtr = std::unique_ptr<Dimension<T>>;
+
+    static DimensionPtr create()
     {
-        X, Y, Z, W, H, D,
-        DX, DY, DZ, DW, DH, DD,
-        D2X, D2Y, D2Z, D2W, D2H, D2D
+        return DimensionPtr(new Dimension());
     };
 
-    using DimensionPtr = std::unique_ptr<Dimension<T>>;
-    static DimensionPtr create();
+    T& operator[](DimensionKey const &key)
+    {
+        return this->dimensionMap[key];
+    };
 
-    T& operator[](Key const &key);
-    T& at(Key const &key);
+    T& at(DimensionKey const &key)
+    {
+        return (*this)[key];
+    };
 
     virtual ~Dimension() = default;
 
@@ -65,14 +76,19 @@ private:
     Dimension(Dimension const &other) = delete;
     Dimension& operator=(Dimension const &other) = delete;
 
-    using DimensionMap = std::map<Key, T>;
+    using DimensionMap = std::map<DimensionKey, T>;
     DimensionMap dimensionMap;
 };
 
-using DDimensionPtr = Dimension<double>::DimensionPtr;
-using FDimensionPtr = Dimension<float>::DimensionPtr;
-using LDimensionPtr = Dimension<long>::DimensionPtr;
-using IDimensionPtr = Dimension<int>::DimensionPtr;
+using DDimension = Dimension<double>;
+using FDimension = Dimension<float>;
+using LDimension = Dimension<long>;
+using IDimension = Dimension<int>;
+
+using DDimensionPtr = DDimension::DimensionPtr;
+using FDimensionPtr = FDimension::DimensionPtr;
+using LDimensionPtr = LDimension::DimensionPtr;
+using IDimensionPtr = IDimension::DimensionPtr;
 
 }; /* namespace EzSDL */
 
