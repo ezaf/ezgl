@@ -1,4 +1,4 @@
-/*  EzSDL/InputComponent.cpp
+/*  EzSDL/Object.cpp
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -19,25 +19,34 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-#include "EzSDL/InputComponent.hpp"
+#include "EzSDL/Object.hpp"
 
 namespace EzSDL
 {
 
 
 
-template <class T>
-void InputComponent<T>::update(Object &obj)
+ObjectPtr Object::create(ComponentPtrList componentDeps)
 {
-    static_cast<T*>(this)->implementation(obj);
+    return ObjectPtr(new Object(componentDeps));
 }
 
 
 
-template <class T>
-ComponentPtr InputComponent<T>::create()
+Object::Object(ComponentPtrList componentDeps) :
+    dimension(DDimension::create()),
+    components(componentDeps)
 {
-    return ComponentPtr(new T());
+}
+
+
+
+void Object::update(Window &window)
+{
+    for (auto &it : this->components)
+    {
+        it->update(*this, window);
+    }
 }
 
 
