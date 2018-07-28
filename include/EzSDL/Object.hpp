@@ -1,4 +1,4 @@
-/*  EzSDL/Dimension.cpp
+/*  EzSDL/Object.hpp
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -19,35 +19,55 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
+#ifndef EZSDL_OBJECT_HPP
+#define EZSDL_OBJECT_HPP
+
+/** @file       EzSDL/Object.hpp
+ *  @brief      Lorem ipsum
+ *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+ */
+
+#include "EzSDL/Component.hpp"
 #include "EzSDL/Dimension.hpp"
+
+#include <memory>
+#include <vector>
+
+
 
 namespace EzSDL
 {
 
+class Window;
 
+using ObjectPtr = std::unique_ptr<Object>;
 
-template <class T>
-typename Dimension<T>::DimensionPtr Dimension<T>::create()
+/** @brief      Lorem ipsum
+ *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+ *              eiusmod tempor incididunt ut labore et dolore magna aliqua.
+ */
+class Object
 {
-    return DimensionPtr(new Dimension());
-}
+public:
+    static ObjectPtr create(ComponentPtrList componentDeps);
+    virtual ~Object() = default;
 
+    virtual void update(Window &window);
 
+    DDimensionPtr dimension;
 
-template <class T>
-T& Dimension<T>::operator[](Dimension::Key const &key)
-{
-    return this->dimensionMap[key];
-}
+protected:
+    Object(ComponentPtrList componentDeps);
 
+private:
+    Object(Object const &other) = delete;
+    Object& operator=(Object const &other) = delete;
 
-
-template <class T>
-T& Dimension<T>::at(Dimension::Key const &key)
-{
-    return (*this)[key];
-}
-
-
+    std::vector<ComponentPtr> components;
+};
 
 }; /* namespace EzSDL */
+
+
+
+#endif /* EZSDL_OBJECT_HPP */
