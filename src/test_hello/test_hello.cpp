@@ -24,47 +24,24 @@
  */
 
 #include "EzSDL/Window.hpp"
+#include "EzSDL/WindowInputComponent.hpp"
 
 #include <SDL2/SDL.h>
 
 #include <iostream>
 
-void sillyEvent(EzSDL::WindowPtr window);
-
 
 
 int main(int argc, char *argv[])
 {
-    EzSDL::WindowPtr window(EzSDL::Window::create("default.json"));
+    EzSDL::Component::enlist<EzSDL::WindowInputComponentID,
+        EzSDL::InputComponent<EzSDL::WindowInputComponent>>();
 
-    long ms = 3000;
+    EzSDL::WindowPtr window(EzSDL::Window::create({
+                EzSDL::Component::create(EzSDL::WindowInputComponentID)
+            }));
 
-    while (ms > 0)
-    {
-        SDL_RenderClear(window->getRenderer());
-        SDL_RenderPresent(window->getRenderer());
-        SDL_Delay(10);
-        ms -= 10;
-    }
+    window->run();
 
     return 0;
-}
-
-
-
-void sillyEvent(EzSDL::WindowPtr window)
-{
-    SDL_Event e; /* TODO: get event from window!!! */
-
-    switch (e.type)
-    {
-        case SDL_KEYDOWN:
-            if (e.key.keysym.scancode == SDL_SCANCODE_SPACE)
-                std::cout << "Silly spacebar event down!" << std::endl;
-            break;
-        case SDL_KEYUP:
-            if (e.key.keysym.scancode == SDL_SCANCODE_SPACE)
-                std::cout << "Silly spacebar event up!" << std::endl;
-            break;
-    }
 }

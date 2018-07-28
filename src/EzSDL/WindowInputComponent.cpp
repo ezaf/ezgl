@@ -21,28 +21,31 @@
 
 #include "EzSDL/WindowInputComponent.hpp"
 
-#include <SDL2/SDL_events.h>
+#include "EzSDL/Dimension.hpp"
+#include "EzSDL/Object.hpp"
+
+#include <cmath>
 
 namespace EzSDL
 {
 
 
 
-void WindowInputComponent::implementation(Object &obj)
+void WindowInputComponent::implementation(Object &object, SDL_Event &e)
 {
-    SDL_Event e; // TODO: get SDL_Event from obj
-
     switch (e.type)
     {
         case SDL_QUIT:
+            object.dimension->at(DimensionKey::Z) = 0;
             break;
         case SDL_KEYDOWN:
             switch (e.key.keysym.scancode)
             {
                 case SDL_SCANCODE_ESCAPE:
+                    object.dimension->at(DimensionKey::Z) = 0;
                     break;
                 case SDL_SCANCODE_GRAVE:
-                    // TODO: pause
+                    object.dimension->at(DimensionKey::Z) *= -1;
                     break;
             }
             break;
@@ -50,10 +53,12 @@ void WindowInputComponent::implementation(Object &obj)
             switch (e.window.event)
             {
                 case SDL_WINDOWEVENT_FOCUS_GAINED:
-                    // TODO: unpause
+                    object.dimension->at(DimensionKey::Z) =
+                        std::abs(object.dimension->at(DimensionKey::Z));
                     break;
                 case SDL_WINDOWEVENT_FOCUS_LOST:
-                    // TODO: pause
+                    object.dimension->at(DimensionKey::Z) =
+                        -std::abs(object.dimension->at(DimensionKey::Z));
                     break;
             }
     }

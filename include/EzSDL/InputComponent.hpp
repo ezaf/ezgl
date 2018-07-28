@@ -28,8 +28,7 @@
  */
 
 #include "EzSDL/Component.hpp"
-
-// #include <memory>
+#include "EzSDL/Window.hpp"
 
 
 
@@ -44,13 +43,22 @@ template <class T>
 class InputComponent : public Component
 {
 public:
-    InputComponent() = default;
     virtual ~InputComponent() = default;
-    void update(Object &obj) override;
+    void update(Object &object, Window &window) override
+    {
+        for (auto &it : window.getEvents())
+        {
+            static_cast<T*>(this)->implementation(object, it);
+        }
+    };
 
-    static ComponentPtr create();
+    static ComponentPtr create()
+    {
+        return ComponentPtr(new T());
+    };
 
 protected:
+    InputComponent() = default;
 
 private:
     InputComponent(InputComponent const &other) = delete;

@@ -50,12 +50,4 @@ ComponentPtr Component::create(Key const &key)
 
 
 
-template <Component::Key K, class T>
-void Component::enlist()
-{
-    Component::enlisted[K] = T::create;
-}
-
-
-
 }; /* namespace EzSDL */
