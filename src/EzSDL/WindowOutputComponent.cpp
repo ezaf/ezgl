@@ -1,9 +1,9 @@
-/*  test_hello.cpp
+/*  EzSDL/WindowOutputComponent.cpp
  *
- *  Copyright (c) 2018 Kirk Lange
+ *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
  *  This software is provided 'as-is', without any express or implied
- *  warranty.  In no event will the authors be held liable for any damages
+ *  warranty. In no event will the authors be held liable for any damages
  *  arising from the use of this software.
  *
  *  Permission is granted to anyone to use this software for any purpose,
@@ -19,30 +19,26 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-/** @file       test_hello.cpp
- *  @brief      Hello world example for EzSDL.
- */
-
-#include "EzSDL/Window.hpp"
-#include "EzSDL/WindowInputComponent.hpp"
 #include "EzSDL/WindowOutputComponent.hpp"
 
+#include "EzSDL/Object.hpp"
 
+#include <SDL2/SDL_render.h>
 
-int main(int argc, char *argv[])
+#include <cmath>
+
+namespace EzSDL
 {
-    EzSDL::Component::enlist<EzSDL::WindowInputComponentID,
-        EzSDL::InputComponent<EzSDL::WindowInputComponent>>();
 
-    EzSDL::Component::enlist<EzSDL::WindowOutputComponentID,
-        EzSDL::OutputComponent<EzSDL::WindowOutputComponent>>();
 
-    EzSDL::WindowPtr window(EzSDL::Window::create({
-                EzSDL::Component::create(EzSDL::WindowInputComponentID),
-                EzSDL::Component::create(EzSDL::WindowOutputComponentID)
-            }));
 
-    window->run();
-
-    return 0;
+void WindowOutputComponent::implementation(Object &object,
+        SDL_Renderer *renderer)
+{
+    SDL_RenderClear(renderer);
+    SDL_RenderPresent(renderer);
 }
+
+
+
+}; /* namespace EzSDL */

@@ -140,6 +140,7 @@ void Window::run()
             events.push_back(event);
         }
 
+        // Update nothing if paused (but still refresh window)
         if (this->dimension->at(DimensionKey::Z) > 0)
         {
             for (auto &it : this->objects)
@@ -150,9 +151,7 @@ void Window::run()
 
         this->update(*this);
 
-        // temporary
-        SDL_RenderClear(this->getRenderer());
-        SDL_RenderPresent(this->getRenderer());
+        // TODO: replace with framerate handler
         SDL_Delay(10);
 
         events.clear();
