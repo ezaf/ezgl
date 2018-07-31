@@ -21,7 +21,8 @@
 
 #include "EzSDL/Window.hpp"
 
-#include <iostream>
+#include <cmath> // round
+#include <iostream> // cout, endl
 
 namespace EzSDL
 {
@@ -60,7 +61,7 @@ Window::Window(ComponentPtrList componentDeps) :
             "Initialized all SDL systems." << std::endl;
     }
 
-    // TODO: parse a json config file
+    // TODO: parse a json config file; handle this in WIndowLogicComponent?
     bool enableFullscreen = true;
 
     SDL_DisplayMode displayMode;
@@ -70,8 +71,20 @@ Window::Window(ComponentPtrList componentDeps) :
         std::cout << "Failed to get desktop display mode: " <<
             SDL_GetError() << std::endl;
     }
+    else
+    {
+        std::cout << "Display mode aquired: {"
+            " w:" << displayMode.w <<
+            " h:" << displayMode.h <<
+            " refresh_rate:" << displayMode.refresh_rate <<
+            " }" << std::endl;
+    }
 
-    this->dimension->at(DimensionKey::Z) = 60; // Hz
+    this->dimension->at(DimensionKey::Z) =
+        static_cast<double>(displayMode.refresh_rate); // Hz
+
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
+    //SDL_ShowCursor(SDL_DISABLE);
 
     // Create actual window
     this->window.reset(
@@ -125,37 +138,57 @@ void Window::addObject(ObjectPtr object)
 
 
 
-void Window::run()
+void Window::runOneFrame()
 {
     SDL_Event event;
 
+    while (SDL_PollEvent(&event) != 0)
+    {
+        events.push_back(event);
+    }
+
+    // Update if not paused, see Window::run() for more info on Z
+    if (this->dimension->at(DimensionKey::Z) > 0)
+    {
+        for (auto &it : this->objects)
+        {
+            it->update(*this);
+        }
+    }
+
+    // Refresh window (even if paused)
+    this->update(*this);
+
+    events.clear();
+}
+
+
+
+void Window::run()
+{
     /*  Let Z be used to indicate refresh rate (target fps), where
      *      =0 : quit signal
      *      <0 : pause
+     *
+     *  For more information on Z, DZ, and D2Z, see `WindowLogicComponent.cpp`
      */
     while (this->dimension->at(DimensionKey::Z) != 0)
     {
-        while (SDL_PollEvent(&event) != 0)
+        this->runOneFrame();
+
+        // Frame rate timing; WindowLogicComponent handles VSync on/off option
+        if (this->dimension->at(DimensionKey::D2Z) > 0.0)
         {
-            events.push_back(event);
+            /*
+            std::cout <<
+                static_cast<unsigned long>(
+                        round(this->dimension->at(DimensionKey::D2Z))) <<
+                std::endl;
+            */
+
+            SDL_Delay(static_cast<unsigned long>(
+                        round(this->dimension->at(DimensionKey::D2Z))));
         }
-
-        // Update if not paused
-        if (this->dimension->at(DimensionKey::Z) > 0)
-        {
-            for (auto &it : this->objects)
-            {
-                it->update(*this);
-            }
-        }
-
-        // Refresh window (even if paused)
-        this->update(*this);
-
-        // TODO: replace with framerate handler
-        SDL_Delay(10);
-
-        events.clear();
     }
 }
 
