@@ -1,4 +1,4 @@
-/*  EzSDL/InputComponent.hpp
+/*  EzSDL/WindowEventComponent.hpp
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -19,54 +19,47 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef EZSDL_INPUTCOMPONENT_HPP
-#define EZSDL_INPUTCOMPONENT_HPP
+#ifndef EZSDL_WINDOWEVENTCOMPONENT_HPP
+#define EZSDL_WINDOWEVENTCOMPONENT_HPP
 
-/** @file       EzSDL/InputComponent.hpp
+/** @file       EzSDL/WindowEventComponent.hpp
  *  @brief      Lorem ipsum
  *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
  */
 
-#include "EzSDL/Component.hpp"
-#include "EzSDL/Window.hpp"
+#include "EzSDL/EventComponent.hpp"
+
+#include <SDL2/SDL_events.h>
 
 
 
 namespace EzSDL
 {
 
+typename Component::Key const WindowEventComponentID = 1;
+
 /** @brief      Lorem ipsum
  *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
  *              eiusmod tempor incididunt ut labore et dolore magna aliqua.
  */
-template <class T>
-class InputComponent : public Component
+class WindowEventComponent : public EventComponent<WindowEventComponent>
 {
 public:
-    virtual ~InputComponent() = default;
-    void update(Object &object, Window &window) override
-    {
-        for (auto &it : window.getEvents())
-        {
-            static_cast<T*>(this)->implementation(object, it);
-        }
-    };
+    WindowEventComponent() = default;
+    virtual ~WindowEventComponent() = default;
 
-    static ComponentPtr create()
-    {
-        return ComponentPtr(new T());
-    };
+    void implementation(Object &object, SDL_Event &event);
 
 protected:
-    InputComponent() = default;
 
 private:
-    InputComponent(InputComponent const &other) = delete;
-    InputComponent& operator=(InputComponent const &other) = delete;
+    WindowEventComponent(WindowEventComponent const &other);
+    WindowEventComponent& operator=(WindowEventComponent const &other);
 };
+
 
 }; /* namespace EzSDL */
 
 
 
-#endif /* EZSDL_INPUTCOMPONENT_HPP */
+#endif /* EZSDL_WINDOWEVENTCOMPONENT_HPP */

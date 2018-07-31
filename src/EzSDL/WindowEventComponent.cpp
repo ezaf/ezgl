@@ -1,4 +1,4 @@
-/*  EzSDL/WindowInputComponent.cpp
+/*  EzSDL/WindowEventComponent.cpp
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -19,7 +19,7 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-#include "EzSDL/WindowInputComponent.hpp"
+#include "EzSDL/WindowEventComponent.hpp"
 
 #include "EzSDL/Dimension.hpp"
 #include "EzSDL/Object.hpp"
@@ -31,7 +31,7 @@ namespace EzSDL
 
 
 
-void WindowInputComponent::implementation(Object &object, SDL_Event &e)
+void WindowEventComponent::implementation(Object &object, SDL_Event &e)
 {
     switch (e.type)
     {

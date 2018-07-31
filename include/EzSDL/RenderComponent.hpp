@@ -1,4 +1,4 @@
-/*  EzSDL/WindowInputComponent.hpp
+/*  EzSDL/RenderComponent.hpp
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -19,47 +19,51 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef EZSDL_WINDOWINPUTCOMPONENT_HPP
-#define EZSDL_WINDOWINPUTCOMPONENT_HPP
+#ifndef EZSDL_RENDERCOMPONENT_HPP
+#define EZSDL_RENDERCOMPONENT_HPP
 
-/** @file       EzSDL/WindowInputComponent.hpp
+/** @file       EzSDL/RenderComponent.hpp
  *  @brief      Lorem ipsum
  *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
  */
 
-#include "EzSDL/InputComponent.hpp"
-
-#include <SDL2/SDL_events.h>
+#include "EzSDL/Component.hpp"
+#include "EzSDL/Window.hpp"
 
 
 
 namespace EzSDL
 {
 
-typename Component::Key const WindowInputComponentID = 1;
-
 /** @brief      Lorem ipsum
  *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
  *              eiusmod tempor incididunt ut labore et dolore magna aliqua.
  */
-class WindowInputComponent : public InputComponent<WindowInputComponent>
+template <class T>
+class RenderComponent : public Component
 {
 public:
-    WindowInputComponent() = default;
-    virtual ~WindowInputComponent() = default;
+    virtual ~RenderComponent() = default;
+    void update(Object &object, Window &window) override
+    {
+        static_cast<T*>(this)->implementation(object, window.getRenderer());
+    };
 
-    void implementation(Object &object, SDL_Event &event);
+    static ComponentPtr create()
+    {
+        return ComponentPtr(new T());
+    };
 
 protected:
+    RenderComponent() = default;
 
 private:
-    WindowInputComponent(WindowInputComponent const &other);
-    WindowInputComponent& operator=(WindowInputComponent const &other);
+    RenderComponent(RenderComponent const &other) = delete;
+    RenderComponent& operator=(RenderComponent const &other) = delete;
 };
-
 
 }; /* namespace EzSDL */
 
 
 
-#endif /* EZSDL_WINDOWINPUTCOMPONENT_HPP */
+#endif /* EZSDL_RENDERCOMPONENT_HPP */

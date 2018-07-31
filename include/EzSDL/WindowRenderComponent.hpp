@@ -1,4 +1,4 @@
-/*  EzSDL/OutputComponent.hpp
+/*  EzSDL/WindowRenderComponent.hpp
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -19,51 +19,47 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef EZSDL_OUTPUTCOMPONENT_HPP
-#define EZSDL_OUTPUTCOMPONENT_HPP
+#ifndef EZSDL_WINDOWRENDERCOMPONENT_HPP
+#define EZSDL_WINDOWRENDERCOMPONENT_HPP
 
-/** @file       EzSDL/OutputComponent.hpp
+/** @file       EzSDL/WindowRenderComponent.hpp
  *  @brief      Lorem ipsum
  *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
  */
 
-#include "EzSDL/Component.hpp"
-#include "EzSDL/Window.hpp"
+#include "EzSDL/RenderComponent.hpp"
+
+class SDL_Renderer;
 
 
 
 namespace EzSDL
 {
 
+typename Component::Key const WindowRenderComponentID = 3;
+
 /** @brief      Lorem ipsum
  *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
  *              eiusmod tempor incididunt ut labore et dolore magna aliqua.
  */
-template <class T>
-class OutputComponent : public Component
+class WindowRenderComponent : public RenderComponent<WindowRenderComponent>
 {
 public:
-    virtual ~OutputComponent() = default;
-    void update(Object &object, Window &window) override
-    {
-        static_cast<T*>(this)->implementation(object, window.getRenderer());
-    };
+    WindowRenderComponent() = default;
+    virtual ~WindowRenderComponent() = default;
 
-    static ComponentPtr create()
-    {
-        return ComponentPtr(new T());
-    };
+    void implementation(Object &object, SDL_Renderer *renderer);
 
 protected:
-    OutputComponent() = default;
 
 private:
-    OutputComponent(OutputComponent const &other) = delete;
-    OutputComponent& operator=(OutputComponent const &other) = delete;
+    WindowRenderComponent(WindowRenderComponent const &other);
+    WindowRenderComponent& operator=(WindowRenderComponent const &other);
 };
+
 
 }; /* namespace EzSDL */
 
 
 
-#endif /* EZSDL_OUTPUTCOMPONENT_HPP */
+#endif /* EZSDL_WINDOWRENDERCOMPONENT_HPP */

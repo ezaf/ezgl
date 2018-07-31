@@ -1,4 +1,4 @@
-/*  EzSDL/WindowOutputComponent.hpp
+/*  EzSDL/EventComponent.hpp
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -19,47 +19,54 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef EZSDL_WINDOWOUTPUTCOMPONENT_HPP
-#define EZSDL_WINDOWOUTPUTCOMPONENT_HPP
+#ifndef EZSDL_EVENTCOMPONENT_HPP
+#define EZSDL_EVENTCOMPONENT_HPP
 
-/** @file       EzSDL/WindowOutputComponent.hpp
+/** @file       EzSDL/EventComponent.hpp
  *  @brief      Lorem ipsum
  *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
  */
 
-#include "EzSDL/OutputComponent.hpp"
-
-class SDL_Renderer;
+#include "EzSDL/Component.hpp"
+#include "EzSDL/Window.hpp"
 
 
 
 namespace EzSDL
 {
 
-typename Component::Key const WindowOutputComponentID = 3;
-
 /** @brief      Lorem ipsum
  *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
  *              eiusmod tempor incididunt ut labore et dolore magna aliqua.
  */
-class WindowOutputComponent : public OutputComponent<WindowOutputComponent>
+template <class T>
+class EventComponent : public Component
 {
 public:
-    WindowOutputComponent() = default;
-    virtual ~WindowOutputComponent() = default;
+    virtual ~EventComponent() = default;
+    void update(Object &object, Window &window) override
+    {
+        for (auto &it : window.getEvents())
+        {
+            static_cast<T*>(this)->implementation(object, it);
+        }
+    };
 
-    void implementation(Object &object, SDL_Renderer *renderer);
+    static ComponentPtr create()
+    {
+        return ComponentPtr(new T());
+    };
 
 protected:
+    EventComponent() = default;
 
 private:
-    WindowOutputComponent(WindowOutputComponent const &other);
-    WindowOutputComponent& operator=(WindowOutputComponent const &other);
+    EventComponent(EventComponent const &other) = delete;
+    EventComponent& operator=(EventComponent const &other) = delete;
 };
-
 
 }; /* namespace EzSDL */
 
 
 
-#endif /* EZSDL_WINDOWOUTPUTCOMPONENT_HPP */
+#endif /* EZSDL_EVENTCOMPONENT_HPP */
