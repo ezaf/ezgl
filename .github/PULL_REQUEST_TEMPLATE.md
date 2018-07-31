@@ -1,5 +1,5 @@
 ---
-name: Issue Solution
+name: Pull Request Template
 about: Let's close those issues already!
 
 ---
