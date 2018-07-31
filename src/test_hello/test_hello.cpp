@@ -25,6 +25,7 @@
 
 #include "EzSDL/Window.hpp"
 #include "EzSDL/WindowInputComponent.hpp"
+#include "EzSDL/WindowLogicComponent.hpp"
 #include "EzSDL/WindowOutputComponent.hpp"
 
 
@@ -34,11 +35,16 @@ int main(int argc, char *argv[])
     EzSDL::Component::enlist<EzSDL::WindowInputComponentID,
         EzSDL::InputComponent<EzSDL::WindowInputComponent>>();
 
+    EzSDL::Component::enlist<EzSDL::WindowLogicComponentID,
+        EzSDL::LogicComponent<EzSDL::WindowLogicComponent>>();
+
     EzSDL::Component::enlist<EzSDL::WindowOutputComponentID,
         EzSDL::OutputComponent<EzSDL::WindowOutputComponent>>();
 
+
     EzSDL::WindowPtr window(EzSDL::Window::create({
                 EzSDL::Component::create(EzSDL::WindowInputComponentID),
+                EzSDL::Component::create(EzSDL::WindowLogicComponentID),
                 EzSDL::Component::create(EzSDL::WindowOutputComponentID)
             }));
 

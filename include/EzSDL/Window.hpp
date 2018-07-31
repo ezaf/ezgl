@@ -68,9 +68,13 @@ public:
     void addObject(ObjectPtr object);
     void run();
 
-    SDL_Window* getWindow() const;
-    SDL_Renderer* getRenderer() const;
+    // Using inherited update function; no need to define an override
+    //void update(Window &window) override;
+
     std::vector<SDL_Event> getEvents() const;
+    double const& getDelta() const;
+    SDL_Renderer* getRenderer() const;
+    SDL_Window* getWindow() const;
 
 protected:
     Window(ComponentPtrList componentDeps);
