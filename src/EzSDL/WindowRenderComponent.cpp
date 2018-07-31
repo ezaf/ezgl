@@ -1,4 +1,4 @@
-/*  EzSDL/WindowOutputComponent.cpp
+/*  EzSDL/WindowRenderComponent.cpp
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -19,7 +19,7 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-#include "EzSDL/WindowOutputComponent.hpp"
+#include "EzSDL/WindowRenderComponent.hpp"
 
 #include "EzSDL/Object.hpp"
 
@@ -30,7 +30,7 @@ namespace EzSDL
 
 
 
-void WindowOutputComponent::implementation(Object &object,
+void WindowRenderComponent::implementation(Object &object,
         SDL_Renderer *renderer)
 {
     SDL_RenderClear(renderer);
