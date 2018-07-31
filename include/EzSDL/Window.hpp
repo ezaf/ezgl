@@ -66,6 +66,9 @@ public:
     virtual ~Window();
 
     void addObject(ObjectPtr object);
+
+    // For Emscripten's sake
+    void runOneFrame();
     void run();
 
     // Using inherited update function; no need to define an override

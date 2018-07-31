@@ -24,22 +24,43 @@
 #include "EzSDL/Dimension.hpp"
 #include "EzSDL/Object.hpp"
 
-#include <SDL2/SDL.h>
+#include <SDL2/SDL.h> // SDL_GetTicks
 
 namespace EzSDL
 {
 
 
 
-void WindowLogicComponent::implementation(Object &object, double const &delta)
+WindowLogicComponent::WindowLogicComponent() :
+    enableVSync(true),
+    deltaCeil(100.0), // No slower than 10 fps
+    lastFrame(0)
 {
-    /*  Window Z Dimension
+    //TODO: parse a config file
+}
+
+
+
+void WindowLogicComponent::implementation(Object &object, double const &ignore)
+{
+    /*  Ironically, it is this function's job to *set* the delta! Here we will
+     *  rename the const delta parameter to "ignore". ;)
+     *
+     *  Window Z Dimension
      *  Z   : frames per time (s), i.e. target fps
-     *  DZ  : time (ms) since start, i.e. SDL_GetTicks()
-     *  D2Z : time (ms) per frame, i.e. delta
+     *  DZ  : time (ms) since last frame, i.e. delta
+     *  D2Z : wait time (ms) per frame, i.e. vsync waiting time
      */
-    object.dimension->at(DimensionKey::DZ) = SDL_GetTicks();
-    object.dimension->at(DimensionKey::D2Z) = delta;
+    double delta = static_cast<double>(SDL_GetTicks() - this->lastFrame);
+    if (delta > this->deltaCeil) delta = this->deltaCeil;
+
+    double waitTime = (1000.0 / object.dimension->at(DimensionKey::Z)) - delta;
+    if (waitTime < 0.0 || !this->enableVSync) waitTime = 0.0;
+
+    object.dimension->at(DimensionKey::DZ) = delta;
+    object.dimension->at(DimensionKey::D2Z) = waitTime;
+
+    this->lastFrame = SDL_GetTicks();
 }
 
 
