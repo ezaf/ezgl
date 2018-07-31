@@ -129,7 +129,7 @@ void Window::run()
 {
     SDL_Event event;
 
-    /*  Let Z be used to indicate refresh rate, where
+    /*  Let Z be used to indicate refresh rate (target fps), where
      *      =0 : quit signal
      *      <0 : pause
      */
@@ -140,7 +140,7 @@ void Window::run()
             events.push_back(event);
         }
 
-        // Update nothing if paused (but still refresh window)
+        // Update if not paused
         if (this->dimension->at(DimensionKey::Z) > 0)
         {
             for (auto &it : this->objects)
@@ -149,6 +149,7 @@ void Window::run()
             }
         }
 
+        // Refresh window (even if paused)
         this->update(*this);
 
         // TODO: replace with framerate handler
@@ -178,6 +179,13 @@ std::vector<SDL_Event> Window::getEvents() const
 {
     return this->events;
 }
+
+
+
+double const& Window::getDelta() const
+{
+    return this->dimension->at(DimensionKey::D2Z);
+};
 
 
 

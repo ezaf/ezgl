@@ -1,4 +1,4 @@
-/*  EzSDL/WindowOutputComponent.cpp
+/*  EzSDL/WindowLogicComponent.cpp
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -19,22 +19,27 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-#include "EzSDL/WindowOutputComponent.hpp"
+#include "EzSDL/WindowLogicComponent.hpp"
 
+#include "EzSDL/Dimension.hpp"
 #include "EzSDL/Object.hpp"
 
-#include <SDL2/SDL_render.h>
+#include <SDL2/SDL.h>
 
 namespace EzSDL
 {
 
 
 
-void WindowOutputComponent::implementation(Object &object,
-        SDL_Renderer *renderer)
+void WindowLogicComponent::implementation(Object &object, double const &delta)
 {
-    SDL_RenderClear(renderer);
-    SDL_RenderPresent(renderer);
+    /*  Window Z Dimension
+     *  Z   : frames per time (s), i.e. target fps
+     *  DZ  : time (ms) since start, i.e. SDL_GetTicks()
+     *  D2Z : time (ms) per frame, i.e. delta
+     */
+    object.dimension->at(DimensionKey::DZ) = SDL_GetTicks();
+    object.dimension->at(DimensionKey::D2Z) = delta;
 }
 
 

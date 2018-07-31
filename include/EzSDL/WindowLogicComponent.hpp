@@ -1,4 +1,4 @@
-/*  EzSDL/WindowOutputComponent.cpp
+/*  EzSDL/WindowLogicComponent.hpp
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -19,24 +19,45 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-#include "EzSDL/WindowOutputComponent.hpp"
+#ifndef EZSDL_WINDOWLOGICCOMPONENT_HPP
+#define EZSDL_WINDOWLOGICCOMPONENT_HPP
 
-#include "EzSDL/Object.hpp"
+/** @file       EzSDL/WindowLogicComponent.hpp
+ *  @brief      Lorem ipsum
+ *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+ */
 
-#include <SDL2/SDL_render.h>
+#include "EzSDL/LogicComponent.hpp"
+
+
 
 namespace EzSDL
 {
 
+typename Component::Key const WindowLogicComponentID = 2;
 
-
-void WindowOutputComponent::implementation(Object &object,
-        SDL_Renderer *renderer)
+/** @brief      Lorem ipsum
+ *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+ *              eiusmod tempor incididunt ut labore et dolore magna aliqua.
+ */
+class WindowLogicComponent : public LogicComponent<WindowLogicComponent>
 {
-    SDL_RenderClear(renderer);
-    SDL_RenderPresent(renderer);
-}
+public:
+    WindowLogicComponent() = default;
+    virtual ~WindowLogicComponent() = default;
 
+    void implementation(Object &object, double const &delta);
+
+protected:
+
+private:
+    WindowLogicComponent(WindowLogicComponent const &other);
+    WindowLogicComponent& operator=(WindowLogicComponent const &other);
+};
 
 
 }; /* namespace EzSDL */
+
+
+
+#endif /* EZSDL_WINDOWLOGICCOMPONENT_HPP */
