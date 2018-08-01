@@ -48,7 +48,7 @@ RUN =
 PKGS = sdl2 SDL2_image SDL2_ttf #glfw3 gtk+-3.0
 
 # Needed submodule include directories within /sub
-SUB_INC_DIRS =
+SUB_INC_DIRS = json/single_include
 
 # Needed submodule source directories within /sub
 SUB_SRC_DIRS =
@@ -56,7 +56,7 @@ SUB_SRC_DIRS =
 # If the submodule has its test source files in the same directory as its
 # actual API source files (facepalm), then you may want to manually specify
 # individual source files here (including the file extension).
-SUB_SRC_FILES = parson/parson.c
+SUB_SRC_FILES =
 
 
 
