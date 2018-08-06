@@ -24,9 +24,9 @@
 
 /** @file       EzSDL/Window.hpp
  *  @brief      SDL_Window adapter.
- *  @details    When using valgrind, note that SDL itself leaks memory. It
- *              definitely leaks 8.4kb, indirectly leaks 1.7kb, and has 120kb
- *              that is still reachable.
+ *  @details    When using valgrind/memcheck, note that SDL itself leaks
+ *              memory. It definitely leaks 8.4kb, indirectly leaks 1.7kb, and
+ *              has 120kb that is still reachable.
  */
 
 #include "EzSDL/Object.hpp"

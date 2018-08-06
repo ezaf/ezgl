@@ -1,0 +1,9 @@
+{
+    "width": 1920,
+    "height": 1080,
+    "fullscreen": true,
+    "bordered": false,
+    "scaling": "linear",
+    "vsync": true,
+    "show_cursor": true
+}

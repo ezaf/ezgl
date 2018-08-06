@@ -32,13 +32,13 @@ LIB_NAME = ezsdl
 LIB_SUBDIR = EzSDL
 
 # Directories within /src of the apps and tests that you want to build.
-MAIN_SUBDIRS = test_hello
+MAIN_SUBDIRS = test_json test_hello
 
 # Name of the application(s) you want to test when you call `make test`.
-TEST = test_hello
+TEST = test_json #test_hello
 
 # Name of the application (singular!) you want to run when you call `make run`.
-RUN =
+RUN = test_hello
 
 # Packages that you want to include in your project.
 # If `pkg-config` cannot find the package, `-I$(PREFIX)/include/$(PKG)` and
@@ -77,7 +77,7 @@ MODE = dynamic
 # In many cases the order in which your `-l`s appear matters! One limitation of
 # EzMake is that we assume all tests/mains use the same compiler flags. If this
 # becomes a big enough issue, this will be amended in a future version.
-CF = -std=c++11 -O3 -w #-g
+CF = -std=c++11 -w -O3 #-g
 LF = #-lm
 
 # Source file extensions you want compiled.

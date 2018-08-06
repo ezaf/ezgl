@@ -21,7 +21,10 @@
 
 #include "EzSDL/Window.hpp"
 
+#include "nlohmann/json.hpp"
+
 #include <cmath> // round
+#include <fstream> // ifstream
 #include <iostream> // cout, endl
 
 namespace EzSDL
@@ -61,13 +64,13 @@ Window::Window(ComponentPtrList componentDeps) :
             "Initialized all SDL systems." << std::endl;
     }
 
-    // TODO: parse a json config file; handle this in WIndowLogicComponent?
-    bool enableFullscreen = true;
-
+    // Get display information
     SDL_DisplayMode displayMode;
     if (SDL_GetDesktopDisplayMode(0, &displayMode) != 0)
     {
-        enableFullscreen = false;
+        displayMode.w = 640;
+        displayMode.h = 480;
+        displayMode.refresh_rate = 60;
         std::cout << "Failed to get desktop display mode: " <<
             SDL_GetError() << std::endl;
     }
@@ -83,37 +86,66 @@ Window::Window(ComponentPtrList componentDeps) :
     this->dimension->at(DimensionKey::Z) =
         static_cast<double>(displayMode.refresh_rate); // Hz
 
-    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
-    //SDL_ShowCursor(SDL_DISABLE);
-
-    // Create actual window
+    // Create actual window and then renderer
     this->window.reset(
             SDL_CreateWindow("EzSDL Demo",
                 SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-                enableFullscreen ? displayMode.w : 640,
-                enableFullscreen ? displayMode.h : 480,
-                SDL_WINDOW_BORDERLESS |
+                displayMode.w, displayMode.h,
                 SDL_WINDOW_ALLOW_HIGHDPI));
 
     this->renderer.reset(
-            SDL_CreateRenderer(getWindow(), -1,
-                SDL_RENDERER_ACCELERATED |
-                SDL_RENDERER_PRESENTVSYNC));
+            SDL_CreateRenderer(getWindow(), -1, SDL_RENDERER_ACCELERATED));
 
-    SDL_SetRenderDrawColor(this->getRenderer(), 0x00, 0x00, 0x00, 0xFF);
+    // Configure settings
+    // TODO: verify file exists, otherwise, exit
+    std::ifstream file("data/window.json");
 
-    // Error checking
-    if (getWindow() != nullptr && this->getRenderer() != nullptr)
+    if (file.good())
     {
-        Window::instanceCount++;
-        std::cout << "Successfully created window and its renderer." <<
-            std::endl;
+        nlohmann::json config;
+        file >> config;
+
+        // Don't bother checking .is_null() because they ought to be there
+        SDL_SetWindowFullscreen(this->window.get(),
+                config["fullscreen"] ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0);
+
+        SDL_SetWindowBordered(this->window.get(),
+                static_cast<SDL_bool>(static_cast<int>(config["bordered"])));
+
+        /*
+        SDL_SetWindowResizable(this->window.get(),
+                static_cast<SDL_bool>(static_cast<int>(config["resizable"])));
+        */
+
+        std::string scaling = config["scaling"];
+        SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, scaling.c_str());
+
+        SDL_SetHint(SDL_HINT_RENDER_VSYNC, config["vsync"] ? "1" : "0");
+        SDL_ShowCursor(config["show_cursor"] ? SDL_ENABLE : SDL_DISABLE);
+        SDL_RenderSetLogicalSize(this->getRenderer(),
+                config["width"], config["height"]);
+
+        SDL_SetRenderDrawColor(this->getRenderer(), 0x00, 0x00, 0x00, 0xFF);
+
+        // Error checking
+        if (getWindow() != nullptr && this->getRenderer() != nullptr)
+        {
+            Window::instanceCount++;
+            std::cout << "Successfully created window and its renderer." <<
+                std::endl;
+        }
+        else
+        {
+            std::cout << "Failed to create window and/or renderer: " <<
+                SDL_GetError() << std::endl;
+        }
     }
     else
     {
-        std::cout << "Failed to create window and/or renderer: " <<
-            SDL_GetError() << std::endl;
+        // TODO: tell desired file name
+        std::cout << "Missing window configuration file!" << std::endl;
     }
+
 }
 
 
