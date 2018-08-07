@@ -43,10 +43,11 @@ typename Component::Key const WindowLogicComponentID = 2;
 class WindowLogicComponent : public LogicComponent<WindowLogicComponent>
 {
 public:
-    WindowLogicComponent();
+    WindowLogicComponent() = default;
     virtual ~WindowLogicComponent() = default;
 
-    void implementation(Object &object, double const &delta);
+    void initImpl(Object &object, Window const &window);
+    void updateImpl(Object &object, double const &delta);
 
 protected:
 
@@ -54,8 +55,9 @@ private:
     WindowLogicComponent(WindowLogicComponent const &other);
     WindowLogicComponent& operator=(WindowLogicComponent const &other);
 
-    bool const enableVSync;
-    double const deltaCeil;
+    // TODO: const these first two if init at ctor?
+    bool enableVSync;
+    double deltaCeil;
     unsigned long lastFrame;
 };
 

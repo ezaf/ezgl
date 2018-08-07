@@ -52,7 +52,8 @@ public:
     static ObjectPtr create(ComponentPtrList componentDeps);
     virtual ~Object() = default;
 
-    virtual void update(Window &window);
+    virtual void init(Window const &window);
+    virtual void update(Window const &window);
 
     DDimensionPtr dimension;
 

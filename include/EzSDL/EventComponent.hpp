@@ -44,11 +44,17 @@ class EventComponent : public Component
 {
 public:
     virtual ~EventComponent() = default;
-    void update(Object &object, Window &window) override
+
+    void init(Object &object, Window const &window) override
+    {
+        static_cast<T*>(this)->initImpl(object, window);
+    };
+
+    void update(Object &object, Window const &window) override
     {
         for (auto &it : window.getEvents())
         {
-            static_cast<T*>(this)->implementation(object, it);
+            static_cast<T*>(this)->updateImpl(object, it);
         }
     };
 

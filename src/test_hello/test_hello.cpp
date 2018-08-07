@@ -24,31 +24,30 @@
  */
 
 #include "EzSDL/Window.hpp"
-#include "EzSDL/WindowEventComponent.hpp"
-#include "EzSDL/WindowLogicComponent.hpp"
-#include "EzSDL/WindowRenderComponent.hpp"
+#include "EzSDL/DummyLogicComponent.hpp"
+#include "EzSDL/DummyRenderComponent.hpp"
 
 
 
 int main(int argc, char *argv[])
 {
-    EzSDL::Component::enlist<EzSDL::WindowEventComponentID,
-        EzSDL::EventComponent<EzSDL::WindowEventComponent>>();
+    EzSDL::Component::enlist<EzSDL::DummyLogicComponentID,
+        EzSDL::LogicComponent<EzSDL::DummyLogicComponent>>();
 
-    EzSDL::Component::enlist<EzSDL::WindowLogicComponentID,
-        EzSDL::LogicComponent<EzSDL::WindowLogicComponent>>();
-
-    EzSDL::Component::enlist<EzSDL::WindowRenderComponentID,
-        EzSDL::RenderComponent<EzSDL::WindowRenderComponent>>();
+    EzSDL::Component::enlist<EzSDL::DummyRenderComponentID,
+        EzSDL::RenderComponent<EzSDL::DummyRenderComponent>>();
 
 
-    EzSDL::WindowPtr window(EzSDL::Window::create({
-                EzSDL::Component::create(EzSDL::WindowEventComponentID),
-                EzSDL::Component::create(EzSDL::WindowLogicComponentID),
-                EzSDL::Component::create(EzSDL::WindowRenderComponentID)
+
+    EzSDL::Window::init();
+
+    EzSDL::Window::addObject(
+            EzSDL::Object::create({
+                EzSDL::Component::create(EzSDL::DummyLogicComponentID),
+                EzSDL::Component::create(EzSDL::DummyRenderComponentID)
             }));
 
-    window->run();
+    EzSDL::Window::run();
 
     return 0;
 }

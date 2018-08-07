@@ -31,7 +31,13 @@ namespace EzSDL
 
 
 
-void WindowEventComponent::implementation(Object &object, SDL_Event &e)
+void WindowEventComponent::initImpl(Object &object, Window const &window)
+{
+}
+
+
+
+void WindowEventComponent::updateImpl(Object &object, SDL_Event &e)
 {
     switch (e.type)
     {

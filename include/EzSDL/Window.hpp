@@ -41,53 +41,39 @@
 namespace EzSDL
 {
 
-/** @brief      Window object smart pointer. */
-using WindowPtr = std::unique_ptr<class Window>;
-
 /** @brief      SDL_Window adapter and smart pointer factory.
  *  @details    This class is not copyable nor inheritable.
  */
 class Window final : private Object
 {
 public:
-    /** @brief      Window smart pointer factory method.
-     *  @details    TODO: exception safety? no-throw? JSON config file specs?
-     *              Initializes SDL subsystems on-demand.
-     *  @returns    Smart pointer (`std::shared_ptr`) to the newly created
-     *              window instance.
-     */
-    static WindowPtr create(ComponentPtrList componentDeps);
+    /** @brief      Call this before all else. */
+    static void init();
 
-    /** @brief      Window destructor that you should never have to call.
-     *  @details    Assuming you're using the `EzSDL::WindowPtr` smart pointer,
-     *              you should never have to explicitly call this destructor
-     *              unless you need to prematurely delete your window instance.
-     */
+    /** @brief      Window destructor that you should never have to call. */
     virtual ~Window();
 
-    void addObject(ObjectPtr object);
-
-    // For Emscripten's sake
-    void runOneFrame();
-    void run();
-
-    // Using inherited update function; no need to define an override
-    //void update(Window &window) override;
+    static void addObject(ObjectPtr object);
+    static void run();
 
     std::vector<SDL_Event> getEvents() const;
     double const& getDelta() const;
     SDL_Renderer* getRenderer() const;
     SDL_Window* getWindow() const;
-
-protected:
-    Window(ComponentPtrList componentDeps);
+    DDimension* getDimension() const;
 
 private:
+    using WindowPtr = std::unique_ptr<class Window>;
+
+    Window(ComponentPtrList componentDeps);
     Window(Window const &other) = delete;
     Window& operator=(Window const &other) = delete;
 
-    // Count of how many windows produced by this factory are currently alive.
-    static int instanceCount;
+    // For Emscripten's sake
+    static void runOneFrame();
+
+    // Singleton instance
+    static WindowPtr instance;
 
     // Pointer to SDL modules themselves
     std::unique_ptr<SDL_Window, decltype(&SDL_DestroyWindow)> window;

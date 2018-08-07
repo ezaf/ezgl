@@ -20,8 +20,15 @@
  */
 
 #include "EzSDL/Window.hpp"
+#include "EzSDL/WindowEventComponent.hpp"
+#include "EzSDL/WindowLogicComponent.hpp"
+#include "EzSDL/WindowRenderComponent.hpp"
 
 #include "nlohmann/json.hpp"
+
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#endif
 
 #include <cmath> // round
 #include <fstream> // ifstream
@@ -32,13 +39,41 @@ namespace EzSDL
 
 
 
-int Window::instanceCount = 0;
+Window::WindowPtr Window::instance;
 
 
 
-WindowPtr Window::create(ComponentPtrList componentDeps)
+void Window::init()
 {
-    return WindowPtr(new Window(componentDeps));
+    if (Window::instance != nullptr)
+        return;
+
+    SDL_Init(SDL_INIT_EVERYTHING);
+
+    SDL_version linked;
+    SDL_GetVersion(&linked);
+
+    std::cout << "Using SDL version " <<
+        static_cast<int>(linked.major) << "." <<
+        static_cast<int>(linked.minor) << "." <<
+        static_cast<int>(linked.patch) << "." << std::endl <<
+        "Initialized all SDL systems." << std::endl;
+
+
+    Component::enlist<WindowEventComponentID,
+        EventComponent<WindowEventComponent>>();
+
+    Component::enlist<WindowLogicComponentID,
+        LogicComponent<WindowLogicComponent>>();
+
+    Component::enlist<WindowRenderComponentID,
+        RenderComponent<WindowRenderComponent>>();
+
+    Window::instance.reset(new Window({
+                Component::create(WindowEventComponentID),
+                Component::create(WindowLogicComponentID),
+                Component::create(WindowRenderComponentID)
+            }));
 }
 
 
@@ -49,21 +84,6 @@ Window::Window(ComponentPtrList componentDeps) :
     renderer(nullptr, SDL_DestroyRenderer),
     events()
 {
-    // Initialize SDL video if necessary
-    if (Window::instanceCount == 0 && SDL_WasInit(SDL_INIT_VIDEO) == 0)
-    {
-        SDL_Init(SDL_INIT_EVERYTHING);
-
-        SDL_version linked;
-        SDL_GetVersion(&linked);
-
-        std::cout << "Using SDL version " <<
-            static_cast<int>(linked.major) << "." <<
-            static_cast<int>(linked.minor) << "." <<
-            static_cast<int>(linked.patch) << "." << std::endl <<
-            "Initialized all SDL systems." << std::endl;
-    }
-
     // Get display information
     SDL_DisplayMode displayMode;
     if (SDL_GetDesktopDisplayMode(0, &displayMode) != 0)
@@ -76,6 +96,9 @@ Window::Window(ComponentPtrList componentDeps) :
     }
     else
     {
+#ifdef __EMSCRIPTEN__
+        displayMode.refresh_rate = 60;
+#endif
         std::cout << "Display mode aquired: {"
             " w:" << displayMode.w <<
             " h:" << displayMode.h <<
@@ -83,6 +106,8 @@ Window::Window(ComponentPtrList componentDeps) :
             " }" << std::endl;
     }
 
+    this->dimension->at(DimensionKey::W) = static_cast<double>(displayMode.w);
+    this->dimension->at(DimensionKey::H) = static_cast<double>(displayMode.h);
     this->dimension->at(DimensionKey::Z) =
         static_cast<double>(displayMode.refresh_rate); // Hz
 
@@ -94,12 +119,12 @@ Window::Window(ComponentPtrList componentDeps) :
                 SDL_WINDOW_ALLOW_HIGHDPI));
 
     this->renderer.reset(
-            SDL_CreateRenderer(getWindow(), -1, SDL_RENDERER_ACCELERATED));
+            SDL_CreateRenderer(this->window.get(), -1,
+                SDL_RENDERER_ACCELERATED));
 
     // Configure settings
-    // TODO: verify file exists, otherwise, exit
+    // TODO: pass an already-init'd json object into the constructor instead
     std::ifstream file("data/window.json");
-
     if (file.good())
     {
         nlohmann::json config;
@@ -122,17 +147,19 @@ Window::Window(ComponentPtrList componentDeps) :
 
         SDL_SetHint(SDL_HINT_RENDER_VSYNC, config["vsync"] ? "1" : "0");
         SDL_ShowCursor(config["show_cursor"] ? SDL_ENABLE : SDL_DISABLE);
-        SDL_RenderSetLogicalSize(this->getRenderer(),
+        SDL_RenderSetLogicalSize(this->renderer.get(),
                 config["width"], config["height"]);
 
-        SDL_SetRenderDrawColor(this->getRenderer(), 0x00, 0x00, 0x00, 0xFF);
+        //SDL_SetWindowIcon(this->window.get(), IMG_Load(""));
+        SDL_SetRenderDrawColor(this->renderer.get(), 0x00, 0x00, 0x00, 0xFF);
 
         // Error checking
-        if (getWindow() != nullptr && this->getRenderer() != nullptr)
+        if (this->window.get() != nullptr && this->renderer.get() != nullptr)
         {
-            Window::instanceCount++;
             std::cout << "Successfully created window and its renderer." <<
                 std::endl;
+
+            Object::init(*Window::instance);
         }
         else
         {
@@ -145,27 +172,24 @@ Window::Window(ComponentPtrList componentDeps) :
         // TODO: tell desired file name
         std::cout << "Missing window configuration file!" << std::endl;
     }
-
 }
 
 
 
 Window::~Window()
 {
-    Window::instanceCount--;
+    // This is a singleton, we know we can quit SDL now
+    SDL_Quit();
 
-    if (Window::instanceCount <= 0)
-    {
-        SDL_Quit();
-        std::cout << "Quit all SDL systems." << std::endl;
-    }
+    std::cout << "Quit all SDL systems." << std::endl;
 }
 
 
 
 void Window::addObject(ObjectPtr object)
 {
-    objects.push_back(std::move(object));
+    object->init(*Window::instance);
+    Window::instance->objects.push_back(std::move(object));
 }
 
 
@@ -176,81 +200,95 @@ void Window::runOneFrame()
 
     while (SDL_PollEvent(&event) != 0)
     {
-        events.push_back(event);
+        Window::instance->events.push_back(event);
     }
 
     // Update if not paused, see Window::run() for more info on Z
-    if (this->dimension->at(DimensionKey::Z) > 0)
+    if (Window::instance->dimension->at(DimensionKey::Z) > 0)
     {
-        for (auto &it : this->objects)
+        for (auto &it : Window::instance->objects)
         {
-            it->update(*this);
+            it->update(*Window::instance);
         }
     }
 
     // Refresh window (even if paused)
-    this->update(*this);
+    Window::instance->update(*Window::instance);
 
-    events.clear();
+    Window::instance->events.clear();
 }
 
 
 
 void Window::run()
 {
+#ifdef __EMSCRIPTEN__
+    emscripten_set_main_loop(Window::runOneFrame, 60, 1);
+#else
     /*  Let Z be used to indicate refresh rate (target fps), where
      *      =0 : quit signal
      *      <0 : pause
      *
      *  For more information on Z, DZ, and D2Z, see `WindowLogicComponent.cpp`
      */
-    while (this->dimension->at(DimensionKey::Z) != 0)
+    while (Window::instance->dimension->at(DimensionKey::Z) != 0)
     {
-        this->runOneFrame();
+        Window::instance->runOneFrame();
 
         // Frame rate timing; WindowLogicComponent handles VSync on/off option
-        if (this->dimension->at(DimensionKey::D2Z) > 0.0)
+        if (Window::instance->dimension->at(DimensionKey::D2Z) > 0.0)
         {
             /*
             std::cout <<
                 static_cast<unsigned long>(
-                        round(this->dimension->at(DimensionKey::D2Z))) <<
+                        round(Window::instance->dimension->at(
+                                DimensionKey::D2Z))
+                        ) <<
                 std::endl;
             */
 
             SDL_Delay(static_cast<unsigned long>(
-                        round(this->dimension->at(DimensionKey::D2Z))));
+                        round(Window::instance->dimension->at(
+                                DimensionKey::D2Z))));
         }
     }
+#endif
 }
 
 
 
 SDL_Window* Window::getWindow() const
 {
-    return this->window.get();
+    return Window::instance->window.get();
 }
 
 
 
 SDL_Renderer* Window::getRenderer() const
 {
-    return this->renderer.get();
+    return Window::instance->renderer.get();
 }
 
 
 
 std::vector<SDL_Event> Window::getEvents() const
 {
-    return this->events;
+    return Window::instance->events;
 }
 
 
 
 double const& Window::getDelta() const
 {
-    return this->dimension->at(DimensionKey::D2Z);
-};
+    return Window::instance->dimension->at(DimensionKey::DZ);
+}
+
+
+
+DDimension* Window::getDimension() const
+{
+    return Window::instance->dimension.get();
+}
 
 
 

@@ -1,4 +1,4 @@
-/*  EzSDL/WindowRenderComponent.cpp
+/*  EzSDL/DummyRenderComponent.cpp
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -19,7 +19,7 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-#include "EzSDL/WindowRenderComponent.hpp"
+#include "EzSDL/DummyRenderComponent.hpp"
 
 #include "EzSDL/Object.hpp"
 
@@ -28,23 +28,29 @@
 namespace EzSDL
 {
 
+using DK = DimensionKey;
 
 
-void WindowRenderComponent::initImpl(Object &object, Window const &window)
+
+void DummyRenderComponent::initImpl(Object &object, Window const &window)
 {
 }
 
 
 
-void WindowRenderComponent::updateImpl(Object &object, SDL_Renderer *renderer)
+void DummyRenderComponent::updateImpl(Object &object, SDL_Renderer *renderer)
 {
-    SDL_RenderPresent(renderer);
+    SDL_SetRenderDrawColor(renderer, 0xFF, 0x00, 0x00, 0xFF);
 
-    // For some reason need to disable this when doing Emscripten
-#ifndef __EMSCRIPTEN__
-    SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0xFF);
-    SDL_RenderClear(renderer);
-#endif
+    SDL_Rect rect = {
+            static_cast<int>(object.dimension->at(DK::X)),
+            static_cast<int>(object.dimension->at(DK::Y)),
+            static_cast<int>(object.dimension->at(DK::W)),
+            static_cast<int>(object.dimension->at(DK::H)) };
+    SDL_RenderFillRect(renderer, &rect);
+
+    SDL_Rect rectB = { 0, 0, 10, 10 };
+    SDL_RenderFillRect(renderer, &rectB);
 }
 
 
