@@ -1,17 +1,22 @@
 dist: trusty
 sudo: required
-language: c
+language: cpp
 
 before_install:
-- chmod +x ./script/deps.sh
+  - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+  - sudo apt-get -qq update
+  - sudo apt-get -qq install g++-7
+  - g++ --version
+  - g++-7 --version
+  - chmod +x ./script/deps.sh
 
 install:
-- sudo ./script/deps.sh
+  - sudo ./script/deps.sh
 
 script:
-- make init
-- make build MODE=static
-- make clean
-- make init
-- make build MODE=dynamic
-- make clean
+  - make init
+  - make build MODE=static CC=g++-7
+  - make clean
+  - make init
+  - make build MODE=dynamic CC=g++-7
+  - make clean
