@@ -81,7 +81,7 @@ CF = -std=c++11 -w -O3 #-g
 LF = #-lm
 
 # Source file extensions you want compiled.
-SRC_EXTS = c cpp
+SRC_EXTS = cpp #c
 
 # Location(s) where EzMake should look for `include` and `lib` subdirectories
 # No biggie if the directory doesn't exist.
