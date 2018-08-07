@@ -1,4 +1,4 @@
-/*  test_json.c
+/*  test_json.cpp
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -19,7 +19,7 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-/** @file       test_json.c
+/** @file       test_json.cpp
  *  @brief      Lorem ipsum
  *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
  */
