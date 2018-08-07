@@ -48,7 +48,8 @@ public:
     WindowEventComponent() = default;
     virtual ~WindowEventComponent() = default;
 
-    void implementation(Object &object, SDL_Event &event);
+    void initImpl(Object &object, Window const &window);
+    void updateImpl(Object &object, SDL_Event &event);
 
 protected:
 

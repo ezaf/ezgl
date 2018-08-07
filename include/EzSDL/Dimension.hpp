@@ -50,7 +50,7 @@ template <typename T>
 class Dimension
 {
 public:
-    using DimensionPtr = std::unique_ptr<Dimension<T>>;
+    using DimensionPtr = std::unique_ptr<Dimension<T> >;
 
     static DimensionPtr create()
     {

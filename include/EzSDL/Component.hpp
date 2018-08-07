@@ -42,7 +42,7 @@ class Window;
 /** @brief      Component smart pointer. */
 using ComponentPtr = std::shared_ptr<class Component>;
 
-/** @brief      */
+/* std::initializer_list not supported in emscripten */
 using ComponentPtrList = std::initializer_list<ComponentPtr>;
 
 /** @brief      Component template class and smart pointer factory.
@@ -59,7 +59,8 @@ public:
 
     Component() = default;
     virtual ~Component() = default;
-    virtual void update(Object &object, Window &window) = 0;
+    virtual void init(Object &object, Window const &window) = 0;
+    virtual void update(Object &object, Window const &window) = 0;
 
     static ComponentPtr create(Key const &key);
 

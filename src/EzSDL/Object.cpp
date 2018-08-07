@@ -41,7 +41,17 @@ Object::Object(ComponentPtrList componentDeps) :
 
 
 
-void Object::update(Window &window)
+void Object::init(Window const &window)
+{
+    for (auto &it : this->components)
+    {
+        it->init(*this, window);
+    }
+}
+
+
+
+void Object::update(Window const &window)
 {
     for (auto &it : this->components)
     {

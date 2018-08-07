@@ -31,17 +31,17 @@ namespace EzSDL
 
 
 
-WindowLogicComponent::WindowLogicComponent() :
-    enableVSync(true),
-    deltaCeil(100.0), // No slower than 10 fps
-    lastFrame(0)
+void WindowLogicComponent::initImpl(Object &object, Window const &window)
 {
     //TODO: parse a config file
+    enableVSync = true;
+    deltaCeil = 100.0; // No slower than 10 fps
+    lastFrame = 0;
 }
 
 
 
-void WindowLogicComponent::implementation(Object &object, double const &ignore)
+void WindowLogicComponent::updateImpl(Object &object, double const &ignore)
 {
     /*  Ironically, it is this function's job to *set* the delta! Here we will
      *  rename the const delta parameter to "ignore". ;)

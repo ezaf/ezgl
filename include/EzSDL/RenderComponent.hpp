@@ -44,9 +44,15 @@ class RenderComponent : public Component
 {
 public:
     virtual ~RenderComponent() = default;
-    void update(Object &object, Window &window) override
+
+    void init(Object &object, Window const &window) override
     {
-        static_cast<T*>(this)->implementation(object, window.getRenderer());
+        static_cast<T*>(this)->initImpl(object, window);
+    };
+
+    void update(Object &object, Window const &window) override
+    {
+        static_cast<T*>(this)->updateImpl(object, window.getRenderer());
     };
 
     static ComponentPtr create()

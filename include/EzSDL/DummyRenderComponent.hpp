@@ -1,4 +1,4 @@
-/*  EzSDL/LogicComponent.hpp
+/*  EzSDL/DummyRenderComponent.hpp
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -19,57 +19,48 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef EZSDL_LOGICCOMPONENT_HPP
-#define EZSDL_LOGICCOMPONENT_HPP
+#ifndef EZSDL_DUMMYRENDERCOMPONENT_HPP
+#define EZSDL_DUMMYRENDERCOMPONENT_HPP
 
-/** @file       EzSDL/LogicComponent.hpp
+/** @file       EzSDL/DummyRenderComponent.hpp
  *  @brief      Lorem ipsum
  *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
  */
 
-#include "EzSDL/Component.hpp"
-#include "EzSDL/Window.hpp"
+#include "EzSDL/RenderComponent.hpp"
+
+class SDL_Renderer;
 
 
 
 namespace EzSDL
 {
 
+typename Component::Key const DummyRenderComponentID = 5;
+
 /** @brief      Lorem ipsum
  *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
  *              eiusmod tempor incididunt ut labore et dolore magna aliqua.
  */
-template <class T>
-class LogicComponent : public Component
+class DummyRenderComponent : public RenderComponent<DummyRenderComponent>
 {
 public:
-    virtual ~LogicComponent() = default;
+    DummyRenderComponent() = default;
+    virtual ~DummyRenderComponent() = default;
 
-    void init(Object &object, Window const &window) override
-    {
-        static_cast<T*>(this)->initImpl(object, window);
-    }
-
-    void update(Object &object, Window const &window) override
-    {
-        static_cast<T*>(this)->updateImpl(object, window.getDelta());
-    };
-
-    static ComponentPtr create()
-    {
-        return ComponentPtr(new T());
-    };
+    void initImpl(Object &object, Window const &window);
+    void updateImpl(Object &object, SDL_Renderer *renderer);
 
 protected:
-    LogicComponent() = default;
 
 private:
-    LogicComponent(LogicComponent const &other) = delete;
-    LogicComponent& operator=(LogicComponent const &other) = delete;
+    DummyRenderComponent(DummyRenderComponent const &other);
+    DummyRenderComponent& operator=(DummyRenderComponent const &other);
 };
+
 
 }; /* namespace EzSDL */
 
 
 
-#endif /* EZSDL_LOGICCOMPONENT_HPP */
+#endif /* EZSDL_DUMMYRENDERCOMPONENT_HPP */

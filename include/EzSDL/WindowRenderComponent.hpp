@@ -48,7 +48,8 @@ public:
     WindowRenderComponent() = default;
     virtual ~WindowRenderComponent() = default;
 
-    void implementation(Object &object, SDL_Renderer *renderer);
+    void initImpl(Object &object, Window const &window);
+    void updateImpl(Object &object, SDL_Renderer *renderer);
 
 protected:
 
