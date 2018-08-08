@@ -36,7 +36,8 @@ class SDL_Renderer;
 namespace EzSDL
 {
 
-typename Component::Key const WindowRenderComponentID = 3;
+Component::Key const WindowRenderComponentID =
+    Component::enlist<3, RenderComponent<class WindowRenderComponent>>();
 
 /** @brief      Lorem ipsum
  *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do

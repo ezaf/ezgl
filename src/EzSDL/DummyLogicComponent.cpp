@@ -24,8 +24,6 @@
 #include "EzSDL/Dimension.hpp"
 #include "EzSDL/Object.hpp"
 
-#include <iostream>
-
 namespace EzSDL
 {
 
@@ -43,7 +41,7 @@ DummyLogicComponent::DummyLogicComponent() :
 
 void DummyLogicComponent::initImpl(Object &object, Window const &window)
 {
-    object.dimension->at(DK::W) = 48;
+    object.dimension->at(DK::W) = 64;
     object.dimension->at(DK::H) = 64;
 
     this->dimFloor->at(DK::X) = 0;
@@ -66,19 +64,29 @@ void DummyLogicComponent::updateImpl(Object &object, double const &delta)
     if (object.dimension->at(DK::X) > this->dimCeil->at(DK::X))
     {
         object.dimension->at(DK::X) = this->dimCeil->at(DK::X);
-        object.dimension->at(DK::DX) *= -1;
+        object.dimension->at(DK::DX) = 0;
     }
     else if (object.dimension->at(DK::X) < this->dimFloor->at(DK::X))
     {
         object.dimension->at(DK::X) = this->dimFloor->at(DK::X);
-        object.dimension->at(DK::DX) *= -1;
+        object.dimension->at(DK::DX) = 0;
     }
+
+    if (object.dimension->at(DK::Y) > this->dimCeil->at(DK::Y))
+    {
+        object.dimension->at(DK::Y) = this->dimCeil->at(DK::Y);
+        object.dimension->at(DK::DY) = 0;
+    }
+    else if (object.dimension->at(DK::Y) < this->dimFloor->at(DK::Y))
+    {
+        object.dimension->at(DK::Y) = this->dimFloor->at(DK::Y);
+        object.dimension->at(DK::DY) = 0;
+    }
+
 
     double const dt = delta / 1000.0;
     object.dimension->at(DK::X) += (object.dimension->at(DK::DX) * dt);
     object.dimension->at(DK::Y) += (object.dimension->at(DK::DY) * dt);
-
-    std::cout << object.dimension->at(DK::X) << std::endl;
 }
 
 

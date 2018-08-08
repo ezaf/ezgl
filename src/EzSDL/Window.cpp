@@ -45,6 +45,7 @@ Window::WindowPtr Window::instance;
 
 void Window::init()
 {
+    // This function should only be called once anyway!
     if (Window::instance != nullptr)
         return;
 
@@ -58,16 +59,6 @@ void Window::init()
         static_cast<int>(linked.minor) << "." <<
         static_cast<int>(linked.patch) << "." << std::endl <<
         "Initialized all SDL systems." << std::endl;
-
-
-    Component::enlist<WindowEventComponentID,
-        EventComponent<WindowEventComponent>>();
-
-    Component::enlist<WindowLogicComponentID,
-        LogicComponent<WindowLogicComponent>>();
-
-    Component::enlist<WindowRenderComponentID,
-        RenderComponent<WindowRenderComponent>>();
 
     Window::instance.reset(new Window({
                 Component::create(WindowEventComponentID),

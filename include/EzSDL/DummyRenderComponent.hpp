@@ -36,7 +36,8 @@ class SDL_Renderer;
 namespace EzSDL
 {
 
-typename Component::Key const DummyRenderComponentID = 5;
+Component::Key const DummyRenderComponentID =
+    Component::enlist<6, RenderComponent<class DummyRenderComponent>>();
 
 /** @brief      Lorem ipsum
  *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
@@ -57,7 +58,6 @@ private:
     DummyRenderComponent(DummyRenderComponent const &other);
     DummyRenderComponent& operator=(DummyRenderComponent const &other);
 };
-
 
 }; /* namespace EzSDL */
 

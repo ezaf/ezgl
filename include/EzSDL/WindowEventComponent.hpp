@@ -36,7 +36,8 @@
 namespace EzSDL
 {
 
-typename Component::Key const WindowEventComponentID = 1;
+Component::Key const WindowEventComponentID =
+    Component::enlist<1, EventComponent<class WindowEventComponent>>();
 
 /** @brief      Lorem ipsum
  *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do

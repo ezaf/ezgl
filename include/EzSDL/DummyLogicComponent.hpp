@@ -34,7 +34,8 @@
 namespace EzSDL
 {
 
-typename Component::Key const DummyLogicComponentID = 4;
+Component::Key const DummyLogicComponentID =
+    Component::enlist<5, LogicComponent<class DummyLogicComponent>>();
 
 /** @brief      Lorem ipsum
  *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
@@ -57,7 +58,6 @@ private:
 
     DDimensionPtr dimCeil, dimFloor;
 };
-
 
 }; /* namespace EzSDL */
 
