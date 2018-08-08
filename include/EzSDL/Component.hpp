@@ -66,9 +66,10 @@ public:
 
     /* TODO: Remark that T must have a static T::create() */
     template <Key K, class T>
-    static void enlist()
+    static Key enlist()
     {
-        Component::enlisted[K] = T::create;
+        Component::getComponentMap()[K] = T::create;
+        return K;
     };
 
 protected:
@@ -78,7 +79,7 @@ private:
     Component& operator=(Component const &other) = delete;
 
     using ComponentMap = std::map<Key, ComponentPtr (*)()>;
-    static ComponentMap enlisted;
+    static ComponentMap& getComponentMap();
 };
 
 }; /* namespace EzSDL */

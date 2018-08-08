@@ -47,9 +47,11 @@ void WindowEventComponent::updateImpl(Object &object, SDL_Event &e)
         case SDL_KEYDOWN:
             switch (e.key.keysym.scancode)
             {
+#ifndef __EMSCRIPTEN__
                 case SDL_SCANCODE_ESCAPE:
                     object.dimension->at(DimensionKey::Z) = 0;
                     break;
+#endif
                 case SDL_SCANCODE_GRAVE:
                     object.dimension->at(DimensionKey::Z) *= -1;
                     break;

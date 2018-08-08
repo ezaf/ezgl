@@ -1,4 +1,4 @@
-/*  EzSDL/WindowLogicComponent.hpp
+/*  EzSDL/DummyEventComponent.hpp
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -19,52 +19,48 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef EZSDL_WINDOWLOGICCOMPONENT_HPP
-#define EZSDL_WINDOWLOGICCOMPONENT_HPP
+#ifndef EZSDL_DUMMYEVENTCOMPONENT_HPP
+#define EZSDL_DUMMYEVENTCOMPONENT_HPP
 
-/** @file       EzSDL/WindowLogicComponent.hpp
+/** @file       EzSDL/DummyEventComponent.hpp
  *  @brief      Lorem ipsum
  *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
  */
 
-#include "EzSDL/LogicComponent.hpp"
+#include "EzSDL/EventComponent.hpp"
+
+#include <SDL2/SDL_events.h>
 
 
 
 namespace EzSDL
 {
 
-Component::Key const WindowLogicComponentID =
-    Component::enlist<2, LogicComponent<class WindowLogicComponent>>();
+Component::Key const DummyEventComponentID =
+    Component::enlist<4, EventComponent<class DummyEventComponent>>();
 
 /** @brief      Lorem ipsum
  *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
  *              eiusmod tempor incididunt ut labore et dolore magna aliqua.
  */
-class WindowLogicComponent : public LogicComponent<WindowLogicComponent>
+class DummyEventComponent : public EventComponent<DummyEventComponent>
 {
 public:
-    WindowLogicComponent() = default;
-    virtual ~WindowLogicComponent() = default;
+    DummyEventComponent() = default;
+    virtual ~DummyEventComponent() = default;
 
     void initImpl(Object &object, Window const &window);
-    void updateImpl(Object &object, double const &delta);
+    void updateImpl(Object &object, SDL_Event &event);
 
 protected:
 
 private:
-    WindowLogicComponent(WindowLogicComponent const &other);
-    WindowLogicComponent& operator=(WindowLogicComponent const &other);
-
-    // TODO: const these first two if init at ctor?
-    bool enableVSync;
-    double deltaCeil;
-    unsigned long lastFrame;
+    DummyEventComponent(DummyEventComponent const &other);
+    DummyEventComponent& operator=(DummyEventComponent const &other);
 };
-
 
 }; /* namespace EzSDL */
 
 
 
-#endif /* EZSDL_WINDOWLOGICCOMPONENT_HPP */
+#endif /* EZSDL_DUMMYEVENTCOMPONENT_HPP */

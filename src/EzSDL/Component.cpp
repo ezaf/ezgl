@@ -28,16 +28,12 @@ namespace EzSDL
 
 
 
-/* Must instantiate the static map somewhere */
-Component::ComponentMap Component::enlisted;
-
-
-
 ComponentPtr Component::create(Key const &key)
 {
-    typename ComponentMap::iterator it = Component::enlisted.find(key);
+    typename ComponentMap::iterator it =
+        Component::getComponentMap().find(key);
 
-    if (it != Component::enlisted.end())
+    if (it != Component::getComponentMap().end())
     {
         return (it->second)();
     }
@@ -46,6 +42,27 @@ ComponentPtr Component::create(Key const &key)
         std::cout << "Failed to find component with key: " << key << std::endl;
         return ComponentPtr(nullptr);
     }
+}
+
+
+
+Component::ComponentMap& Component::getComponentMap()
+{
+    /* Must use this technique instead of a static member to ensure that the
+     * map gets initialized before global initializers try to enlist
+     * components. If we initialized the map in this translation unit
+     * (Component.cpp) then we cannot guarentee that it is initialized before
+     * another translation unit tries to access the map. That is why we
+     * initialize the map inside this static function which is called by
+     * whatever translation unit wants to access the map.
+     *
+     * This should be thread safe because this method is first called by a
+     * global initializer, i.e. before main(). Please correct me if I'm wrong.
+     * https://stackoverflow.com/a/1962918/5890633
+     */
+
+    static ComponentMap map;
+    return map;
 }
 
 

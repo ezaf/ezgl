@@ -24,6 +24,7 @@
  */
 
 #include "EzSDL/Window.hpp"
+#include "EzSDL/DummyEventComponent.hpp"
 #include "EzSDL/DummyLogicComponent.hpp"
 #include "EzSDL/DummyRenderComponent.hpp"
 
@@ -31,18 +32,11 @@
 
 int main(int argc, char *argv[])
 {
-    EzSDL::Component::enlist<EzSDL::DummyLogicComponentID,
-        EzSDL::LogicComponent<EzSDL::DummyLogicComponent>>();
-
-    EzSDL::Component::enlist<EzSDL::DummyRenderComponentID,
-        EzSDL::RenderComponent<EzSDL::DummyRenderComponent>>();
-
-
-
     EzSDL::Window::init();
 
     EzSDL::Window::addObject(
             EzSDL::Object::create({
+                EzSDL::Component::create(EzSDL::DummyEventComponentID),
                 EzSDL::Component::create(EzSDL::DummyLogicComponentID),
                 EzSDL::Component::create(EzSDL::DummyRenderComponentID)
             }));
