@@ -45,7 +45,7 @@ void iterate(nlohmann::json obj, int depth=0)
 
         std::cout << it.key() << ":" << it.value() << std::endl;
 
-        if (it.value().is_structured())
+        if (it.value().is_structured() && !it.value().is_array())
         {
             iterate(it.value(), depth+1);
         }
