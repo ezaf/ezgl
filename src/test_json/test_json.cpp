@@ -31,6 +31,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <vector>
 
 
 
@@ -61,6 +62,13 @@ int main(int argc, char *argv[])
     infile >> settings;
 
     iterate(settings);
+
+    auto comp = settings["components"];
+    std::vector<int> compvec(std::begin(comp), std::end(comp));
+    //for (auto const &it : settings["components"]) compvec.push_back(it);
+    std::cout << "> json to vector: ";
+    for (auto const &it : compvec) std::cout << it << ", ";
+    std::cout << std::endl;
 
     return 0;
 }
