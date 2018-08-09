@@ -31,6 +31,8 @@
 
 #include "EzSDL/Object.hpp"
 
+#include "nlohmann/json.hpp"
+
 #include <SDL2/SDL.h>
 
 #include <memory>
@@ -48,7 +50,7 @@ class Window final : private Object
 {
 public:
     /** @brief      Call this before all else. */
-    static void init();
+    static void init(nlohmann::json const &config);
 
     /** @brief      Window destructor that you should never have to call. */
     virtual ~Window();
@@ -65,7 +67,7 @@ public:
 private:
     using WindowPtr = std::unique_ptr<class Window>;
 
-    Window(ComponentPtrList componentDeps);
+    Window(nlohmann::json const &config);
     Window(Window const &other) = delete;
     Window& operator=(Window const &other) = delete;
 

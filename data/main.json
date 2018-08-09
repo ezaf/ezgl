@@ -1,0 +1,16 @@
+{
+    "window": {
+        "dimensions": [0, 0, 0, 1920, 1080, 0],
+        "components": [1, 2, 3],
+        "fullscreen": false,
+        "bordered": false,
+        "scaling": "linear",
+        "vsync": true,
+        "show_cursor": true
+    },
+
+    "dummy": {
+        "dimensions": [0, 64, 0, 64, 64, 0],
+        "components": [4, 5, 6]
+    }
+}

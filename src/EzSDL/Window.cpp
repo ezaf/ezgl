@@ -24,14 +24,11 @@
 #include "EzSDL/WindowLogicComponent.hpp"
 #include "EzSDL/WindowRenderComponent.hpp"
 
-#include "nlohmann/json.hpp"
-
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
 #endif
 
 #include <cmath> // round
-#include <fstream> // ifstream
 #include <iostream> // cout, endl
 
 namespace EzSDL
@@ -43,7 +40,7 @@ Window::WindowPtr Window::instance;
 
 
 
-void Window::init()
+void Window::init(nlohmann::json const &config)
 {
     // This function should only be called once anyway!
     if (Window::instance != nullptr)
@@ -60,17 +57,13 @@ void Window::init()
         static_cast<int>(linked.patch) << "." << std::endl <<
         "Initialized all SDL systems." << std::endl;
 
-    Window::instance.reset(new Window({
-                Component::create(WindowEventComponentID),
-                Component::create(WindowLogicComponentID),
-                Component::create(WindowRenderComponentID)
-            }));
+    Window::instance.reset(new Window(config));
 }
 
 
 
-Window::Window(ComponentPtrList componentDeps) :
-    Object(componentDeps),
+Window::Window(nlohmann::json const &config) :
+    Object(config),
     window(nullptr, SDL_DestroyWindow),
     renderer(nullptr, SDL_DestroyRenderer),
     events()
@@ -97,11 +90,6 @@ Window::Window(ComponentPtrList componentDeps) :
             " }" << std::endl;
     }
 
-    this->dimension->at(DimensionKey::W) = static_cast<double>(displayMode.w);
-    this->dimension->at(DimensionKey::H) = static_cast<double>(displayMode.h);
-    this->dimension->at(DimensionKey::Z) =
-        static_cast<double>(displayMode.refresh_rate); // Hz
-
     // Create actual window and then renderer
     this->window.reset(
             SDL_CreateWindow("EzSDL Demo",
@@ -114,54 +102,52 @@ Window::Window(ComponentPtrList componentDeps) :
                 SDL_RENDERER_ACCELERATED));
 
     // Configure settings
-    // TODO: pass an already-init'd json object into the constructor instead
-    std::ifstream file("data/window.json");
-    if (file.good())
+    // Don't bother checking .is_null() because they ought to be there
+    SDL_SetWindowFullscreen(this->window.get(),
+            config["fullscreen"] ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0);
+
+    SDL_SetWindowBordered(this->window.get(),
+            static_cast<SDL_bool>(static_cast<int>(config["bordered"])));
+
+    /*
+    SDL_SetWindowResizable(this->window.get(),
+            static_cast<SDL_bool>(static_cast<int>(config["resizable"])));
+    */
+
+    std::string scaling = config["scaling"];
+    if (!(scaling == "linear" || scaling == "nearest")) scaling = "linear";
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, scaling.c_str());
+    SDL_SetHint(SDL_HINT_RENDER_VSYNC, config["vsync"] ? "1" : "0");
+    SDL_ShowCursor(config["show_cursor"] ? SDL_ENABLE : SDL_DISABLE);
+
+    // Refresh rate (Hz)
+    if (this->dimension->at(DimensionKey::Z) == 0)
     {
-        nlohmann::json config;
-        file >> config;
+        this->dimension->at(DimensionKey::Z) =
+            static_cast<double>(displayMode.refresh_rate);
+    }
 
-        // Don't bother checking .is_null() because they ought to be there
-        SDL_SetWindowFullscreen(this->window.get(),
-                config["fullscreen"] ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0);
+    SDL_RenderSetLogicalSize(this->renderer.get(),
+            this->dimension->at(DimensionKey::W),
+            this->dimension->at(DimensionKey::H));
 
-        SDL_SetWindowBordered(this->window.get(),
-                static_cast<SDL_bool>(static_cast<int>(config["bordered"])));
+    //SDL_SetWindowIcon(this->window.get(), IMG_Load(""));
+    SDL_SetRenderDrawColor(this->renderer.get(), 0x00, 0x00, 0x00, 0xFF);
 
-        /*
-        SDL_SetWindowResizable(this->window.get(),
-                static_cast<SDL_bool>(static_cast<int>(config["resizable"])));
-        */
+    // Error checking
+    if (this->window.get() != nullptr && this->renderer.get() != nullptr)
+    {
+        std::cout << "Successfully created window and its renderer." <<
+            std::endl;
 
-        std::string scaling = config["scaling"];
-        SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, scaling.c_str());
-
-        SDL_SetHint(SDL_HINT_RENDER_VSYNC, config["vsync"] ? "1" : "0");
-        SDL_ShowCursor(config["show_cursor"] ? SDL_ENABLE : SDL_DISABLE);
-        SDL_RenderSetLogicalSize(this->renderer.get(),
-                config["width"], config["height"]);
-
-        //SDL_SetWindowIcon(this->window.get(), IMG_Load(""));
-        SDL_SetRenderDrawColor(this->renderer.get(), 0x00, 0x00, 0x00, 0xFF);
-
-        // Error checking
-        if (this->window.get() != nullptr && this->renderer.get() != nullptr)
-        {
-            std::cout << "Successfully created window and its renderer." <<
-                std::endl;
-
-            Object::init(*Window::instance);
-        }
-        else
-        {
-            std::cout << "Failed to create window and/or renderer: " <<
-                SDL_GetError() << std::endl;
-        }
+        /* Initialize this window's components by calling base class'
+         * non-static init function. */
+        Object::init(*Window::instance);
     }
     else
     {
-        // TODO: tell desired file name
-        std::cout << "Missing window configuration file!" << std::endl;
+        std::cout << "Failed to create window and/or renderer: " <<
+            SDL_GetError() << std::endl;
     }
 }
 

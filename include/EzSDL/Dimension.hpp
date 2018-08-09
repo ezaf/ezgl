@@ -39,7 +39,8 @@ enum DimensionKey
 {
     X, Y, Z, W, H, D,
     DX, DY, DZ, DW, DH, DD,
-    D2X, D2Y, D2Z, D2W, D2H, D2D
+    D2X, D2Y, D2Z, D2W, D2H, D2D,
+    NIL
 };
 
 /** @brief      Lorem ipsum
@@ -55,6 +56,22 @@ public:
     static DimensionPtr create()
     {
         return DimensionPtr(new Dimension());
+    };
+
+    /* U is a container of keys with iterator support */
+    template <typename U>
+    static DimensionPtr create(U const &ts)
+    {
+        Dimension *dimension = new Dimension();
+        int key = 0;
+        for (auto t = ts.begin();
+                t != ts.end() && key != DimensionKey::NIL;
+                t++, key++)
+        {
+            (*dimension)[static_cast<DimensionKey>(key)] =
+                static_cast<T>(t.value());
+        }
+        return DimensionPtr(dimension);
     };
 
     T& operator[](DimensionKey const &key)

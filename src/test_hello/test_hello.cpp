@@ -28,18 +28,22 @@
 #include "EzSDL/DummyLogicComponent.hpp"
 #include "EzSDL/DummyRenderComponent.hpp"
 
+#include "nlohmann/json.hpp"
+
+#include <fstream> // ifstream
+
 
 
 int main(int argc, char *argv[])
 {
-    EzSDL::Window::init();
+    std::ifstream file("data/main.json");
+    if (!file.good()) return 1;
 
-    EzSDL::Window::addObject(
-            EzSDL::Object::create({
-                EzSDL::Component::create(EzSDL::DummyEventComponentID),
-                EzSDL::Component::create(EzSDL::DummyLogicComponentID),
-                EzSDL::Component::create(EzSDL::DummyRenderComponentID)
-            }));
+    nlohmann::json config;
+    file >> config;
+    EzSDL::Window::init(config["window"]);
+
+    EzSDL::Window::addObject(EzSDL::Object::create(config["dummy"]));
 
     EzSDL::Window::run();
 
