@@ -6,5 +6,5 @@
     "scaling": "linear",
     "vsync": true,
     "show_cursor": true,
-    "component": [1, 2, 3]
+    "components": [1, 2, 3]
 }
