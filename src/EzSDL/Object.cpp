@@ -26,16 +26,16 @@ namespace EzSDL
 
 
 
-ObjectPtr Object::create(ComponentPtrList componentDeps)
+ObjectPtr Object::create(nlohmann::json const &config)
 {
-    return ObjectPtr(new Object(componentDeps));
+    return ObjectPtr(new Object(config));
 }
 
 
 
-Object::Object(ComponentPtrList componentDeps) :
-    dimension(DDimension::create()),
-    components(componentDeps)
+Object::Object(nlohmann::json const &config) :
+    dimension(DDimension::create(config["dimensions"])),
+    components(Component::create(config["components"]))
 {
 }
 

@@ -30,6 +30,8 @@
 #include "EzSDL/Component.hpp"
 #include "EzSDL/Dimension.hpp"
 
+#include "nlohmann/json.hpp"
+
 #include <memory>
 #include <vector>
 
@@ -49,7 +51,7 @@ using ObjectPtr = std::unique_ptr<Object>;
 class Object
 {
 public:
-    static ObjectPtr create(ComponentPtrList componentDeps);
+    static ObjectPtr create(nlohmann::json const &config);
     virtual ~Object() = default;
 
     virtual void init(Window const &window);
@@ -58,7 +60,7 @@ public:
     DDimensionPtr dimension;
 
 protected:
-    Object(ComponentPtrList componentDeps);
+    Object(nlohmann::json const &config);
 
 private:
     Object(Object const &other) = delete;

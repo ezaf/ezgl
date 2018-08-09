@@ -27,9 +27,9 @@
  *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
  */
 
-#include <initializer_list>
 #include <map>
 #include <memory>
+#include <vector>
 
 
 
@@ -41,9 +41,6 @@ class Window;
 
 /** @brief      Component smart pointer. */
 using ComponentPtr = std::shared_ptr<class Component>;
-
-/* std::initializer_list not supported in emscripten */
-using ComponentPtrList = std::initializer_list<ComponentPtr>;
 
 /** @brief      Component template class and smart pointer factory.
  *  @details    Components can be any one of the parts of the MVC model.
@@ -57,12 +54,23 @@ public:
     /** @brief      Key/ID type used when enlisting and creating components. */
     using Key = unsigned long;
 
-    Component() = default;
     virtual ~Component() = default;
     virtual void init(Object &object, Window const &window) = 0;
     virtual void update(Object &object, Window const &window) = 0;
 
     static ComponentPtr create(Key const &key);
+
+    /* T is a container of keys with iterator support */
+    template <typename T>
+    static std::vector<ComponentPtr> create(T const &keys)
+    {
+        std::vector<ComponentPtr> components;
+        for (Key const &key : keys)
+        {
+            components.push_back(Component::create(key));
+        }
+        return components;
+    };
 
     /* TODO: Remark that T must have a static T::create() */
     template <Key K, class T>
@@ -73,6 +81,7 @@ public:
     };
 
 protected:
+    Component() = default;
 
 private:
     Component(Component const &other) = delete;
