@@ -45,14 +45,14 @@ class RenderComponent : public Component
 public:
     virtual ~RenderComponent() = default;
 
-    void IInit(Object &object, Game &game) override
+    void IInit(Object &object, EzSDL::Game &game) override
     {
         static_cast<T*>(this)->init(object, game);
     };
 
     void IUpdate(Object &object, Game &game) override
     {
-        static_cast<T*>(this)->update(object, game.renderer);
+        static_cast<T*>(this)->update(object, game.getRenderer());
     };
 
     static ComponentPtr create()

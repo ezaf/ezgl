@@ -54,7 +54,7 @@ public:
 
     void IUpdate(Object &object, Game &game) override
     {
-        for (auto const &it : game.events)
+        for (auto const &it : game.getEvents())
         {
             static_cast<T*>(this)->update(object, it);
         }

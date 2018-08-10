@@ -29,9 +29,6 @@
  *              has 120kb that is still reachable.
  */
 
-#include "EzSDL/EventComponent.hpp"
-#include "EzSDL/LogicComponent.hpp"
-#include "EzSDL/RenderComponent.hpp"
 #include "EzSDL/Object.hpp"
 #include "nlohmann/json.hpp"
 
@@ -49,10 +46,6 @@ namespace EzSDL
  */
 class Game final
 {
-    template <class T> friend class EventComponent;
-    template <class T> friend class LogicComponent;
-    template <class T> friend class RenderComponent;
-
 public:
     /** @brief      Call this before all else. */
     static void init(nlohmann::json &config);
@@ -66,6 +59,9 @@ public:
     static void run();
 
     nlohmann::json &data;
+    SDL_Window* getWindow();
+    SDL_Renderer* getRenderer();
+    std::vector<SDL_Event> const& getEvents();
 
 private:
     using GamePtr = std::unique_ptr<class Game>;

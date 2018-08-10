@@ -29,8 +29,6 @@
 
 #include "EzSDL/Component.hpp"
 
-class EzSDL::Game;
-
 
 
 namespace EzSDL
