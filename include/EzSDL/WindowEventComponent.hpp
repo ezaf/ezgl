@@ -29,15 +29,12 @@
 
 #include "EzSDL/EventComponent.hpp"
 
-#include <SDL2/SDL_events.h>
-
 
 
 namespace EzSDL
 {
 
-Component::Key const WindowEventComponentID =
-    Component::enlist<1, EventComponent<class WindowEventComponent>>();
+EZSDL_COMPONENT_ENLIST(Window, EventComponent);
 
 /** @brief      Lorem ipsum
  *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
@@ -49,8 +46,8 @@ public:
     WindowEventComponent() = default;
     virtual ~WindowEventComponent() = default;
 
-    void initImpl(Object &object, Window const &window);
-    void updateImpl(Object &object, SDL_Event &event);
+    void init(Object &object, Game &game);
+    void update(Object &object, SDL_Event const &event);
 
 protected:
 

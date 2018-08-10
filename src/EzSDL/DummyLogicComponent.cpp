@@ -21,72 +21,57 @@
 
 #include "EzSDL/DummyLogicComponent.hpp"
 
-#include "EzSDL/Dimension.hpp"
+#include "EzSDL/Game.hpp"
 #include "EzSDL/Object.hpp"
 
 namespace EzSDL
 {
 
-using DK = DimensionKey;
 
 
-
-DummyLogicComponent::DummyLogicComponent() :
-    dimCeil(DDimension::create()),
-    dimFloor(DDimension::create())
+void DummyLogicComponent::init(Object &object, Game &game)
 {
 }
 
 
 
-void DummyLogicComponent::initImpl(Object &object, Window const &window)
+void DummyLogicComponent::update(Object &object, Game &game)
 {
-    object.dimension->at(DK::W) = 64;
-    object.dimension->at(DK::H) = 64;
+    double const xceil =
+        static_cast<double>(game.data["render_width"]) -
+        static_cast<double>(object.data["w"]);
+    double const yceil =
+        static_cast<double>(game.data["render_height"]) -
+        static_cast<double>(object.data["h"]);
 
-    this->dimFloor->at(DK::X) = 0;
-    this->dimFloor->at(DK::Y) = 0;
-    this->dimCeil->at(DK::X) =
-        window.getDimension()->at(DK::W) - object.dimension->at(DK::W);
-    this->dimCeil->at(DK::Y) =
-        window.getDimension()->at(DK::H) - object.dimension->at(DK::H);
-
-    object.dimension->at(DK::X) = 0;
-    object.dimension->at(DK::Y) = object.dimension->at(DK::H);
-    object.dimension->at(DK::DX) = 1000.0;
-    object.dimension->at(DK::DY) = 0;
-}
-
-
-
-void DummyLogicComponent::updateImpl(Object &object, double const &delta)
-{
-    if (object.dimension->at(DK::X) > this->dimCeil->at(DK::X))
+    if (object.data["x"] > xceil)
     {
-        object.dimension->at(DK::X) = this->dimCeil->at(DK::X);
-        object.dimension->at(DK::DX) = 0;
+        object.data["x"] = xceil;
+        object.data["dx"] = 0;
     }
-    else if (object.dimension->at(DK::X) < this->dimFloor->at(DK::X))
+    else if (object.data["x"] < 0)
     {
-        object.dimension->at(DK::X) = this->dimFloor->at(DK::X);
-        object.dimension->at(DK::DX) = 0;
+        object.data["x"] = 0;
+        object.data["dx"] = 0;
     }
 
-    if (object.dimension->at(DK::Y) > this->dimCeil->at(DK::Y))
+    if (object.data["y"] > yceil)
     {
-        object.dimension->at(DK::Y) = this->dimCeil->at(DK::Y);
-        object.dimension->at(DK::DY) = 0;
+        object.data["y"] = yceil;
+        object.data["dy"] = 0;
     }
-    else if (object.dimension->at(DK::Y) < this->dimFloor->at(DK::Y))
+    else if (object.data["y"] < 0)
     {
-        object.dimension->at(DK::Y) = this->dimFloor->at(DK::Y);
-        object.dimension->at(DK::DY) = 0;
+        object.data["y"] = 0;
+        object.data["dy"] = 0;
     }
 
-
-    double const dt = delta / 1000.0;
-    object.dimension->at(DK::X) += (object.dimension->at(DK::DX) * dt);
-    object.dimension->at(DK::Y) += (object.dimension->at(DK::DY) * dt);
+    object.data["x"] = static_cast<double>(object.data["x"]) +
+        (static_cast<double>(object.data["dx"]) *
+         static_cast<double>(game.data["delta"]));
+    object.data["y"] = static_cast<double>(object.data["y"]) +
+        (static_cast<double>(object.data["dy"]) *
+         static_cast<double>(game.data["delta"]));
 }
 
 

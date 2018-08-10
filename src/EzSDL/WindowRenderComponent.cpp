@@ -22,21 +22,30 @@
 #include "EzSDL/WindowRenderComponent.hpp"
 
 #include "EzSDL/Object.hpp"
+#include "nlohmann/json.hpp"
 
 #include <SDL2/SDL_render.h>
+#include <string>
 
 namespace EzSDL
 {
 
 
 
-void WindowRenderComponent::initImpl(Object &object, Window const &window)
+void WindowRenderComponent::init(Object &object, Game &game)
 {
+    std::string scaling = object.data["scaling"];
+    if (scaling != "linear" && scaling != "nearest")
+        scaling = "linear";
+
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, scaling.c_str());
+    SDL_SetHint(SDL_HINT_RENDER_VSYNC, object.data["vsync"] ? "1" : "0");
+    SDL_ShowCursor(object.data["show_cursor"] ? SDL_ENABLE : SDL_DISABLE);
 }
 
 
 
-void WindowRenderComponent::updateImpl(Object &object, SDL_Renderer *renderer)
+void WindowRenderComponent::update(Object &object, SDL_Renderer *renderer)
 {
     SDL_RenderPresent(renderer);
 

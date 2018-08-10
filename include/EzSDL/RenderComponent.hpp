@@ -28,7 +28,7 @@
  */
 
 #include "EzSDL/Component.hpp"
-#include "EzSDL/Window.hpp"
+#include "EzSDL/Game.hpp"
 
 
 
@@ -45,14 +45,14 @@ class RenderComponent : public Component
 public:
     virtual ~RenderComponent() = default;
 
-    void init(Object &object, Window const &window) override
+    void IInit(Object &object, Game &game) override
     {
-        static_cast<T*>(this)->initImpl(object, window);
+        static_cast<T*>(this)->init(object, game);
     };
 
-    void update(Object &object, Window const &window) override
+    void IUpdate(Object &object, Game &game) override
     {
-        static_cast<T*>(this)->updateImpl(object, window.getRenderer());
+        static_cast<T*>(this)->update(object, game.renderer);
     };
 
     static ComponentPtr create()

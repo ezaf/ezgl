@@ -1,16 +1,45 @@
 {
     "window": {
-        "dimensions": [0, 0, 0, 1920, 1080, 0],
-        "components": [1, 2, 3],
+        "title": "EzSDL Demo",
+        "render_width": 1920,
+        "render_height": 1080,
+        "display_width": null,
+        "display_height": null,
+        "refresh_rate": null,
         "fullscreen": false,
         "bordered": false,
         "scaling": "linear",
         "vsync": true,
-        "show_cursor": true
+        "delta_max": 100,
+        "show_cursor": true,
+        "components": [
+            "WindowEventComponent",
+            "WindowLogicComponent",
+            "WindowRenderComponent"
+        ]
+    },
+
+    "game": {
+        "objects": {
+            "dummy": 1
+        }
     },
 
     "dummy": {
-        "dimensions": [0, 64, 0, 64, 64, 0],
-        "components": [4, 5, 6]
+        "x": 0.0,
+        "y": 64.0,
+        "speed": 1000.0,
+        "dx": 500.0,
+        "dy": 0.0,
+        "accel": 0.0,
+        "d2x": 0.0,
+        "d2y": 0.0,
+        "w": 64.0,
+        "h": 64.0,
+        "components": [
+            "DummyEventComponent",
+            "DummyLogicComponent",
+            "DummyRenderComponent"
+        ]
     }
 }

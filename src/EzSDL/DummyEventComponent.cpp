@@ -21,23 +21,22 @@
 
 #include "EzSDL/DummyEventComponent.hpp"
 
-#include "EzSDL/Dimension.hpp"
 #include "EzSDL/Object.hpp"
 
-#include <cmath>
+#include <SDL2/SDL_events.h>
 
 namespace EzSDL
 {
 
 
 
-void DummyEventComponent::initImpl(Object &object, Window const &window)
+void DummyEventComponent::init(Object &object, Game &game)
 {
 }
 
 
 
-void DummyEventComponent::updateImpl(Object &object, SDL_Event &e)
+void DummyEventComponent::update(Object &object, SDL_Event const &e)
 {
     switch (e.type)
     {
@@ -46,19 +45,19 @@ void DummyEventComponent::updateImpl(Object &object, SDL_Event &e)
         {
         case SDL_SCANCODE_UP:
         case SDL_SCANCODE_W:
-            object.dimension->at(DimensionKey::DY) = -1000.0;
+            object.data["dy"] = -static_cast<double>(object.data["speed"]);
             break;
         case SDL_SCANCODE_DOWN:
         case SDL_SCANCODE_S:
-            object.dimension->at(DimensionKey::DY) = 1000.0;
+            object.data["dy"] = static_cast<double>(object.data["speed"]);
             break;
         case SDL_SCANCODE_LEFT:
         case SDL_SCANCODE_A:
-            object.dimension->at(DimensionKey::DX) = -1000.0;
+            object.data["dx"] = -static_cast<double>(object.data["speed"]);
             break;
         case SDL_SCANCODE_RIGHT:
         case SDL_SCANCODE_D:
-            object.dimension->at(DimensionKey::DX) = 1000.0;
+            object.data["dx"] = static_cast<double>(object.data["speed"]);
             break;
         }
         break;
@@ -69,13 +68,13 @@ void DummyEventComponent::updateImpl(Object &object, SDL_Event &e)
         case SDL_SCANCODE_W:
         case SDL_SCANCODE_DOWN:
         case SDL_SCANCODE_S:
-            object.dimension->at(DimensionKey::DY) = 0;
+            object.data["dy"] = 0.0;
             break;
         case SDL_SCANCODE_LEFT:
         case SDL_SCANCODE_A:
         case SDL_SCANCODE_RIGHT:
         case SDL_SCANCODE_D:
-            object.dimension->at(DimensionKey::DX) = 0;
+            object.data["dx"] = 0.0;
             break;
         }
         break;

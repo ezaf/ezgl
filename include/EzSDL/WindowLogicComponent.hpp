@@ -34,8 +34,7 @@
 namespace EzSDL
 {
 
-Component::Key const WindowLogicComponentID =
-    Component::enlist<2, LogicComponent<class WindowLogicComponent>>();
+EZSDL_COMPONENT_ENLIST(Window, LogicComponent);
 
 /** @brief      Lorem ipsum
  *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
@@ -47,8 +46,8 @@ public:
     WindowLogicComponent() = default;
     virtual ~WindowLogicComponent() = default;
 
-    void initImpl(Object &object, Window const &window);
-    void updateImpl(Object &object, double const &delta);
+    void init(Object &object, Game &game);
+    void update(Object &object, Game &game);
 
 protected:
 
@@ -56,9 +55,6 @@ private:
     WindowLogicComponent(WindowLogicComponent const &other);
     WindowLogicComponent& operator=(WindowLogicComponent const &other);
 
-    // TODO: const these first two if init at ctor?
-    bool enableVSync;
-    double deltaCeil;
     unsigned long lastFrame;
 };
 

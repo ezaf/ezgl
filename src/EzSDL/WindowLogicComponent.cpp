@@ -21,44 +21,84 @@
 
 #include "EzSDL/WindowLogicComponent.hpp"
 
-#include "EzSDL/Dimension.hpp"
 #include "EzSDL/Object.hpp"
+#include "nlohmann/json.hpp"
 
-#include <SDL2/SDL.h> // SDL_GetTicks
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#endif
+
+#include <iostream>
+#include <SDL2/SDL.h>
 
 namespace EzSDL
 {
 
 
 
-void WindowLogicComponent::initImpl(Object &object, Window const &window)
+void WindowLogicComponent::init(Object &object, Game &game)
 {
-    //TODO: parse a config file
-    enableVSync = true;
-    deltaCeil = 100.0; // No slower than 10 fps
-    lastFrame = 0;
+    this->lastFrame = SDL_GetTicks();
+
+    SDL_DisplayMode display;
+    if (SDL_GetDesktopDisplayMode(0, &display) != 0)
+    {
+        display.w = object.data["render_width"];
+        display.h = object.data["render_height"];
+
+        if (object.data["refresh_rate"] == nullptr)
+            display.refresh_rate = 60;
+        else
+            display.refresh_rate = object.data["refresh_rate"];
+
+        std::cout << "Failed to get desktop display mode: " <<
+            SDL_GetError() << std::endl;
+    }
+    else
+    {
+#ifdef __EMSCRIPTEN__
+        display.refresh_rate = 60;
+#endif
+        std::cout << "Display mode aquired: {"
+            " w:" << display.w <<
+            " h:" << display.h <<
+            " refresh_rate:" << display.refresh_rate <<
+            " }" << std::endl;
+    }
+
+    if (object.data["display_width"] == nullptr)
+        object.data["display_width"] = display.w;
+
+    if (object.data["render_width"] == nullptr)
+        object.data["render_width"] = object.data["display_width"];
+
+    if (object.data["display_height"] == nullptr)
+        object.data["display_height"] = display.h;
+
+    if (object.data["render_height"] == nullptr)
+        object.data["render_height"] = object.data["display_height"];
+
+    if (object.data["refresh_rate"] == nullptr)
+        object.data["refresh_rate"] = display.refresh_rate;
+
+    object.data["delta"] = 0.0;
+    object.data["vsync_wait"] = 0;
 }
 
 
 
-void WindowLogicComponent::updateImpl(Object &object, double const &ignore)
+void WindowLogicComponent::update(Object &object, Game &game)
 {
-    /*  Ironically, it is this function's job to *set* the delta! Here we will
-     *  rename the const delta parameter to "ignore". ;)
-     *
-     *  Window Z Dimension
-     *  Z   : frames per time (s), i.e. target fps
-     *  DZ  : time (ms) since last frame, i.e. delta
-     *  D2Z : wait time (ms) per frame, i.e. vsync waiting time
-     */
-    double delta = static_cast<double>(SDL_GetTicks() - this->lastFrame);
-    if (delta > this->deltaCeil) delta = this->deltaCeil;
+    int delta = static_cast<int>(SDL_GetTicks() - this->lastFrame);
+    if (delta > object.data["delta_max"]) delta = object.data["delta_max"];
 
-    double waitTime = (1000.0 / object.dimension->at(DimensionKey::Z)) - delta;
-    if (waitTime < 0.0 || !this->enableVSync) waitTime = 0.0;
+    double waitTime =
+        (1000.0 / static_cast<double>(object.data["refresh_rate"])) - delta;
+    if (waitTime < 0.0 || !object.data["vsync"])
+        waitTime = 0.0;
 
-    object.dimension->at(DimensionKey::DZ) = delta;
-    object.dimension->at(DimensionKey::D2Z) = waitTime;
+    object.data["delta"] = (delta / 1000.0);
+    object.data["vsync_wait"] = waitTime;
 
     this->lastFrame = SDL_GetTicks();
 }

@@ -28,7 +28,8 @@
  */
 
 #include "EzSDL/Component.hpp"
-#include "EzSDL/Window.hpp"
+
+class EzSDL::Game;
 
 
 
@@ -45,14 +46,14 @@ class LogicComponent : public Component
 public:
     virtual ~LogicComponent() = default;
 
-    void init(Object &object, Window const &window) override
+    void IInit(Object &object, Game &game) override
     {
-        static_cast<T*>(this)->initImpl(object, window);
+        static_cast<T*>(this)->init(object, game);
     }
 
-    void update(Object &object, Window const &window) override
+    void IUpdate(Object &object, Game &game) override
     {
-        static_cast<T*>(this)->updateImpl(object, window.getDelta());
+        static_cast<T*>(this)->update(object, game);
     };
 
     static ComponentPtr create()

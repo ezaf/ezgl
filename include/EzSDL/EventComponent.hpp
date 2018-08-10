@@ -28,7 +28,9 @@
  */
 
 #include "EzSDL/Component.hpp"
-#include "EzSDL/Window.hpp"
+#include "EzSDL/Game.hpp"
+
+union SDL_Event;
 
 
 
@@ -45,16 +47,16 @@ class EventComponent : public Component
 public:
     virtual ~EventComponent() = default;
 
-    void init(Object &object, Window const &window) override
+    void IInit(Object &object, Game &game) override
     {
-        static_cast<T*>(this)->initImpl(object, window);
+        static_cast<T*>(this)->init(object, game);
     };
 
-    void update(Object &object, Window const &window) override
+    void IUpdate(Object &object, Game &game) override
     {
-        for (auto &it : window.getEvents())
+        for (auto const &it : game.events)
         {
-            static_cast<T*>(this)->updateImpl(object, it);
+            static_cast<T*>(this)->update(object, it);
         }
     };
 

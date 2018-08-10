@@ -36,8 +36,7 @@ class SDL_Renderer;
 namespace EzSDL
 {
 
-Component::Key const WindowRenderComponentID =
-    Component::enlist<3, RenderComponent<class WindowRenderComponent>>();
+EZSDL_COMPONENT_ENLIST(Window, RenderComponent);
 
 /** @brief      Lorem ipsum
  *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
@@ -49,8 +48,8 @@ public:
     WindowRenderComponent() = default;
     virtual ~WindowRenderComponent() = default;
 
-    void initImpl(Object &object, Window const &window);
-    void updateImpl(Object &object, SDL_Renderer *renderer);
+    void init(Object &object, Game &game);
+    void update(Object &object, SDL_Renderer *renderer);
 
 protected:
 
