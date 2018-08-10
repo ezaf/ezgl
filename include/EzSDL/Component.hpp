@@ -44,8 +44,8 @@ Component::Key const Obj##Kind##ID = \
 namespace EzSDL
 {
 
-class Object;
 class Game;
+class Object;
 
 /** @brief      Component smart pointer. */
 using ComponentPtr = std::shared_ptr<class Component>;

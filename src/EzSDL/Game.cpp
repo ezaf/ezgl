@@ -153,7 +153,8 @@ void Game::runOneFrame()
 void Game::run()
 {
 #ifdef __EMSCRIPTEN__
-    emscripten_set_main_loop(Game::runOneFrame, 60, 1);
+    emscripten_set_main_loop(Game::runOneFrame,
+            Game::instance->data["refresh_rate"], 1);
 #else
     while (!Game::instance->data["quit"])
     {
@@ -171,33 +172,24 @@ void Game::run()
 
 
 
-/*
-double const& Game::getDelta()
+SDL_Window* Game::getWindow()
 {
-    return Game::instance->data["delta"];
+    return this->window;
+}
+
+
+
+SDL_Renderer* Game::getRenderer()
+{
+    return this->renderer;
 }
 
 
 
 std::vector<SDL_Event> const& Game::getEvents()
 {
-    return Game::instance->events;
+    return this->events;
 }
-
-
-
-SDL_Renderer const& Game::getRenderer()
-{
-    return *Game::instance->renderer;
-}
-
-
-
-SDL_Window const& Game::getWindow()
-{
-    return *Game::instance->window;
-}
-*/
 
 
 

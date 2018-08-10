@@ -29,7 +29,6 @@
 
 #include "EzSDL/RenderComponent.hpp"
 
-class EzSDL::Game;
 class SDL_Renderer;
 
 

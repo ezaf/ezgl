@@ -21,6 +21,7 @@
 
 #include "EzSDL/WindowLogicComponent.hpp"
 
+#include "EzSDL/Game.hpp"
 #include "EzSDL/Object.hpp"
 #include "nlohmann/json.hpp"
 
@@ -57,7 +58,7 @@ void WindowLogicComponent::init(Object &object, Game &game)
     else
     {
 #ifdef __EMSCRIPTEN__
-        display.refresh_rate = 60;
+        display.refresh_rate = 120;
 #endif
         std::cout << "Display mode aquired: {"
             " w:" << display.w <<
