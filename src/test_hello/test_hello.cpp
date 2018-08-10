@@ -23,7 +23,12 @@
  *  @brief      Hello world example for EzSDL.
  */
 
-#include "EzSDL/Window.hpp"
+#include "EzSDL/Game.hpp"
+
+// Foo solution. Load DLLs in the future!
+#include "EzSDL/WindowEventComponent.hpp"
+#include "EzSDL/WindowLogicComponent.hpp"
+#include "EzSDL/WindowRenderComponent.hpp"
 #include "EzSDL/DummyEventComponent.hpp"
 #include "EzSDL/DummyLogicComponent.hpp"
 #include "EzSDL/DummyRenderComponent.hpp"
@@ -41,11 +46,10 @@ int main(int argc, char *argv[])
 
     nlohmann::json config;
     file >> config;
-    EzSDL::Window::init(config["window"]);
 
-    EzSDL::Window::addObject(EzSDL::Object::create(config["dummy"]));
-
-    EzSDL::Window::run();
+    EzSDL::Game::init(config["window"]);
+    EzSDL::Game::addObject(EzSDL::Object::create(config["dummy"]));
+    EzSDL::Game::run();
 
     return 0;
 }

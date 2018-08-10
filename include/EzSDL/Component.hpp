@@ -29,7 +29,15 @@
 
 #include <map>
 #include <memory>
+#include <string>
 #include <vector>
+
+
+
+// Requires the following of component class naming conventions
+#define EZSDL_COMPONENT_ENLIST(Obj, Kind) \
+Component::Key const Obj##Kind##ID = \
+    Component::enlist<Kind<class Obj##Kind>>(#Obj#Kind)
 
 
 
@@ -37,7 +45,7 @@ namespace EzSDL
 {
 
 class Object;
-class Window;
+class Game;
 
 /** @brief      Component smart pointer. */
 using ComponentPtr = std::shared_ptr<class Component>;
@@ -52,11 +60,11 @@ class Component
 {
 public:
     /** @brief      Key/ID type used when enlisting and creating components. */
-    using Key = unsigned long;
+    using Key = std::string;
 
     virtual ~Component() = default;
-    virtual void init(Object &object, Window const &window) = 0;
-    virtual void update(Object &object, Window const &window) = 0;
+    virtual void IInit(Object &object, Game &game) = 0;
+    virtual void IUpdate(Object &object, Game &game) = 0;
 
     static ComponentPtr create(Key const &key);
 
@@ -73,10 +81,11 @@ public:
     };
 
     /* TODO: Remark that T must have a static T::create() */
-    template <Key K, class T>
-    static Key enlist()
+    template <class T>
+    static Key enlist(Key K)
     {
-        Component::getComponentMap()[K] = T::create;
+        if (Component::getComponentMap().count(K) == 0)
+            Component::getComponentMap()[K] = T::create;
         return K;
     };
 

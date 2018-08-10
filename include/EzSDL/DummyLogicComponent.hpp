@@ -34,8 +34,7 @@
 namespace EzSDL
 {
 
-Component::Key const DummyLogicComponentID =
-    Component::enlist<5, LogicComponent<class DummyLogicComponent>>();
+EZSDL_COMPONENT_ENLIST(Dummy, LogicComponent);
 
 /** @brief      Lorem ipsum
  *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
@@ -44,19 +43,17 @@ Component::Key const DummyLogicComponentID =
 class DummyLogicComponent : public LogicComponent<DummyLogicComponent>
 {
 public:
-    DummyLogicComponent();
+    DummyLogicComponent() = default;
     virtual ~DummyLogicComponent() = default;
 
-    void initImpl(Object &object, Window const &window);
-    void updateImpl(Object &object, double const &delta);
+    void init(Object &object, Game &game);
+    void update(Object &object, Game &game);
 
 protected:
 
 private:
     DummyLogicComponent(DummyLogicComponent const &other);
     DummyLogicComponent& operator=(DummyLogicComponent const &other);
-
-    DDimensionPtr dimCeil, dimFloor;
 };
 
 }; /* namespace EzSDL */

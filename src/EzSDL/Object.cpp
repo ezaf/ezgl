@@ -21,41 +21,44 @@
 
 #include "EzSDL/Object.hpp"
 
+#include "EzSDL/Game.hpp"
+#include "nlohmann/json.hpp"
+
 namespace EzSDL
 {
 
 
 
-ObjectPtr Object::create(nlohmann::json const &config)
+ObjectPtr Object::create(nlohmann::json &config)
 {
     return ObjectPtr(new Object(config));
 }
 
 
 
-Object::Object(nlohmann::json const &config) :
-    dimension(DDimension::create(config["dimensions"])),
+Object::Object(nlohmann::json &config) :
+    data(config),
     components(Component::create(config["components"]))
 {
 }
 
 
 
-void Object::init(Window const &window)
+void Object::init(Game &game)
 {
     for (auto &it : this->components)
     {
-        it->init(*this, window);
+        it->IInit(*this, game);
     }
 }
 
 
 
-void Object::update(Window const &window)
+void Object::update(Game &game)
 {
     for (auto &it : this->components)
     {
-        it->update(*this, window);
+        it->IUpdate(*this, game);
     }
 }
 

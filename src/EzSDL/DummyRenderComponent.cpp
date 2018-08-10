@@ -23,30 +23,29 @@
 
 #include "EzSDL/Object.hpp"
 
+#include <cmath>
 #include <SDL2/SDL_render.h>
 
 namespace EzSDL
 {
 
-using DK = DimensionKey;
 
 
-
-void DummyRenderComponent::initImpl(Object &object, Window const &window)
+void DummyRenderComponent::init(Object &object, Game &game)
 {
 }
 
 
 
-void DummyRenderComponent::updateImpl(Object &object, SDL_Renderer *renderer)
+void DummyRenderComponent::update(Object &object, SDL_Renderer *renderer)
 {
     SDL_SetRenderDrawColor(renderer, 0xFF, 0x00, 0x00, 0xFF);
 
     SDL_Rect rect = {
-            static_cast<int>(object.dimension->at(DK::X)),
-            static_cast<int>(object.dimension->at(DK::Y)),
-            static_cast<int>(object.dimension->at(DK::W)),
-            static_cast<int>(object.dimension->at(DK::H)) };
+        static_cast<int>(std::round(static_cast<double>(object.data["x"]))),
+        static_cast<int>(std::round(static_cast<double>(object.data["y"]))),
+        static_cast<int>(object.data["w"]),
+        static_cast<int>(object.data["h"]) };
     SDL_RenderFillRect(renderer, &rect);
 
     SDL_Rect rectB = { 0, 0, 10, 10 };

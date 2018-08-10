@@ -29,6 +29,7 @@
 
 #include "EzSDL/RenderComponent.hpp"
 
+class EzSDL::Game;
 class SDL_Renderer;
 
 
@@ -36,8 +37,7 @@ class SDL_Renderer;
 namespace EzSDL
 {
 
-Component::Key const DummyRenderComponentID =
-    Component::enlist<6, RenderComponent<class DummyRenderComponent>>();
+EZSDL_COMPONENT_ENLIST(Dummy, RenderComponent);
 
 /** @brief      Lorem ipsum
  *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
@@ -49,8 +49,8 @@ public:
     DummyRenderComponent() = default;
     virtual ~DummyRenderComponent() = default;
 
-    void initImpl(Object &object, Window const &window);
-    void updateImpl(Object &object, SDL_Renderer *renderer);
+    void init(Object &object, Game &game);
+    void update(Object &object, SDL_Renderer *renderer);
 
 protected:
 

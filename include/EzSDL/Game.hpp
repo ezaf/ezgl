@@ -1,4 +1,4 @@
-/*  EzSDL/Window.hpp
+/*  EzSDL/Game.hpp
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -19,23 +19,24 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef EZSDL_WINDOW_HPP
-#define EZSDL_WINDOW_HPP
+#ifndef EZSDL_GAME_HPP
+#define EZSDL_GAME_HPP
 
-/** @file       EzSDL/Window.hpp
+/** @file       EzSDL/Game.hpp
  *  @brief      SDL_Window adapter.
  *  @details    When using valgrind/memcheck, note that SDL itself leaks
  *              memory. It definitely leaks 8.4kb, indirectly leaks 1.7kb, and
  *              has 120kb that is still reachable.
  */
 
+#include "EzSDL/EventComponent.hpp"
+#include "EzSDL/LogicComponent.hpp"
+#include "EzSDL/RenderComponent.hpp"
 #include "EzSDL/Object.hpp"
-
 #include "nlohmann/json.hpp"
 
-#include <SDL2/SDL.h>
-
 #include <memory>
+#include <SDL2/SDL.h>
 #include <string>
 
 
@@ -46,48 +47,49 @@ namespace EzSDL
 /** @brief      SDL_Window adapter and smart pointer factory.
  *  @details    This class is not copyable nor inheritable.
  */
-class Window final : private Object
+class Game final
 {
+    template <class T> friend class EventComponent;
+    template <class T> friend class LogicComponent;
+    template <class T> friend class RenderComponent;
+
 public:
     /** @brief      Call this before all else. */
-    static void init(nlohmann::json const &config);
+    static void init(nlohmann::json &config);
 
-    /** @brief      Window destructor that you should never have to call. */
-    virtual ~Window();
+    /** @brief      Game destructor that you should never have to call. */
+    ~Game();
 
+    // TODO: deprecate, load via the json
     static void addObject(ObjectPtr object);
+
     static void run();
 
-    std::vector<SDL_Event> getEvents() const;
-    double const& getDelta() const;
-    SDL_Renderer* getRenderer() const;
-    SDL_Window* getWindow() const;
-    DDimension* getDimension() const;
+    nlohmann::json &data;
 
 private:
-    using WindowPtr = std::unique_ptr<class Window>;
+    using GamePtr = std::unique_ptr<class Game>;
 
-    Window(nlohmann::json const &config);
-    Window(Window const &other) = delete;
-    Window& operator=(Window const &other) = delete;
+    Game(nlohmann::json &config);
+    Game(Game const &other) = delete;
+    Game& operator=(Game const &other) = delete;
 
     // For Emscripten's sake
     static void runOneFrame();
 
     // Singleton instance
-    static WindowPtr instance;
+    static GamePtr instance;
 
-    // Pointer to SDL modules themselves
-    std::unique_ptr<SDL_Window, decltype(&SDL_DestroyWindow)> window;
-    std::unique_ptr<SDL_Renderer, decltype(&SDL_DestroyRenderer)> renderer;
-    std::vector<SDL_Event> events;
-
-    // Objects besides this window itself
     std::vector<ObjectPtr> objects;
+    ObjectPtr object;
+
+    SDL_Window *window;
+    SDL_Renderer *renderer;
+    std::vector<SDL_Event> events;
 };
 
 }; /* namespace EzSDL */
 
 
 
-#endif /* EZSDL_WINDOW_HPP */
+#endif /* EZSDL_GAME_HPP */

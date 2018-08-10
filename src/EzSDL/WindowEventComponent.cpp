@@ -21,39 +21,40 @@
 
 #include "EzSDL/WindowEventComponent.hpp"
 
-#include "EzSDL/Dimension.hpp"
 #include "EzSDL/Object.hpp"
 
-#include <cmath>
+#include <SDL2/SDL_events.h>
 
 namespace EzSDL
 {
 
 
 
-void WindowEventComponent::initImpl(Object &object, Window const &window)
+void WindowEventComponent::init(Object &object, Game &game)
 {
+    object.data["pause"] = false;
+    object.data["quit"] = false;
 }
 
 
 
-void WindowEventComponent::updateImpl(Object &object, SDL_Event &e)
+void WindowEventComponent::update(Object &object, SDL_Event const &e)
 {
     switch (e.type)
     {
         case SDL_QUIT:
-            object.dimension->at(DimensionKey::Z) = 0;
+            object.data["quit"] = true;
             break;
         case SDL_KEYDOWN:
             switch (e.key.keysym.scancode)
             {
 #ifndef __EMSCRIPTEN__
                 case SDL_SCANCODE_ESCAPE:
-                    object.dimension->at(DimensionKey::Z) = 0;
+                    object.data["quit"] = true;
                     break;
 #endif
                 case SDL_SCANCODE_GRAVE:
-                    object.dimension->at(DimensionKey::Z) *= -1;
+                    object.data["pause"] = true;
                     break;
             }
             break;
@@ -61,12 +62,10 @@ void WindowEventComponent::updateImpl(Object &object, SDL_Event &e)
             switch (e.window.event)
             {
                 case SDL_WINDOWEVENT_FOCUS_GAINED:
-                    object.dimension->at(DimensionKey::Z) =
-                        std::abs(object.dimension->at(DimensionKey::Z));
+                    object.data["pause"] = false;
                     break;
                 case SDL_WINDOWEVENT_FOCUS_LOST:
-                    object.dimension->at(DimensionKey::Z) =
-                        -std::abs(object.dimension->at(DimensionKey::Z));
+                    object.data["pause"] = true;
                     break;
             }
     }

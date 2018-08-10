@@ -28,8 +28,6 @@
  */
 
 #include "EzSDL/Component.hpp"
-#include "EzSDL/Dimension.hpp"
-
 #include "nlohmann/json.hpp"
 
 #include <memory>
@@ -40,7 +38,7 @@
 namespace EzSDL
 {
 
-class Window;
+class Game;
 
 using ObjectPtr = std::unique_ptr<Object>;
 
@@ -48,21 +46,19 @@ using ObjectPtr = std::unique_ptr<Object>;
  *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
  *              eiusmod tempor incididunt ut labore et dolore magna aliqua.
  */
-class Object
+class Object final
 {
 public:
-    static ObjectPtr create(nlohmann::json const &config);
+    static ObjectPtr create(nlohmann::json &config);
     virtual ~Object() = default;
 
-    virtual void init(Window const &window);
-    virtual void update(Window const &window);
+    void init(Game &game);
+    void update(Game &game);
 
-    DDimensionPtr dimension;
-
-protected:
-    Object(nlohmann::json const &config);
+    nlohmann::json &data;
 
 private:
+    Object(nlohmann::json &config);
     Object(Object const &other) = delete;
     Object& operator=(Object const &other) = delete;
 
