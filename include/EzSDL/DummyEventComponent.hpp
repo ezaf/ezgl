@@ -54,6 +54,8 @@ protected:
 private:
     DummyEventComponent(DummyEventComponent const &other);
     DummyEventComponent& operator=(DummyEventComponent const &other);
+
+    bool up, down, left, right;
 };
 
 }; /* namespace EzSDL */
