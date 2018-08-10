@@ -54,7 +54,7 @@ void WindowEventComponent::update(Object &object, SDL_Event const &e)
                     break;
 #endif
                 case SDL_SCANCODE_GRAVE:
-                    object.data["pause"] = true;
+                    object.data["pause"] = !object.data["pause"];
                     break;
             }
             break;

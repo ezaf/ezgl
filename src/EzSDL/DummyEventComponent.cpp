@@ -1,6 +1,6 @@
 /*  EzSDL/DummyEventComponent.cpp
  *
- *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
+ *  Copythis->right (c) 2018 Kirk Lange <github.com/kirklange>
  *
  *  This software is provided 'as-is', without any express or implied
  *  warranty. In no event will the authors be held liable for any damages
@@ -32,6 +32,7 @@ namespace EzSDL
 
 void DummyEventComponent::init(Object &object, Game &game)
 {
+    this->up = this->down = this->left = this->right = false;
 }
 
 
@@ -45,19 +46,19 @@ void DummyEventComponent::update(Object &object, SDL_Event const &e)
         {
         case SDL_SCANCODE_UP:
         case SDL_SCANCODE_W:
-            object.data["dy"] = -static_cast<double>(object.data["speed"]);
+            this->up = true;
             break;
         case SDL_SCANCODE_DOWN:
         case SDL_SCANCODE_S:
-            object.data["dy"] = static_cast<double>(object.data["speed"]);
+            this->down = true;
             break;
         case SDL_SCANCODE_LEFT:
         case SDL_SCANCODE_A:
-            object.data["dx"] = -static_cast<double>(object.data["speed"]);
+            this->left = true;
             break;
         case SDL_SCANCODE_RIGHT:
         case SDL_SCANCODE_D:
-            object.data["dx"] = static_cast<double>(object.data["speed"]);
+            this->right = true;
             break;
         }
         break;
@@ -66,19 +67,37 @@ void DummyEventComponent::update(Object &object, SDL_Event const &e)
         {
         case SDL_SCANCODE_UP:
         case SDL_SCANCODE_W:
+            this->up = false;
+            break;
         case SDL_SCANCODE_DOWN:
         case SDL_SCANCODE_S:
-            object.data["dy"] = 0.0;
+            this->down = false;
             break;
         case SDL_SCANCODE_LEFT:
         case SDL_SCANCODE_A:
+            this->left = false;
+            break;
         case SDL_SCANCODE_RIGHT:
         case SDL_SCANCODE_D:
-            object.data["dx"] = 0.0;
+            this->right = false;
             break;
         }
         break;
     }
+
+    if (this->up)
+        object.data["dy"] = -static_cast<double>(object.data["speed"]);
+    else if (this->down)
+        object.data["dy"] = static_cast<double>(object.data["speed"]);
+    else
+        object.data["dy"] = 0.0;
+
+    if (this->left)
+        object.data["dx"] = -static_cast<double>(object.data["speed"]);
+    else if (this->right)
+        object.data["dx"] = static_cast<double>(object.data["speed"]);
+    else
+        object.data["dx"] = 0.0;
 }
 
 
