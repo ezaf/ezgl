@@ -14,7 +14,7 @@ install:
   - sudo ./script/deps.sh
 
 script:
-  - make init
-  - make all
-  - make test
-  - make clean
+  - make init CC=g++-7
+  - make all CC=g++-7
+  - make test CC=g++-7
+  - make clean CC=g++-7
