@@ -3,5 +3,6 @@
 /include
 /lib
 *.d
+*.d.*
 *.o
 *.swp

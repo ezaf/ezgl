@@ -1,4 +1,4 @@
-/*  EzSDL/WindowLogicComponent.cpp
+/*  EzSDL/WindowLogic.cpp
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -19,7 +19,7 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-#include "EzSDL/WindowLogicComponent.hpp"
+#include "EzSDL/WindowLogic.hpp"
 
 #include "EzSDL/Game.hpp"
 #include "EzSDL/Object.hpp"
@@ -37,7 +37,7 @@ namespace EzSDL
 
 
 
-void WindowLogicComponent::init(Object &object, Game &game)
+void WindowLogic::init(Object &object, Game &game)
 {
     this->lastFrame = SDL_GetTicks();
 
@@ -88,7 +88,7 @@ void WindowLogicComponent::init(Object &object, Game &game)
 
 
 
-void WindowLogicComponent::update(Object &object, Game &game)
+void WindowLogic::update(Object &object, Game &game)
 {
     int delta = static_cast<int>(SDL_GetTicks() - this->lastFrame);
     if (delta > object.data["delta_max"]) delta = object.data["delta_max"];

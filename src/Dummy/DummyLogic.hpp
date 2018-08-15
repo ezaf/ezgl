@@ -1,4 +1,4 @@
-/*  EzSDL/DummyRenderComponent.cpp
+/*  EzSDL/DummyLogic.hpp
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -19,39 +19,45 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-#include "EzSDL/DummyRenderComponent.hpp"
+#ifndef EZSDL_DUMMYLOGIC_HPP
+#define EZSDL_DUMMYLOGIC_HPP
 
-#include "EzSDL/Object.hpp"
+/** @file       EzSDL/DummyLogic.hpp
+ *  @brief      Lorem ipsum
+ *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+ */
 
-#include <cmath>
-#include <SDL2/SDL_render.h>
+#include "EzSDL/LogicComponent.hpp"
+
+
 
 namespace EzSDL
 {
 
+EZSDL_COMPONENT_ENLIST(DummyLogic, LogicComponent);
 
-
-void DummyRenderComponent::init(Object &object, Game &game)
+/** @brief      Lorem ipsum
+ *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+ *              eiusmod tempor incididunt ut labore et dolore magna aliqua.
+ */
+class DummyLogic : public LogicComponent<DummyLogic>
 {
-}
+public:
+    DummyLogic() = default;
+    virtual ~DummyLogic() = default;
 
+    void init(Object &object, Game &game);
+    void update(Object &object, Game &game);
 
+protected:
 
-void DummyRenderComponent::update(Object &object, SDL_Renderer *renderer)
-{
-    SDL_SetRenderDrawColor(renderer, 0xFF, 0x00, 0x00, 0xFF);
-
-    SDL_Rect rect = {
-        static_cast<int>(std::round(static_cast<double>(object.data["x"]))),
-        static_cast<int>(std::round(static_cast<double>(object.data["y"]))),
-        static_cast<int>(object.data["w"]),
-        static_cast<int>(object.data["h"]) };
-    SDL_RenderFillRect(renderer, &rect);
-
-    SDL_Rect rectB = { 0, 0, 10, 10 };
-    SDL_RenderFillRect(renderer, &rectB);
-}
-
-
+private:
+    DummyLogic(DummyLogic const &other);
+    DummyLogic& operator=(DummyLogic const &other);
+};
 
 }; /* namespace EzSDL */
+
+
+
+#endif /* EZSDL_DUMMYLOGIC_HPP */

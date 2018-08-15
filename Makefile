@@ -27,7 +27,7 @@
 # Directories within ./src of your library code.
 # Each subdirectory gets built into its own shared library, assuming that MODE
 # is set to dynamic.
-MODULES = EzSDL
+MODULES = EzSDL Dummy
 
 # Directories within ./src of the apps and tests that you want to build.
 MAINS = test_json test_window

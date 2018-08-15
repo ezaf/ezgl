@@ -1,4 +1,4 @@
-/*  EzSDL/DummyEventComponent.hpp
+/*  EzSDL/WindowEvent.hpp
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -19,10 +19,10 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef EZSDL_DUMMYEVENTCOMPONENT_HPP
-#define EZSDL_DUMMYEVENTCOMPONENT_HPP
+#ifndef EZSDL_WINDOWEVENT_HPP
+#define EZSDL_WINDOWEVENT_HPP
 
-/** @file       EzSDL/DummyEventComponent.hpp
+/** @file       EzSDL/WindowEvent.hpp
  *  @brief      Lorem ipsum
  *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
  */
@@ -34,17 +34,17 @@
 namespace EzSDL
 {
 
-EZSDL_COMPONENT_ENLIST(Dummy, EventComponent);
+EZSDL_COMPONENT_ENLIST(WindowEvent, EventComponent);
 
 /** @brief      Lorem ipsum
  *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
  *              eiusmod tempor incididunt ut labore et dolore magna aliqua.
  */
-class DummyEventComponent : public EventComponent<DummyEventComponent>
+class WindowEvent : public EventComponent<WindowEvent>
 {
 public:
-    DummyEventComponent() = default;
-    virtual ~DummyEventComponent() = default;
+    WindowEvent() = default;
+    virtual ~WindowEvent() = default;
 
     void init(Object &object, Game &game);
     void update(Object &object, SDL_Event const &event);
@@ -52,14 +52,13 @@ public:
 protected:
 
 private:
-    DummyEventComponent(DummyEventComponent const &other);
-    DummyEventComponent& operator=(DummyEventComponent const &other);
-
-    bool up, down, left, right;
+    WindowEvent(WindowEvent const &other);
+    WindowEvent& operator=(WindowEvent const &other);
 };
+
 
 }; /* namespace EzSDL */
 
 
 
-#endif /* EZSDL_DUMMYEVENTCOMPONENT_HPP */
+#endif /* EZSDL_WINDOWEVENT_HPP */

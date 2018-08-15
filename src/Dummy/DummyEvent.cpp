@@ -1,4 +1,4 @@
-/*  EzSDL/DummyEventComponent.cpp
+/*  EzSDL/DummyEvent.cpp
  *
  *  Copythis->right (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -19,7 +19,7 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-#include "EzSDL/DummyEventComponent.hpp"
+#include "Dummy/DummyEvent.hpp"
 
 #include "EzSDL/Object.hpp"
 
@@ -30,14 +30,14 @@ namespace EzSDL
 
 
 
-void DummyEventComponent::init(Object &object, Game &game)
+void DummyEvent::init(Object &object, Game &game)
 {
     this->up = this->down = this->left = this->right = false;
 }
 
 
 
-void DummyEventComponent::update(Object &object, SDL_Event const &e)
+void DummyEvent::update(Object &object, SDL_Event const &e)
 {
     switch (e.type)
     {

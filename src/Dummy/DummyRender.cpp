@@ -1,9 +1,9 @@
-/*  test_hello.cpp
+/*  EzSDL/DummyRender.cpp
  *
- *  Copyright (c) 2018 Kirk Lange
+ *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
  *  This software is provided 'as-is', without any express or implied
- *  warranty.  In no event will the authors be held liable for any damages
+ *  warranty. In no event will the authors be held liable for any damages
  *  arising from the use of this software.
  *
  *  Permission is granted to anyone to use this software for any purpose,
@@ -19,34 +19,39 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-/** @file       test_hello.cpp
- *  @brief      Hello world example for EzSDL.
- */
-
-#include "EzSDL/Game.hpp"
-
-// Foo solution. Load DLLs in the future!
-#include "Dummy/DummyEvent.hpp"
-#include "Dummy/DummyLogic.hpp"
 #include "Dummy/DummyRender.hpp"
 
-#include "nlohmann/json.hpp"
+#include "EzSDL/Object.hpp"
 
-#include <fstream> // ifstream
+#include <cmath>
+#include <SDL2/SDL_render.h>
 
-
-
-int main(int argc, char *argv[])
+namespace EzSDL
 {
-    std::ifstream file("data/main.json");
-    if (!file.good()) return 1;
 
-    nlohmann::json config;
-    file >> config;
 
-    EzSDL::Game::init(config["window"]);
-    EzSDL::Game::addObject(EzSDL::Object::create(config["dummy"]));
-    EzSDL::Game::run();
 
-    return 0;
+void DummyRender::init(Object &object, Game &game)
+{
 }
+
+
+
+void DummyRender::update(Object &object, SDL_Renderer *renderer)
+{
+    SDL_SetRenderDrawColor(renderer, 0xFF, 0x00, 0x00, 0xFF);
+
+    SDL_Rect rect = {
+        static_cast<int>(std::round(static_cast<double>(object.data["x"]))),
+        static_cast<int>(std::round(static_cast<double>(object.data["y"]))),
+        static_cast<int>(object.data["w"]),
+        static_cast<int>(object.data["h"]) };
+    SDL_RenderFillRect(renderer, &rect);
+
+    SDL_Rect rectB = { 0, 0, 10, 10 };
+    SDL_RenderFillRect(renderer, &rectB);
+}
+
+
+
+}; /* namespace EzSDL */

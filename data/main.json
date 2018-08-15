@@ -13,9 +13,9 @@
         "delta_max": 100,
         "show_cursor": true,
         "components": [
-            "WindowEventComponent",
-            "WindowLogicComponent",
-            "WindowRenderComponent"
+            "WindowEvent",
+            "WindowLogic",
+            "WindowRender"
         ]
     },
 
@@ -37,9 +37,9 @@
         "w": 64.0,
         "h": 64.0,
         "components": [
-            "DummyEventComponent",
-            "DummyLogicComponent",
-            "DummyRenderComponent"
+            "DummyEvent",
+            "DummyLogic",
+            "DummyRender"
         ]
     }
 }
