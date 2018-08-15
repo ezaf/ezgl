@@ -15,8 +15,6 @@ install:
 
 script:
   - make init
-  - make build MODE=static CC=g++-7
-  - make clean
-  - make init
-  - make build MODE=dynamic CC=g++-7
+  - make all
+  - make test
   - make clean

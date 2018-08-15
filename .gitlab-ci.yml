@@ -12,11 +12,7 @@ before_script:
 # test_all:
 #   script:
 #   - make init
-#   - make build MODE=static
-#   - make test
-#   - make clean
-#   - make init
-#   - make build MODE=dynamic
+#   - make all
 #   - make test
 #   - make clean
 
