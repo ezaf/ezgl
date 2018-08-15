@@ -1,4 +1,4 @@
-/*  EzSDL/WindowEventComponent.hpp
+/*  EzSDL/WindowLogic.hpp
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -19,41 +19,43 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef EZSDL_WINDOWEVENTCOMPONENT_HPP
-#define EZSDL_WINDOWEVENTCOMPONENT_HPP
+#ifndef EZSDL_WINDOWLOGIC_HPP
+#define EZSDL_WINDOWLOGIC_HPP
 
-/** @file       EzSDL/WindowEventComponent.hpp
+/** @file       EzSDL/WindowLogic.hpp
  *  @brief      Lorem ipsum
  *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
  */
 
-#include "EzSDL/EventComponent.hpp"
+#include "EzSDL/LogicComponent.hpp"
 
 
 
 namespace EzSDL
 {
 
-EZSDL_COMPONENT_ENLIST(Window, EventComponent);
+EZSDL_COMPONENT_ENLIST(WindowLogic, LogicComponent);
 
 /** @brief      Lorem ipsum
  *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
  *              eiusmod tempor incididunt ut labore et dolore magna aliqua.
  */
-class WindowEventComponent : public EventComponent<WindowEventComponent>
+class WindowLogic : public LogicComponent<WindowLogic>
 {
 public:
-    WindowEventComponent() = default;
-    virtual ~WindowEventComponent() = default;
+    WindowLogic() = default;
+    virtual ~WindowLogic() = default;
 
     void init(Object &object, Game &game);
-    void update(Object &object, SDL_Event const &event);
+    void update(Object &object, Game &game);
 
 protected:
 
 private:
-    WindowEventComponent(WindowEventComponent const &other);
-    WindowEventComponent& operator=(WindowEventComponent const &other);
+    WindowLogic(WindowLogic const &other);
+    WindowLogic& operator=(WindowLogic const &other);
+
+    unsigned long lastFrame;
 };
 
 
@@ -61,4 +63,4 @@ private:
 
 
 
-#endif /* EZSDL_WINDOWEVENTCOMPONENT_HPP */
+#endif /* EZSDL_WINDOWLOGIC_HPP */

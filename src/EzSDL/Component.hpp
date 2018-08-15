@@ -37,7 +37,7 @@
 // Requires the following of component class naming conventions
 #define EZSDL_COMPONENT_ENLIST(Obj, Kind) \
 Component::Key const Obj##Kind##ID = \
-    Component::enlist<Kind<class Obj##Kind>>(#Obj#Kind)
+    Component::enlist<Kind<class Obj>>(#Obj)
 
 
 

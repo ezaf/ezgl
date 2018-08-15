@@ -1,4 +1,4 @@
-/*  EzSDL/WindowEventComponent.cpp
+/*  EzSDL/WindowEvent.cpp
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -19,7 +19,7 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-#include "EzSDL/WindowEventComponent.hpp"
+#include "EzSDL/WindowEvent.hpp"
 
 #include "EzSDL/Object.hpp"
 
@@ -30,7 +30,7 @@ namespace EzSDL
 
 
 
-void WindowEventComponent::init(Object &object, Game &game)
+void WindowEvent::init(Object &object, Game &game)
 {
     object.data["pause"] = false;
     object.data["quit"] = false;
@@ -38,7 +38,7 @@ void WindowEventComponent::init(Object &object, Game &game)
 
 
 
-void WindowEventComponent::update(Object &object, SDL_Event const &e)
+void WindowEvent::update(Object &object, SDL_Event const &e)
 {
     switch (e.type)
     {

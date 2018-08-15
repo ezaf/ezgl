@@ -1,4 +1,4 @@
-/*  EzSDL/WindowRenderComponent.cpp
+/*  EzSDL/DummyEvent.hpp
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -19,43 +19,47 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-#include "EzSDL/WindowRenderComponent.hpp"
+#ifndef EZSDL_DUMMYEVENT_HPP
+#define EZSDL_DUMMYEVENT_HPP
 
-#include "EzSDL/Object.hpp"
-#include "nlohmann/json.hpp"
+/** @file       EzSDL/DummyEvent.hpp
+ *  @brief      Lorem ipsum
+ *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+ */
 
-#include <SDL2/SDL_render.h>
-#include <string>
+#include "EzSDL/EventComponent.hpp"
+
+
 
 namespace EzSDL
 {
 
+EZSDL_COMPONENT_ENLIST(DummyEvent, EventComponent);
 
-
-void WindowRenderComponent::init(Object &object, Game &game)
+/** @brief      Lorem ipsum
+ *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+ *              eiusmod tempor incididunt ut labore et dolore magna aliqua.
+ */
+class DummyEvent : public EventComponent<DummyEvent>
 {
-    std::string scaling = object.data["scaling"];
-    if (scaling != "linear" && scaling != "nearest")
-        scaling = "linear";
+public:
+    DummyEvent() = default;
+    virtual ~DummyEvent() = default;
 
-    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, scaling.c_str());
-    SDL_SetHint(SDL_HINT_RENDER_VSYNC, object.data["vsync"] ? "1" : "0");
-    SDL_ShowCursor(object.data["show_cursor"] ? SDL_ENABLE : SDL_DISABLE);
-}
+    void init(Object &object, Game &game);
+    void update(Object &object, SDL_Event const &event);
 
+protected:
 
+private:
+    DummyEvent(DummyEvent const &other);
+    DummyEvent& operator=(DummyEvent const &other);
 
-void WindowRenderComponent::update(Object &object, SDL_Renderer *renderer)
-{
-    SDL_RenderPresent(renderer);
-
-    // For some reason need to disable this when doing Emscripten
-#ifndef __EMSCRIPTEN__
-    SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0xFF);
-    SDL_RenderClear(renderer);
-#endif
-}
-
-
+    bool up, down, left, right;
+};
 
 }; /* namespace EzSDL */
+
+
+
+#endif /* EZSDL_DUMMYEVENT_HPP */

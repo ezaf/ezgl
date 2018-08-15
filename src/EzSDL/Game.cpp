@@ -20,6 +20,9 @@
  */
 
 #include "EzSDL/Game.hpp"
+#include "EzSDL/WindowEvent.hpp"
+#include "EzSDL/WindowLogic.hpp"
+#include "EzSDL/WindowRender.hpp"
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>

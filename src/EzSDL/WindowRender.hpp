@@ -1,4 +1,4 @@
-/*  EzSDL/WindowLogicComponent.hpp
+/*  EzSDL/WindowRender.hpp
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -19,43 +19,43 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef EZSDL_WINDOWLOGICCOMPONENT_HPP
-#define EZSDL_WINDOWLOGICCOMPONENT_HPP
+#ifndef EZSDL_WINDOWRENDER_HPP
+#define EZSDL_WINDOWRENDER_HPP
 
-/** @file       EzSDL/WindowLogicComponent.hpp
+/** @file       EzSDL/WindowRender.hpp
  *  @brief      Lorem ipsum
  *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
  */
 
-#include "EzSDL/LogicComponent.hpp"
+#include "EzSDL/RenderComponent.hpp"
+
+class SDL_Renderer;
 
 
 
 namespace EzSDL
 {
 
-EZSDL_COMPONENT_ENLIST(Window, LogicComponent);
+EZSDL_COMPONENT_ENLIST(WindowRender, RenderComponent);
 
 /** @brief      Lorem ipsum
  *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
  *              eiusmod tempor incididunt ut labore et dolore magna aliqua.
  */
-class WindowLogicComponent : public LogicComponent<WindowLogicComponent>
+class WindowRender : public RenderComponent<WindowRender>
 {
 public:
-    WindowLogicComponent() = default;
-    virtual ~WindowLogicComponent() = default;
+    WindowRender() = default;
+    virtual ~WindowRender() = default;
 
     void init(Object &object, Game &game);
-    void update(Object &object, Game &game);
+    void update(Object &object, SDL_Renderer *renderer);
 
 protected:
 
 private:
-    WindowLogicComponent(WindowLogicComponent const &other);
-    WindowLogicComponent& operator=(WindowLogicComponent const &other);
-
-    unsigned long lastFrame;
+    WindowRender(WindowRender const &other);
+    WindowRender& operator=(WindowRender const &other);
 };
 
 
@@ -63,4 +63,4 @@ private:
 
 
 
-#endif /* EZSDL_WINDOWLOGICCOMPONENT_HPP */
+#endif /* EZSDL_WINDOWRENDER_HPP */

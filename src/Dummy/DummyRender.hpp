@@ -1,4 +1,4 @@
-/*  EzSDL/DummyRenderComponent.hpp
+/*  EzSDL/DummyRender.hpp
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -19,10 +19,10 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef EZSDL_DUMMYRENDERCOMPONENT_HPP
-#define EZSDL_DUMMYRENDERCOMPONENT_HPP
+#ifndef EZSDL_DUMMYRENDER_HPP
+#define EZSDL_DUMMYRENDER_HPP
 
-/** @file       EzSDL/DummyRenderComponent.hpp
+/** @file       EzSDL/DummyRender.hpp
  *  @brief      Lorem ipsum
  *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
  */
@@ -36,17 +36,17 @@ class SDL_Renderer;
 namespace EzSDL
 {
 
-EZSDL_COMPONENT_ENLIST(Dummy, RenderComponent);
+EZSDL_COMPONENT_ENLIST(DummyRender, RenderComponent);
 
 /** @brief      Lorem ipsum
  *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
  *              eiusmod tempor incididunt ut labore et dolore magna aliqua.
  */
-class DummyRenderComponent : public RenderComponent<DummyRenderComponent>
+class DummyRender : public RenderComponent<DummyRender>
 {
 public:
-    DummyRenderComponent() = default;
-    virtual ~DummyRenderComponent() = default;
+    DummyRender() = default;
+    virtual ~DummyRender() = default;
 
     void init(Object &object, Game &game);
     void update(Object &object, SDL_Renderer *renderer);
@@ -54,12 +54,12 @@ public:
 protected:
 
 private:
-    DummyRenderComponent(DummyRenderComponent const &other);
-    DummyRenderComponent& operator=(DummyRenderComponent const &other);
+    DummyRender(DummyRender const &other);
+    DummyRender& operator=(DummyRender const &other);
 };
 
 }; /* namespace EzSDL */
 
 
 
-#endif /* EZSDL_DUMMYRENDERCOMPONENT_HPP */
+#endif /* EZSDL_DUMMYRENDER_HPP */

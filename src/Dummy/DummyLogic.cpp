@@ -1,4 +1,4 @@
-/*  EzSDL/DummyLogicComponent.cpp
+/*  EzSDL/DummyLogic.cpp
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -19,7 +19,7 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-#include "EzSDL/DummyLogicComponent.hpp"
+#include "Dummy/DummyLogic.hpp"
 
 #include "EzSDL/Game.hpp"
 #include "EzSDL/Object.hpp"
@@ -29,13 +29,13 @@ namespace EzSDL
 
 
 
-void DummyLogicComponent::init(Object &object, Game &game)
+void DummyLogic::init(Object &object, Game &game)
 {
 }
 
 
 
-void DummyLogicComponent::update(Object &object, Game &game)
+void DummyLogic::update(Object &object, Game &game)
 {
     double const xceil =
         static_cast<double>(game.data["render_width"]) -
