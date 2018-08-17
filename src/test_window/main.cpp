@@ -25,14 +25,17 @@
 
 #include "EzSDL/Game.hpp"
 
-// Foo solution. Load DLLs in the future!
-#include "Dummy/DummyEvent.hpp"
-#include "Dummy/DummyLogic.hpp"
-#include "Dummy/DummyRender.hpp"
-
 #include "nlohmann/json.hpp"
 
 #include <fstream> // ifstream
+
+#ifdef __linux__
+#include <dlfcn.h>
+#define DLEXT ".so"
+#elif _WIN32
+#include "dlfcn-win32/dlfcn.h"
+#define DLEXT ".dll"
+#endif
 
 
 
@@ -43,6 +46,9 @@ int main(int argc, char *argv[])
 
     nlohmann::json config;
     file >> config;
+
+    // TODO: load using json file strings
+    dlopen("Dummy" DLEXT, RTLD_LAZY);
 
     EzSDL::Game::init(config["window"]);
     EzSDL::Game::addObject(EzSDL::Object::create(config["dummy"]));

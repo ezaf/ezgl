@@ -4,3 +4,9 @@
 [submodule "sub/json"]
 	path = sub/json
 	url = https://github.com/nlohmann/json.git
+[submodule "src/dlfcn-win32"]
+	path = src/dlfcn-win32
+	url = https://github.com/dlfcn-win32/dlfcn-win32.git
+[submodule "sub/dlfcn-win32"]
+	path = sub/dlfcn-win32
+	url = https://github.com/dlfcn-win32/dlfcn-win32.git

@@ -27,7 +27,11 @@
 # Directories within ./src of your library code.
 # Each subdirectory gets built into its own shared library, assuming that MODE
 # is set to dynamic.
-MODULES = EzSDL Dummy
+MODULES = EzSDL
+
+# Similar to MODULES, except PLUGINS are not part of the core application and
+# must be dynamically loaded via a shared object (.dll, .so, etc)
+PLUGINS = Dummy
 
 # Directories within ./src of the apps and tests that you want to build.
 MAINS = test_json test_window
@@ -37,6 +41,10 @@ TEST = test_json
 
 # Name of the application (singular!) you want to run when you call `make run`.
 RUN = test_window
+
+# When building all, choose whether to build dynamic and/or static mains
+# EZSDL: For some reason statically built mains have trouble loading plugins
+MODES = dynamic #static
 
 # Packages that you want to include in your project.
 # If `pkg-config` cannot find the package, `-I$(PREFIX)/include/$(PKG)` and
@@ -52,6 +60,10 @@ SUB_SUBDIRS = json/single_include
 # actual API source files (facepalm), then you may want to manually specify
 # individual source files here (including the file extension).
 SUB_FILES =
+
+ifneq (, $(shell uname -s | grep -E _NT))
+	SUB_FILES += dlfcn-win32/dlfcn.c
+endif
 
 
 
@@ -69,11 +81,21 @@ CC = g++
 CF = -std=c++11 -w -O3
 LF = #-lOpenGL32 -lglew32
 
+ifneq (, $(shell uname -s | grep -E _NT))
+	LF += -lpsapi
+endif
+ifneq (, $(shell uname -s | grep -E Linux))
+	LF += -ldl
+endif
+ifneq (, $(shell uname -s | grep -E Darwin))
+	LF += # ?!?!?!
+endif
+
 # Include file extensions you want moved to ./include
-INC_EXTS = h hpp
+INC_EXTS = hpp h
 
 # Source file extensions you want compiled.
-SRC_EXTS = cpp
+SRC_EXTS = cpp c
 
 # Location(s) where EzMake should look for `include` and `lib` subdirectories
 # No biggie if the directory doesn't exist.
