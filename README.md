@@ -6,18 +6,31 @@
 [![License: zlib](https://img.shields.io/badge/license-zlib-blue.svg)](https://zlib.net/zlib_license.html)
 <!--[![Contributors](https://img.shields.io/github/contributors/ezaf/ezgl.svg)](https://github.com/ezaf/ezgl/graphs/contributors)-->
 
-The easy, light-weight wrapper for SDL2 and its extension libraries.
+A component-based, graphics-API-agnostic game engine.
 
-## Links
 
-Some helpful links if you want to use and/or contribute to the project!
 
-Resource | URL
---- | ---
-Documentation | [ezgl.ezaf.io](http://ezgl.ezaf.io)
-GitHub | [github.com/ezaf/ezgl](https://github.com/ezaf/ezgl)
-Issues | [github.com/ezaf/ezgl/issues](https://github.com/ezaf/ezgl/issues)
-Build Status | [travis-ci.org/ezaf/ezgl](https://travis-ci.org/ezaf/ezgl)
+## About
+
+You may have noticed that the documentation is basically non-existent and full
+of a lot of Lorem Ipsums. That is because this month (August) the engine has
+undergone three major refactorings, the most recent one being on August 19th.
+As far as I can tell, the engine shouldn't drastically change from now on, so
+over the next couple weeks I'll be repaying all that technical debt.
+
+In communicating the purpose of the EzGL game engine, I think it would help to
+describe the purpose of the August 19th refactoring (EzSDL -> EzGL). For the
+longest time I've been stagnating, only bothering to use SDL2. While I'll most
+likely still implement my next semester's project in SDL2, I also want to learn
+OpenGL/GLFW. What I thought would be really cool is if after I learn the ropes
+of OpenGL I could write a drop-in replacement for the SDL2 component of the
+game engine. Thus, over the weekend, I seperated out the component-based
+foundation of EzGL from the SDL2-related code. Now, changing the graphics API
+is as simple as changing `core.api` in the json configuration file! It is this
+concept of dynamic loading and robust run-time customization that is at the
+heart of EzGL.
+
+
 
 ## License
 
