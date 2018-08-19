@@ -28,7 +28,6 @@
 #include "nlohmann/json.hpp"
 
 #include <fstream> // ifstream
-#include <SDL2/SDL.h>
 
 #ifdef __linux__
 #include <dlfcn.h>
@@ -37,6 +36,9 @@
 #include "dlfcn-win32/dlfcn.h"
 #define DLEXT ".dll"
 #endif
+
+// Counteract SDL hijacking
+#define SDL_main main
 
 
 

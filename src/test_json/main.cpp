@@ -27,8 +27,10 @@
 
 #include <fstream>
 #include <iostream>
-#include <SDL2/SDL.h>
 #include <vector>
+
+// Counteract SDL hijacking
+#define SDL_main main
 
 
 
