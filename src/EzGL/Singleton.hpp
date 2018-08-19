@@ -1,4 +1,4 @@
-/*  EzSDL/EventComponent.hpp
+/*  EzGL/Singleton.hpp
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -19,62 +19,46 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef EZSDL_EVENTCOMPONENT_HPP
-#define EZSDL_EVENTCOMPONENT_HPP
+#ifndef EZGL_SINGLETON_HPP
+#define EZGL_SINGLETON_HPP
 
-/** @file       EzSDL/EventComponent.hpp
+/** @file       EzGL/Singleton.hpp
  *  @brief      Lorem ipsum
  *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
  */
 
-#include "EzSDL/Component.hpp"
-#include "EzSDL/Game.hpp"
-
-union SDL_Event;
 
 
-
-namespace EzSDL
+namespace EzGL
 {
 
-/** @brief      Lorem ipsum
- *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
- *              eiusmod tempor incididunt ut labore et dolore magna aliqua.
- */
+/** @brief      Singleton template class. */
 template <class T>
-class EventComponent : public Component
+class Singleton
 {
 public:
-    virtual ~EventComponent() = default;
+    virtual ~Singleton() = default;
 
-    void IInit(Object &object, Game &game) override
+    /** @brief      Lorem ipsum
+     *  @details    Apparently this *is* thread safe:
+     *              https://stackoverflow.com/a/26985665/5890633
+     */
+    static T& Instance()
     {
-        static_cast<T*>(this)->init(object, game);
-    };
-
-    void IUpdate(Object &object, Game &game) override
-    {
-        for (auto const &it : game.getEvents())
-        {
-            static_cast<T*>(this)->update(object, it);
-        }
-    };
-
-    static ComponentPtr create()
-    {
-        return ComponentPtr(new T());
-    };
+        static T instance;
+        return instance;
+    }
 
 protected:
-    EventComponent() = default;
+    Singleton() = default;
 
 private:
-    EventComponent(EventComponent const &other) = delete;
-    EventComponent& operator=(EventComponent const &other) = delete;
+    Singleton(Singleton const &) = delete;
+    Singleton& operator=(Singleton const &) = delete;
 };
 
-}; /* namespace EzSDL */
+}; /* namespace EzGL */
 
 
 
-#endif /* EZSDL_EVENTCOMPONENT_HPP */
+#endif /* EZGL_SINGLETON_HPP */

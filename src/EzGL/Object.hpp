@@ -1,4 +1,4 @@
-/*  EzSDL/Object.cpp
+/*  EzGL/Object.hpp
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -19,49 +19,53 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-#include "EzSDL/Object.hpp"
+#ifndef EZGL_OBJECT_HPP
+#define EZGL_OBJECT_HPP
 
-#include "EzSDL/Game.hpp"
+/** @file       EzGL/Object.hpp
+ *  @brief      Lorem ipsum
+ *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+ */
+
 #include "nlohmann/json.hpp"
 
-namespace EzSDL
+#include <memory>
+
+
+
+namespace EzGL
 {
 
+class Core;
 
+using ObjectPtr = std::unique_ptr<class Object>;
 
-ObjectPtr Object::create(nlohmann::json &config)
+/** @brief      Lorem ipsum
+ *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+ *              eiusmod tempor incididunt ut labore et dolore magna aliqua.
+ */
+class Object final
 {
-    return ObjectPtr(new Object(config));
-}
+public:
+    static ObjectPtr create(nlohmann::json &config);
+    virtual ~Object();
+
+    void init(Core &core);
+    void update(Core &core);
+
+    nlohmann::json &data;
+
+private:
+    Object(nlohmann::json &config);
+    Object(Object const &other) = delete;
+    Object& operator=(Object const &other) = delete;
+
+    class Impl;
+    Impl *impl;
+};
+
+}; /* namespace EzGL */
 
 
 
-Object::Object(nlohmann::json &config) :
-    data(config),
-    components(Component::create(config["components"]))
-{
-}
-
-
-
-void Object::init(Game &game)
-{
-    for (auto &it : this->components)
-    {
-        it->IInit(*this, game);
-    }
-}
-
-
-
-void Object::update(Game &game)
-{
-    for (auto &it : this->components)
-    {
-        it->IUpdate(*this, game);
-    }
-}
-
-
-
-}; /* namespace EzSDL */
+#endif /* EZGL_OBJECT_HPP */

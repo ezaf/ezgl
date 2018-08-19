@@ -1,6 +1,7 @@
 {
-    "window": {
-        "title": "EzSDL Demo",
+    "core": {
+        "api": "EzGL_SDL",
+        "title": "EzGL Demo",
         "render_width": 1920,
         "render_height": 1080,
         "display_width": null,
@@ -12,30 +13,23 @@
         "vsync": true,
         "delta_max": 100,
         "show_cursor": true,
-        "components": [
-            "WindowEvent",
-            "WindowLogic",
-            "WindowRender"
-        ]
-    },
-
-    "game": {
         "objects": {
             "dummy": 1
         }
     },
 
     "dummy": {
-        "x": 0.0,
-        "y": 64.0,
-        "speed": 1000.0,
-        "dx": 500.0,
-        "dy": 0.0,
-        "accel": 0.0,
-        "d2x": 0.0,
-        "d2y": 0.0,
-        "w": 64.0,
-        "h": 64.0,
+        "x": 0,
+        "y": 64,
+        "speed": 1000,
+        "dx": 500,
+        "dy": 0,
+        "accel": 0,
+        "d2x": 0,
+        "d2y": 0,
+        "w": 64,
+        "h": 64,
+        "image": "dummy.png",
         "components": [
             "DummyEvent",
             "DummyLogic",

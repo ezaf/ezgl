@@ -1,4 +1,4 @@
-# Configuration Makefile for EzSDL
+# EzMake Configuration File
 #
 # Copyright (c) 2018 Kirk Lange
 #
@@ -27,11 +27,11 @@
 # Directories within ./src of your library code.
 # Each subdirectory gets built into its own shared library, assuming that MODE
 # is set to dynamic.
-MODULES = EzSDL
+MODULES = EzGL
 
 # Similar to MODULES, except PLUGINS are not part of the core application and
 # must be dynamically loaded via a shared object (.dll, .so, etc)
-PLUGINS = Dummy
+PLUGINS = EzGL_SDL #Dummy
 
 # Directories within ./src of the apps and tests that you want to build.
 MAINS = test_json test_window
@@ -43,7 +43,7 @@ TEST = test_json
 RUN = test_window
 
 # When building all, choose whether to build dynamic and/or static mains
-# EZSDL: For some reason statically built mains have trouble loading plugins
+# EzGL: For some reason statically built mains have trouble loading plugins
 MODES = dynamic #static
 
 # Packages that you want to include in your project.
@@ -61,7 +61,7 @@ SUB_SUBDIRS = json/single_include
 # individual source files here (including the file extension).
 SUB_FILES =
 
-ifneq (, $(shell uname -s | grep -E _NT))
+ifneq (,$(shell uname -s | grep -E _NT))
 	SUB_FILES += dlfcn-win32/dlfcn.c
 endif
 
@@ -78,16 +78,16 @@ CC = g++
 # In many cases the order in which your `-l`s appear matters! One limitation of
 # EzMake is that we assume all tests/mains use the same compiler flags. If this
 # becomes a big enough issue, this will be amended in a future version.
-CF = -std=c++11 -w -O3
+CF = -std=c++11 -w -O3 -I./sub
 LF = #-lOpenGL32 -lglew32
 
-ifneq (, $(shell uname -s | grep -E _NT))
+ifneq (,$(shell uname -s | grep -E _NT))
 	LF += -lpsapi
 endif
-ifneq (, $(shell uname -s | grep -E Linux))
+ifneq (,$(shell uname -s | grep -E Linux))
 	LF += -ldl
 endif
-ifneq (, $(shell uname -s | grep -E Darwin))
+ifneq (,$(shell uname -s | grep -E Darwin))
 	LF += # ?!?!?!
 endif
 

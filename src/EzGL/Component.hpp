@@ -1,4 +1,4 @@
-/*  EzSDL/Object.hpp
+/*  EzGL/Component.hpp
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -19,54 +19,53 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef EZSDL_OBJECT_HPP
-#define EZSDL_OBJECT_HPP
+#ifndef EZGL_COMPONENT_HPP
+#define EZGL_COMPONENT_HPP
 
-/** @file       EzSDL/Object.hpp
+/** @file       EzGL/Component.hpp
  *  @brief      Lorem ipsum
  *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
  */
 
-#include "EzSDL/Component.hpp"
-#include "nlohmann/json.hpp"
-
-#include <memory>
-#include <vector>
+#include "EzGL/ComponentFactory.hpp"
+#include "EzGL/IComponent.hpp"
 
 
 
-namespace EzSDL
+namespace EzGL
 {
 
-class Game;
-
-using ObjectPtr = std::unique_ptr<Object>;
-
-/** @brief      Lorem ipsum
- *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
- *              eiusmod tempor incididunt ut labore et dolore magna aliqua.
- */
-class Object final
+template <class T>
+class Component : private IComponent
 {
 public:
-    static ObjectPtr create(nlohmann::json &config);
-    virtual ~Object() = default;
+    virtual ~Component() = default;
 
-    void init(Game &game);
-    void update(Game &game);
+    static ComponentPtr Create()
+    {
+        return ComponentPtr(new T());
+    }
 
-    nlohmann::json &data;
+    void IInit(Object &object, Core &core) override
+    {
+        static_cast<T*>(this)->init(object, core);
+    }
+
+    void IUpdate(Object &object, Core &core) override
+    {
+        static_cast<T*>(this)->update(object, core);
+    }
+
+protected:
+    Component() = default;
 
 private:
-    Object(nlohmann::json &config);
-    Object(Object const &other) = delete;
-    Object& operator=(Object const &other) = delete;
-
-    std::vector<ComponentPtr> components;
+    Component(Component const &) = delete;
+    Component& operator=(Component const &) = delete;
 };
 
-}; /* namespace EzSDL */
+}; /* namespace EzGL */
 
 
 
-#endif /* EZSDL_OBJECT_HPP */
+#endif /* EZGL_COMPONENT_HPP */

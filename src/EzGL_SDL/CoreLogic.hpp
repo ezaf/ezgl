@@ -1,4 +1,4 @@
-/*  EzSDL/WindowRender.hpp
+/*  EzGL_SDL/CoreLogic.hpp
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -19,48 +19,39 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef EZSDL_WINDOWRENDER_HPP
-#define EZSDL_WINDOWRENDER_HPP
+#ifndef EZGL_SDL_CORELOGIC_HPP
+#define EZGL_SDL_CORELOGIC_HPP
 
-/** @file       EzSDL/WindowRender.hpp
+/** @file       EzGL_SDL/CoreLogic.hpp
  *  @brief      Lorem ipsum
  *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
  */
 
-#include "EzSDL/RenderComponent.hpp"
-
-class SDL_Renderer;
+#include "EzGL/Component.hpp"
 
 
 
-namespace EzSDL
+namespace EzGL
 {
 
-EZSDL_COMPONENT_ENLIST(WindowRender, RenderComponent);
+EZGL_COMPONENT_ENLIST(CoreLogic);
 
-/** @brief      Lorem ipsum
- *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
- *              eiusmod tempor incididunt ut labore et dolore magna aliqua.
- */
-class WindowRender : public RenderComponent<WindowRender>
+class CoreLogic : public Component<CoreLogic>
 {
 public:
-    WindowRender() = default;
-    virtual ~WindowRender() = default;
+    CoreLogic() = default;
+    virtual ~CoreLogic() = default;
 
-    void init(Object &object, Game &game);
-    void update(Object &object, SDL_Renderer *renderer);
-
-protected:
+    void init(Object &object, Core &core);
+    void update(Object &object, Core &core);
 
 private:
-    WindowRender(WindowRender const &other);
-    WindowRender& operator=(WindowRender const &other);
+    CoreLogic(CoreLogic const &) = delete;
+    CoreLogic& operator=(CoreLogic const &) = delete;
 };
 
-
-}; /* namespace EzSDL */
-
+}; /* namespace EzGL */
 
 
-#endif /* EZSDL_WINDOWRENDER_HPP */
+
+#endif /* EZGL_SDL_CORELOGIC_HPP */

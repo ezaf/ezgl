@@ -1,4 +1,4 @@
-/*  EzSDL/WindowEvent.hpp
+/*  EzGL_SDL/CoreRender.hpp
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -19,46 +19,48 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef EZSDL_WINDOWEVENT_HPP
-#define EZSDL_WINDOWEVENT_HPP
+#ifndef EZGL_SDL_CORERENDER_HPP
+#define EZGL_SDL_CORERENDER_HPP
 
-/** @file       EzSDL/WindowEvent.hpp
+/** @file       EzGL_SDL/CoreRender.hpp
  *  @brief      Lorem ipsum
  *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
  */
 
-#include "EzSDL/EventComponent.hpp"
+#include "EzGL/Component.hpp"
+
+#include <SDL2/SDL.h>
 
 
 
-namespace EzSDL
+namespace EzGL
 {
 
-EZSDL_COMPONENT_ENLIST(WindowEvent, EventComponent);
+EZGL_COMPONENT_ENLIST(CoreRender);
 
-/** @brief      Lorem ipsum
- *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
- *              eiusmod tempor incididunt ut labore et dolore magna aliqua.
- */
-class WindowEvent : public EventComponent<WindowEvent>
+class CoreRender : public Component<CoreRender>
 {
 public:
-    WindowEvent() = default;
-    virtual ~WindowEvent() = default;
+    CoreRender() = default;
+    virtual ~CoreRender();
 
-    void init(Object &object, Game &game);
-    void update(Object &object, SDL_Event const &event);
+    void init(Object &object, Core &core);
+    void update(Object &object, Core &core);
 
 protected:
 
 private:
-    WindowEvent(WindowEvent const &other);
-    WindowEvent& operator=(WindowEvent const &other);
+    CoreRender(CoreRender const &) = delete;
+    CoreRender& operator=(CoreRender const &) = delete;
+
+    void destroy();
+
+    SDL_Window *window;
+    SDL_Renderer *renderer;
 };
 
-
-}; /* namespace EzSDL */
-
+}; /* namespace EzGL */
 
 
-#endif /* EZSDL_WINDOWEVENT_HPP */
+
+#endif /* EZGL_SDL_CORERENDER_HPP */

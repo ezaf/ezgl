@@ -1,4 +1,4 @@
-/*  test_hello.cpp
+/*  test_window/main.cpp
  *
  *  Copyright (c) 2018 Kirk Lange
  *
@@ -19,15 +19,16 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-/** @file       test_hello.cpp
- *  @brief      Hello world example for EzSDL.
+/** @file       test_window/main.cpp
+ *  @brief      Hello world example for EzGL.
  */
 
-#include "EzSDL/Game.hpp"
+#include "EzGL/Core.hpp"
 
 #include "nlohmann/json.hpp"
 
 #include <fstream> // ifstream
+#include <SDL2/SDL.h>
 
 #ifdef __linux__
 #include <dlfcn.h>
@@ -48,11 +49,12 @@ int main(int argc, char *argv[])
     file >> config;
 
     // TODO: load using json file strings
-    dlopen("Dummy" DLEXT, RTLD_LAZY);
+    //dlopen("Dummy" DLEXT, RTLD_LAZY);
 
-    EzSDL::Game::init(config["window"]);
-    EzSDL::Game::addObject(EzSDL::Object::create(config["dummy"]));
-    EzSDL::Game::run();
+    EzGL::Core::Instance().init(config["core"]);
+    EzGL::Core::Instance().run();
+
+    //EzGL::Core::addObject(config["dummy"]);
 
     return 0;
 }

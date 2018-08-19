@@ -1,4 +1,4 @@
-/*  EzSDL/WindowLogic.hpp
+/*  EzGL/Object.cpp
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -19,48 +19,77 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef EZSDL_WINDOWLOGIC_HPP
-#define EZSDL_WINDOWLOGIC_HPP
+#include "EzGL/Object.hpp"
 
-/** @file       EzSDL/WindowLogic.hpp
- *  @brief      Lorem ipsum
- *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
- */
+#include "EzGL/ComponentFactory.hpp"
+#include "EzGL/IComponent.hpp"
 
-#include "EzSDL/LogicComponent.hpp"
+#include <vector>
 
-
-
-namespace EzSDL
+namespace EzGL
 {
 
-EZSDL_COMPONENT_ENLIST(WindowLogic, LogicComponent);
 
-/** @brief      Lorem ipsum
- *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
- *              eiusmod tempor incididunt ut labore et dolore magna aliqua.
- */
-class WindowLogic : public LogicComponent<WindowLogic>
+
+class Object::Impl
 {
 public:
-    WindowLogic() = default;
-    virtual ~WindowLogic() = default;
+    Impl(nlohmann::json &config) :
+        components(ComponentFactory::Instance().create(config["components"]))
+    {
+    }
 
-    void init(Object &object, Game &game);
-    void update(Object &object, Game &game);
+    ~Impl()
+    {
+        components.clear();
+        components.shrink_to_fit();
+    }
 
-protected:
-
-private:
-    WindowLogic(WindowLogic const &other);
-    WindowLogic& operator=(WindowLogic const &other);
-
-    unsigned long lastFrame;
+    std::vector<ComponentPtr> components;
 };
 
 
-}; /* namespace EzSDL */
+
+ObjectPtr Object::create(nlohmann::json &config)
+{
+    return ObjectPtr(new Object(config));
+}
 
 
 
-#endif /* EZSDL_WINDOWLOGIC_HPP */
+Object::Object(nlohmann::json &config) :
+    data(config),
+    impl(new Impl(config))
+{
+}
+
+
+
+Object::~Object()
+{
+    delete impl;
+}
+
+
+
+void Object::init(Core &core)
+{
+    for (auto &it : this->impl->components)
+    {
+        it->IInit(*this, core);
+    }
+}
+
+
+
+void Object::update(Core &core)
+{
+    for (auto &it : this->impl->components)
+    {
+        it->IUpdate(*this, core);
+    }
+}
+
+
+
+}; /* namespace EzGL */

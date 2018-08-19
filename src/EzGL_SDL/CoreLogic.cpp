@@ -1,4 +1,4 @@
-/*  EzSDL/WindowLogic.cpp
+/*  EzGL/CoreLogic.cpp
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -19,11 +19,10 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-#include "EzSDL/WindowLogic.hpp"
+#include "EzGL_SDL/CoreLogic.hpp"
 
-#include "EzSDL/Game.hpp"
-#include "EzSDL/Object.hpp"
-#include "nlohmann/json.hpp"
+#include "EzGL/Core.hpp"
+#include "EzGL/Object.hpp"
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
@@ -32,15 +31,13 @@
 #include <iostream>
 #include <SDL2/SDL.h>
 
-namespace EzSDL
+namespace EzGL
 {
 
 
 
-void WindowLogic::init(Object &object, Game &game)
+void CoreLogic::init(Object &object, Core &core)
 {
-    this->lastFrame = SDL_GetTicks();
-
     SDL_DisplayMode display;
     if (SDL_GetDesktopDisplayMode(0, &display) != 0)
     {
@@ -60,7 +57,7 @@ void WindowLogic::init(Object &object, Game &game)
 #ifdef __EMSCRIPTEN__
         display.refresh_rate = 120;
 #endif
-        std::cout << "Display mode aquired: {"
+        std::cout << "SDL display mode aquired: {"
             " w:" << display.w <<
             " h:" << display.h <<
             " refresh_rate:" << display.refresh_rate <<
@@ -81,29 +78,15 @@ void WindowLogic::init(Object &object, Game &game)
 
     if (object.data["refresh_rate"] == nullptr)
         object.data["refresh_rate"] = display.refresh_rate;
-
-    object.data["delta"] = 0.0;
-    object.data["vsync_wait"] = 0;
 }
 
 
 
-void WindowLogic::update(Object &object, Game &game)
+void CoreLogic::update(Object &object, Core &core)
 {
-    int delta = static_cast<int>(SDL_GetTicks() - this->lastFrame);
-    if (delta > object.data["delta_max"]) delta = object.data["delta_max"];
-
-    double waitTime =
-        (1000.0 / static_cast<double>(object.data["refresh_rate"])) - delta;
-    if (waitTime < 0.0 || !object.data["vsync"])
-        waitTime = 0.0;
-
-    object.data["delta"] = (delta / 1000.0);
-    object.data["vsync_wait"] = waitTime;
-
-    this->lastFrame = SDL_GetTicks();
+    core.updateObjects();
 }
 
 
 
-}; /* namespace EzSDL */
+}; /* namespace EzGL */

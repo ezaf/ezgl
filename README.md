@@ -1,15 +1,12 @@
-# EzSDL
+# EzGL
 
-[![Build Status](https://travis-ci.org/ezaf/ezsdl.svg?branch=master)](https://travis-ci.org/ezaf/ezsdl)
-[![GitHub Issues](https://img.shields.io/github/issues/ezaf/ezsdl.svg)](https://github.com/ezaf/ezsdl/issues)
+[![Build Status](https://travis-ci.org/ezaf/ezgl.svg?branch=master)](https://travis-ci.org/ezaf/ezgl)
+[![GitHub Issues](https://img.shields.io/github/issues/ezaf/ezgl.svg)](https://github.com/ezaf/ezgl/issues)
+[![Documentation](https://img.shields.io/badge/docs-doxygen-blue.svg)](http://ezgl.ezaf.io)
 [![License: zlib](https://img.shields.io/badge/license-zlib-blue.svg)](https://zlib.net/zlib_license.html)
-<!--[![Code Documented](https://img.shields.io/badge/docs-passing-brightgreen.svg)](http://ezsdl.ezaf.io)-->
-<!--[![Contributors](https://img.shields.io/github/contributors/ezaf/ezsdl.svg)](https://github.com/ezaf/ezsdl/graphs/contributors)-->
-
+<!--[![Contributors](https://img.shields.io/github/contributors/ezaf/ezgl.svg)](https://github.com/ezaf/ezgl/graphs/contributors)-->
 
 The easy, light-weight wrapper for SDL2 and its extension libraries.
-
-<hr>
 
 ## Links
 
@@ -17,12 +14,10 @@ Some helpful links if you want to use and/or contribute to the project!
 
 Resource | URL
 --- | ---
-Documentation | [ezsdl.ezaf.io](http://ezsdl.ezaf.io)
-GitHub | [github.com/ezaf/ezsdl](https://github.com/ezaf/ezsdl)
-Issues | [github.com/ezaf/ezsdl/issues](https://github.com/ezaf/ezsdl/issues)
-Build Status | [travis-ci.org/ezaf/ezsdl](https://travis-ci.org/ezaf/ezsdl)
-
-<hr>
+Documentation | [ezgl.ezaf.io](http://ezgl.ezaf.io)
+GitHub | [github.com/ezaf/ezgl](https://github.com/ezaf/ezgl)
+Issues | [github.com/ezaf/ezgl/issues](https://github.com/ezaf/ezgl/issues)
+Build Status | [travis-ci.org/ezaf/ezgl](https://travis-ci.org/ezaf/ezgl)
 
 ## License
 

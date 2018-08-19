@@ -1,4 +1,4 @@
-/*  EzSDL/WindowRender.cpp
+/*  EzGL/IComponent.hpp
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -19,43 +19,39 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-#include "EzSDL/WindowRender.hpp"
+#ifndef EZGL_ICOMPONENT_HPP
+#define EZGL_ICOMPONENT_HPP
 
-#include "EzSDL/Object.hpp"
-#include "nlohmann/json.hpp"
+/** @file       EzGL/IComponent.hpp
+ *  @brief      Lorem ipsum
+ *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+ */
 
-#include <SDL2/SDL_render.h>
-#include <string>
 
-namespace EzSDL
+
+namespace EzGL
 {
 
+class Core;
+class Object;
 
-
-void WindowRender::init(Object &object, Game &game)
+class IComponent
 {
-    std::string scaling = object.data["scaling"];
-    if (scaling != "linear" && scaling != "nearest")
-        scaling = "linear";
+public:
+    virtual ~IComponent() = default;
+    virtual void IInit(Object &object, Core &core) = 0;
+    virtual void IUpdate(Object &object, Core &core) = 0;
 
-    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, scaling.c_str());
-    SDL_SetHint(SDL_HINT_RENDER_VSYNC, object.data["vsync"] ? "1" : "0");
-    SDL_ShowCursor(object.data["show_cursor"] ? SDL_ENABLE : SDL_DISABLE);
-}
+protected:
+    IComponent() = default;
 
+private:
+    IComponent(IComponent const &) = delete;
+    IComponent& operator=(IComponent const &) = delete;
+};
 
-
-void WindowRender::update(Object &object, SDL_Renderer *renderer)
-{
-    SDL_RenderPresent(renderer);
-
-    // For some reason need to disable this when doing Emscripten
-#ifndef __EMSCRIPTEN__
-    SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0xFF);
-    SDL_RenderClear(renderer);
-#endif
-}
+}; /* namespace EzGL */
 
 
 
-}; /* namespace EzSDL */
+#endif /* EZGL_ICOMPONENT_HPP */

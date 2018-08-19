@@ -1,4 +1,4 @@
-/*  EzSDL/WindowEvent.cpp
+/*  EzGL_SDL/CoreEvent.cpp
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -19,29 +19,49 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-#include "EzSDL/WindowEvent.hpp"
+#include "EzGL_SDL/CoreEvent.hpp"
 
-#include "EzSDL/Object.hpp"
+#include "EzGL/Object.hpp"
 
-#include <SDL2/SDL_events.h>
+#include <iostream>
+#include <SDL2/SDL.h>
 
-namespace EzSDL
+namespace EzGL
 {
 
 
 
-void WindowEvent::init(Object &object, Game &game)
+void CoreEvent::init(Object &object, Core &core)
 {
+    // TODO: If SDL wasn't initialized already
+    if (true)
+    {
+        SDL_Init(SDL_INIT_EVERYTHING);
+
+        SDL_version linked;
+        SDL_GetVersion(&linked);
+
+        std::cout << "Using SDL version " <<
+            static_cast<int>(linked.major) << "." <<
+            static_cast<int>(linked.minor) << "." <<
+            static_cast<int>(linked.patch) << "." << std::endl <<
+            "Initialized all SDL systems." << std::endl;
+    }
+
     object.data["pause"] = false;
     object.data["quit"] = false;
 }
 
 
 
-void WindowEvent::update(Object &object, SDL_Event const &e)
+void CoreEvent::update(Object &object, Core &core)
 {
-    switch (e.type)
+    SDL_Event e;
+
+    while (SDL_PollEvent(&e))
     {
+        switch (e.type)
+        {
         case SDL_QUIT:
             object.data["quit"] = true;
             break;
@@ -49,28 +69,29 @@ void WindowEvent::update(Object &object, SDL_Event const &e)
             switch (e.key.keysym.scancode)
             {
 #ifndef __EMSCRIPTEN__
-                case SDL_SCANCODE_ESCAPE:
-                    object.data["quit"] = true;
-                    break;
+            case SDL_SCANCODE_ESCAPE:
+                object.data["quit"] = true;
+                break;
 #endif
-                case SDL_SCANCODE_GRAVE:
-                    object.data["pause"] = !object.data["pause"];
-                    break;
+            case SDL_SCANCODE_GRAVE:
+                object.data["pause"] = !object.data["pause"];
+                break;
             }
             break;
         case SDL_WINDOWEVENT:
             switch (e.window.event)
             {
-                case SDL_WINDOWEVENT_FOCUS_GAINED:
-                    object.data["pause"] = false;
-                    break;
-                case SDL_WINDOWEVENT_FOCUS_LOST:
-                    object.data["pause"] = true;
-                    break;
+            case SDL_WINDOWEVENT_FOCUS_GAINED:
+                object.data["pause"] = false;
+                break;
+            case SDL_WINDOWEVENT_FOCUS_LOST:
+                object.data["pause"] = true;
+                break;
             }
+        }
     }
 }
 
 
 
-}; /* namespace EzSDL */
+}; /* namespace EzGL */

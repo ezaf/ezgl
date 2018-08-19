@@ -1,4 +1,4 @@
-/*  EzSDL/LogicComponent.hpp
+/*  EzGL_SDL/CoreEvent.hpp
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -19,56 +19,39 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef EZSDL_LOGICCOMPONENT_HPP
-#define EZSDL_LOGICCOMPONENT_HPP
+#ifndef EZGL_SDL_COREEVENT_HPP
+#define EZGL_SDL_COREEVENT_HPP
 
-/** @file       EzSDL/LogicComponent.hpp
+/** @file       EzGL_SDL/CoreEvent.hpp
  *  @brief      Lorem ipsum
  *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
  */
 
-#include "EzSDL/Component.hpp"
+#include "EzGL/Component.hpp"
 
 
 
-namespace EzSDL
+namespace EzGL
 {
 
-/** @brief      Lorem ipsum
- *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
- *              eiusmod tempor incididunt ut labore et dolore magna aliqua.
- */
-template <class T>
-class LogicComponent : public Component
+EZGL_COMPONENT_ENLIST(CoreEvent);
+
+class CoreEvent final : public Component<CoreEvent>
 {
 public:
-    virtual ~LogicComponent() = default;
+    CoreEvent() = default;
+    virtual ~CoreEvent() = default;
 
-    void IInit(Object &object, Game &game) override
-    {
-        static_cast<T*>(this)->init(object, game);
-    }
-
-    void IUpdate(Object &object, Game &game) override
-    {
-        static_cast<T*>(this)->update(object, game);
-    };
-
-    static ComponentPtr create()
-    {
-        return ComponentPtr(new T());
-    };
-
-protected:
-    LogicComponent() = default;
+    void init(Object &object, Core &core);
+    void update(Object &object, Core &core);
 
 private:
-    LogicComponent(LogicComponent const &other) = delete;
-    LogicComponent& operator=(LogicComponent const &other) = delete;
+    CoreEvent(CoreEvent const &) = delete;
+    CoreEvent& operator=(CoreEvent const &) = delete;
 };
 
-}; /* namespace EzSDL */
+}; /* namespace EzGL */
 
 
 
-#endif /* EZSDL_LOGICCOMPONENT_HPP */
+#endif /* EZGL_SDL_COREEVENT_HPP */

@@ -1,4 +1,4 @@
-/*  test_json.cpp
+/*  test_json/main.cpp
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -19,18 +19,15 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-/** @file       test_json.cpp
- *  @brief      Lorem ipsum
- *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+/** @file       test_json/main.cpp
+ *  @brief      Test driving nlohmann::json
  */
 
 #include "nlohmann/json.hpp"
 
-// Prevents "undefined reference to 'SDL_main'" error
-#include <SDL2/SDL.h>
-
 #include <fstream>
 #include <iostream>
+#include <SDL2/SDL.h>
 #include <vector>
 
 
