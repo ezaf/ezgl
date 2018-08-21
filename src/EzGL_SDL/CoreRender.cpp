@@ -31,6 +31,11 @@ namespace EzGL
 
 
 
+SDL_Window* EzGL::CoreRender::Window = 0;
+SDL_Renderer* EzGL::CoreRender::Renderer = 0;
+
+
+
 CoreRender::~CoreRender()
 {
     this->destroy();
@@ -46,22 +51,22 @@ void CoreRender::init(Object &object, Core &core)
     this->destroy();
 
     std::string title = object.data["title"];
-    this->window = SDL_CreateWindow(title.c_str(),
+    CoreRender::Window = SDL_CreateWindow(title.c_str(),
             SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
             object.data["display_width"], object.data["display_height"],
             SDL_WINDOW_ALLOW_HIGHDPI);
 
-    SDL_SetWindowFullscreen(this->window,
+    SDL_SetWindowFullscreen(CoreRender::Window,
             object.data["fullscreen"] ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0 );
-    SDL_SetWindowBordered(this->window,
+    SDL_SetWindowBordered(CoreRender::Window,
             static_cast<SDL_bool>(static_cast<int>(object.data["bordered"])));
-    //SDL_SetWindowIcon(this->window, IMG_Load(object.data["icon"]));
+    //SDL_SetWindowIcon(CoreRender::Window, IMG_Load(object.data["icon"]));
 
-    this->renderer = SDL_CreateRenderer(this->window, -1,
+    CoreRender::Renderer = SDL_CreateRenderer(CoreRender::Window, -1,
             SDL_RENDERER_ACCELERATED);
 
-    SDL_SetRenderDrawColor(this->renderer, 0x00, 0x00, 0x00, 0xFF);
-    SDL_RenderSetLogicalSize(this->renderer,
+    SDL_SetRenderDrawColor(CoreRender::Renderer, 0x00, 0x00, 0x00, 0xFF);
+    SDL_RenderSetLogicalSize(CoreRender::Renderer,
             object.data["render_width"], object.data["render_height"]);
 
     std::string scaling = object.data["scaling"];
@@ -77,16 +82,12 @@ void CoreRender::init(Object &object, Core &core)
 
 void CoreRender::update(Object &object, Core &core)
 {
-    SDL_SetRenderDrawColor(this->renderer, 0xFF, 0x00, 0x00, 0xFF);
-    SDL_Rect rect = { 128, 128, 32, 32 };
-    SDL_RenderFillRect(this->renderer, &rect);
-
-    SDL_RenderPresent(this->renderer);
+    SDL_RenderPresent(CoreRender::Renderer);
 
     // For some reason need to disable this when doing Emscripten
 #ifndef __EMSCRIPTEN__
-    SDL_SetRenderDrawColor(this->renderer, 0x00, 0x00, 0x00, 0xFF);
-    SDL_RenderClear(this->renderer);
+    SDL_SetRenderDrawColor(CoreRender::Renderer, 0x00, 0x00, 0x00, 0xFF);
+    SDL_RenderClear(CoreRender::Renderer);
 #endif
 }
 
@@ -94,16 +95,16 @@ void CoreRender::update(Object &object, Core &core)
 
 void CoreRender::destroy()
 {
-    if (this->renderer != nullptr)
+    if (CoreRender::Renderer != nullptr)
     {
-        SDL_DestroyRenderer(this->renderer);
-        this->renderer = 0;
+        SDL_DestroyRenderer(CoreRender::Renderer);
+        CoreRender::Renderer = 0;
     }
 
-    if (this->window != nullptr)
+    if (CoreRender::Window != nullptr)
     {
-        SDL_DestroyWindow(this->window);
-        this->window = 0;
+        SDL_DestroyWindow(CoreRender::Window);
+        CoreRender::Window = 0;
     }
 }
 

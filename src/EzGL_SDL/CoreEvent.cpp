@@ -50,6 +50,38 @@ void CoreEvent::init(Object &object, Core &core)
 
     object.data["pause"] = false;
     object.data["quit"] = false;
+
+#define KEY(keyname) \
+    object.data["key"][#keyname] = false
+
+    KEY(F1); KEY(F2); KEY(F3); KEY(F4); KEY(F5); KEY(F6); KEY(F7); KEY(F8);
+    KEY(F9); KEY(F10); KEY(F11); KEY(F12); KEY(F13); KEY(F14); KEY(F15);
+    KEY(F16); KEY(F17); KEY(F18); KEY(F19); KEY(F20); KEY(F21); KEY(F22);
+    KEY(F23); KEY(F24);
+
+    KEY(0); KEY(1); KEY(2); KEY(3); KEY(4); KEY(5); KEY(6); KEY(7); KEY(8);
+    KEY(9); KEY(NUMLOCKCLEAR);
+
+    KEY(EQUALS); KEY(MINUS); KEY(QUOTE);
+
+    KEY(a); KEY(b); KEY(c); KEY(d); KEY(e); KEY(f); KEY(g); KEY(h); KEY(i);
+    KEY(j); KEY(k); KEY(l); KEY(m); KEY(n); KEY(o); KEY(p); KEY(q); KEY(r);
+    KEY(s); KEY(t); KEY(u); KEY(v); KEY(w); KEY(x); KEY(y); KEY(z);
+
+    KEY(BACKSLASH); /*KEY(BACKQUOTE);*/ KEY(LEFTBRACKET); KEY(PERIOD);
+    KEY(RIGHTBRACKET); KEY(SEMICOLON); KEY(SLASH);
+
+    KEY(DOWN); KEY(UP); KEY(LEFT); KEY(RIGHT);
+
+    KEY(DELETE); KEY(END); KEY(HOME); KEY(INSERT); KEY(PAGEDOWN); KEY(PAGEUP);
+    KEY(PAUSE); KEY(PRINTSCREEN); KEY(SCROLLLOCK); KEY(SYSREQ);
+
+    KEY(CAPSLOCK); /*KEY(ESCAPE);*/ KEY(LALT); KEY(LCTRL); KEY(LGUI);
+    KEY(LSHIFT); KEY(MENU); KEY(RALT); KEY(RCTRL); KEY(RGUI); KEY(RSHIFT);
+
+    KEY(BACKSPACE); KEY(RETURN); KEY(SPACE); KEY(TAB);
+
+#undef KEY
 }
 
 
@@ -65,19 +97,65 @@ void CoreEvent::update(Object &object, Core &core)
         case SDL_QUIT:
             object.data["quit"] = true;
             break;
+
         case SDL_KEYDOWN:
-            switch (e.key.keysym.scancode)
+        case SDL_KEYUP:
+            switch (e.key.keysym.sym)
             {
 #ifndef __EMSCRIPTEN__
-            case SDL_SCANCODE_ESCAPE:
+            case SDLK_ESCAPE:
                 object.data["quit"] = true;
+                object.data["key"]["ESCAPE"] =
+                    (e.key.type == SDL_KEYDOWN ? true : false);
                 break;
 #endif
-            case SDL_SCANCODE_GRAVE:
+            case SDLK_BACKQUOTE:
                 object.data["pause"] = !object.data["pause"];
+                object.data["key"]["BACKQUOTE"] =
+                    (e.key.type == SDL_KEYDOWN ? true : false);
                 break;
+
+#define KEY(keyname) \
+            case SDLK_##keyname: \
+                object.data["key"][#keyname] = \
+                    (e.key.type == SDL_KEYDOWN ? true : false); \
+                break;
+
+            KEY(F1); KEY(F2); KEY(F3); KEY(F4); KEY(F5); KEY(F6);
+            KEY(F7); KEY(F8); KEY(F9); KEY(F10); KEY(F11); KEY(F12);
+            KEY(F13); KEY(F14); KEY(F15); KEY(F16); KEY(F17); KEY(F18);
+            KEY(F19); KEY(F20); KEY(F21); KEY(F22); KEY(F23); KEY(F24);
+
+            KEY(0); KEY(1); KEY(2); KEY(3); KEY(4); KEY(5); KEY(6);
+            KEY(7); KEY(8); KEY(9); KEY(NUMLOCKCLEAR);
+
+            KEY(EQUALS); KEY(MINUS); KEY(QUOTE);
+
+            KEY(a); KEY(b); KEY(c); KEY(d); KEY(e); KEY(f); KEY(g);
+            KEY(h); KEY(i); KEY(j); KEY(k); KEY(l); KEY(m); KEY(n);
+            KEY(o); KEY(p); KEY(q); KEY(r); KEY(s); KEY(t); KEY(u);
+            KEY(v); KEY(w); KEY(x); KEY(y); KEY(z);
+
+            KEY(BACKSLASH); /*KEY(BACKQUOTE);*/ KEY(LEFTBRACKET);
+            KEY(PERIOD); KEY(RIGHTBRACKET); KEY(SEMICOLON); KEY(SLASH);
+
+            KEY(DOWN); KEY(UP); KEY(LEFT); KEY(RIGHT);
+
+            KEY(DELETE); KEY(END); KEY(HOME); KEY(INSERT); KEY(PAGEDOWN);
+            KEY(PAGEUP); KEY(PAUSE); KEY(PRINTSCREEN); KEY(SCROLLLOCK);
+            KEY(SYSREQ);
+
+            KEY(CAPSLOCK); /*KEY(ESCAPE);*/ KEY(LALT); KEY(LCTRL);
+            KEY(LGUI); KEY(LSHIFT); KEY(MENU); KEY(RALT); KEY(RCTRL);
+            KEY(RGUI); KEY(RSHIFT);
+
+            KEY(BACKSPACE); KEY(RETURN); KEY(SPACE); KEY(TAB);
+
+#undef KEY_SDLK
             }
             break;
+        // End SDL_KEYDOWN || SDL_KEYUP
+
         case SDL_WINDOWEVENT:
             switch (e.window.event)
             {

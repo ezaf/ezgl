@@ -1,4 +1,4 @@
-/*  EzGL_SDL/CoreRender.hpp
+/*  EzGL_SDL/Texture.hpp
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -19,10 +19,10 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef EZGL_SDL_CORERENDER_HPP
-#define EZGL_SDL_CORERENDER_HPP
+#ifndef EZGL_SDL_TEXTURE_HPP
+#define EZGL_SDL_TEXTURE_HPP
 
-/** @file       EzGL_SDL/CoreRender.hpp
+/** @file       EzGL_SDL/Texture.hpp
  *  @brief      Lorem ipsum
  *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
  */
@@ -36,32 +36,31 @@
 namespace EzGL
 {
 
-EZGL_COMPONENT_ENLIST(CoreRender);
+EZGL_COMPONENT_ENLIST(Texture);
 
-class CoreRender : public Component<CoreRender>
+class Texture : public Component<Texture>
 {
 public:
-    CoreRender() = default;
-    virtual ~CoreRender();
+    Texture() = default;
+    virtual ~Texture();
 
     void init(Object &object, Core &core);
     void update(Object &object, Core &core);
 
-    // Texture needs to access SDL_Renderer somehow...
-    static SDL_Window *Window;
-    static SDL_Renderer *Renderer;
-
 protected:
 
 private:
-    CoreRender(CoreRender const &) = delete;
-    CoreRender& operator=(CoreRender const &) = delete;
+    Texture(Texture const &) = delete;
+    Texture& operator=(Texture const &) = delete;
 
     void destroy();
+
+    SDL_Texture *texture;
+    SDL_Rect src, dst;
 };
 
 }; /* namespace EzGL */
 
 
 
-#endif /* EZGL_SDL_CORERENDER_HPP */
+#endif /* EZGL_SDL_TEXTURE_HPP */

@@ -1,4 +1,4 @@
-/*  EzGL_SDL/CoreRender.hpp
+/*  EzGL/Motion.hpp
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -19,49 +19,45 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef EZGL_SDL_CORERENDER_HPP
-#define EZGL_SDL_CORERENDER_HPP
+#ifndef EZGL_MOTION_HPP
+#define EZGL_MOTION_HPP
 
-/** @file       EzGL_SDL/CoreRender.hpp
+/** @file       EzGL/Motion.hpp
  *  @brief      Lorem ipsum
  *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
  */
 
 #include "EzGL/Component.hpp"
 
-#include <SDL2/SDL.h>
-
 
 
 namespace EzGL
 {
 
-EZGL_COMPONENT_ENLIST(CoreRender);
+EZGL_COMPONENT_ENLIST(Motion);
 
-class CoreRender : public Component<CoreRender>
+/** @brief      Lorem ipsum
+ *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+ *              eiusmod tempor incididunt ut labore et dolore magna aliqua.
+ */
+class Motion : public Component<Motion>
 {
 public:
-    CoreRender() = default;
-    virtual ~CoreRender();
+    Motion() = default;
+    virtual ~Motion() = default;
 
     void init(Object &object, Core &core);
     void update(Object &object, Core &core);
 
-    // Texture needs to access SDL_Renderer somehow...
-    static SDL_Window *Window;
-    static SDL_Renderer *Renderer;
-
 protected:
 
 private:
-    CoreRender(CoreRender const &) = delete;
-    CoreRender& operator=(CoreRender const &) = delete;
-
-    void destroy();
+    Motion(Motion const &) = delete;
+    Motion& operator=(Motion const &) = delete;
 };
 
 }; /* namespace EzGL */
 
 
 
-#endif /* EZGL_SDL_CORERENDER_HPP */
+#endif /* EZGL_MOTION_HPP */

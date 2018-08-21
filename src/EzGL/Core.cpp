@@ -126,7 +126,7 @@ void Core::run()
         std::chrono::time_point<Clock> now = Clock::now();
 
         double delta = std::chrono::duration<double>(
-                this->impl->lastFrame - Clock::now()).count() * 1000.0;
+                Clock::now() - this->impl->lastFrame).count();
 
         if (delta > this->data["delta_max"])
             delta = static_cast<double>(this->data["delta_max"]);
@@ -134,6 +134,9 @@ void Core::run()
         this->data["delta"] = delta;
 
         Core::Impl::runOneFrame(*this);
+
+        this->impl->lastFrame = Clock::now();
+        this->impl->updated = false;
 
         if (this->data["vsync"])
         {
@@ -144,9 +147,6 @@ void Core::run()
             if (wait > 0)
                 std::this_thread::sleep_for(std::chrono::milliseconds(wait));
         }
-
-        this->impl->lastFrame = Clock::now();
-        this->impl->updated = false;
     }
 #endif
 }
@@ -156,8 +156,8 @@ void Core::run()
 void Core::addObject(nlohmann::json &config)
 {
     ObjectPtr object(Object::create(config));
-    object->init(Core::Instance());
-    Core::Instance().impl->objects.push_back(std::move(object));
+    object->init(*this);
+    this->impl->objects.push_back(std::move(object));
 }
 
 
