@@ -38,8 +38,8 @@
         ],
         "components": [
             "DummyEvent",
-            "DummyLogic",
             "Motion",
+            "DummyLogic",
             "Texture"
         ]
     }
