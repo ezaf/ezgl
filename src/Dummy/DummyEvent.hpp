@@ -1,4 +1,4 @@
-/*  EzSDL/DummyEvent.hpp
+/*  EzGL/DummyEvent.hpp
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -19,47 +19,43 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef EZSDL_DUMMYEVENT_HPP
-#define EZSDL_DUMMYEVENT_HPP
+#ifndef EZGL_DUMMYEVENT_HPP
+#define EZGL_DUMMYEVENT_HPP
 
-/** @file       EzSDL/DummyEvent.hpp
+/** @file       Dummy/DummyEvent.hpp
  *  @brief      Lorem ipsum
  *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
  */
 
-#include "EzSDL/EventComponent.hpp"
+#include "EzGL/Component.hpp"
 
 
 
-namespace EzSDL
+namespace EzGL
 {
 
-EZSDL_COMPONENT_ENLIST(DummyEvent, EventComponent);
+EZGL_COMPONENT_ENLIST(DummyEvent);
 
 /** @brief      Lorem ipsum
  *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
  *              eiusmod tempor incididunt ut labore et dolore magna aliqua.
  */
-class DummyEvent : public EventComponent<DummyEvent>
+class DummyEvent : public Component<DummyEvent>
 {
 public:
     DummyEvent() = default;
     virtual ~DummyEvent() = default;
 
-    void init(Object &object, Game &game);
-    void update(Object &object, SDL_Event const &event);
-
-protected:
+    void init(Object &object, Core &core);
+    void update(Object &object, Core &core);
 
 private:
-    DummyEvent(DummyEvent const &other);
-    DummyEvent& operator=(DummyEvent const &other);
-
-    bool up, down, left, right;
+    DummyEvent(DummyEvent const &) = delete;
+    DummyEvent& operator=(DummyEvent const &) = delete;
 };
 
-}; /* namespace EzSDL */
+}; /* namespace EzGL */
 
 
 
-#endif /* EZSDL_DUMMYEVENT_HPP */
+#endif /* EZGL_DUMMYEVENT_HPP */

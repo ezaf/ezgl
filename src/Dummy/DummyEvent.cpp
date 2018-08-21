@@ -1,4 +1,4 @@
-/*  EzSDL/DummyEvent.cpp
+/*  EzGL/DummyEvent.cpp
  *
  *  Copythis->right (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -21,80 +21,37 @@
 
 #include "Dummy/DummyEvent.hpp"
 
-#include "EzSDL/Object.hpp"
+#include "EzGL/Core.hpp"
+#include "EzGL/Object.hpp"
 
-#include <SDL2/SDL_events.h>
-
-namespace EzSDL
+namespace EzGL
 {
 
 
 
-void DummyEvent::init(Object &object, Game &game)
+void DummyEvent::init(Object &object, Core &core)
 {
-    this->up = this->down = this->left = this->right = false;
 }
 
 
 
-void DummyEvent::update(Object &object, SDL_Event const &e)
+void DummyEvent::update(Object &object, Core &core)
 {
-    switch (e.type)
-    {
-    case SDL_KEYDOWN:
-        switch (e.key.keysym.scancode)
-        {
-        case SDL_SCANCODE_UP:
-        case SDL_SCANCODE_W:
-            this->up = true;
-            break;
-        case SDL_SCANCODE_DOWN:
-        case SDL_SCANCODE_S:
-            this->down = true;
-            break;
-        case SDL_SCANCODE_LEFT:
-        case SDL_SCANCODE_A:
-            this->left = true;
-            break;
-        case SDL_SCANCODE_RIGHT:
-        case SDL_SCANCODE_D:
-            this->right = true;
-            break;
-        }
-        break;
-    case SDL_KEYUP:
-        switch (e.key.keysym.scancode)
-        {
-        case SDL_SCANCODE_UP:
-        case SDL_SCANCODE_W:
-            this->up = false;
-            break;
-        case SDL_SCANCODE_DOWN:
-        case SDL_SCANCODE_S:
-            this->down = false;
-            break;
-        case SDL_SCANCODE_LEFT:
-        case SDL_SCANCODE_A:
-            this->left = false;
-            break;
-        case SDL_SCANCODE_RIGHT:
-        case SDL_SCANCODE_D:
-            this->right = false;
-            break;
-        }
-        break;
-    }
+    bool up = core.data["key"]["UP"] || core.data["key"]["w"];
+    bool down = core.data["key"]["DOWN"] || core.data["key"]["s"];
+    bool left = core.data["key"]["LEFT"] || core.data["key"]["a"];
+    bool right = core.data["key"]["RIGHT"] || core.data["key"]["d"];
 
-    if (this->up)
+    if (up && !down)
         object.data["dy"] = -static_cast<double>(object.data["speed"]);
-    else if (this->down)
+    else if (down && !up)
         object.data["dy"] = static_cast<double>(object.data["speed"]);
     else
         object.data["dy"] = 0.0;
 
-    if (this->left)
+    if (left && !right)
         object.data["dx"] = -static_cast<double>(object.data["speed"]);
-    else if (this->right)
+    else if (right && !left)
         object.data["dx"] = static_cast<double>(object.data["speed"]);
     else
         object.data["dx"] = 0.0;
@@ -102,4 +59,4 @@ void DummyEvent::update(Object &object, SDL_Event const &e)
 
 
 
-}; /* namespace EzSDL */
+}; /* namespace EzGL */

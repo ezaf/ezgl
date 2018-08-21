@@ -11,7 +11,7 @@
         "bordered": false,
         "scaling": "linear",
         "vsync": true,
-        "delta_max": 100,
+        "delta_max": 0.1,
         "show_cursor": true,
         "objects": {
             "dummy": 1
@@ -29,11 +29,12 @@
         "d2y": 0,
         "w": 64,
         "h": 64,
-        "image": "dummy.png",
+        "image": "data/dummy.png",
         "components": [
             "DummyEvent",
             "DummyLogic",
-            "DummyRender"
+            "Motion",
+            "Texture"
         ]
     }
 }

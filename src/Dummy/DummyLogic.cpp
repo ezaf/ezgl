@@ -1,4 +1,4 @@
-/*  EzSDL/DummyLogic.cpp
+/*  EzGL/DummyLogic.cpp
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -21,27 +21,27 @@
 
 #include "Dummy/DummyLogic.hpp"
 
-#include "EzSDL/Game.hpp"
-#include "EzSDL/Object.hpp"
+#include "EzGL/Core.hpp"
+#include "EzGL/Object.hpp"
 
-namespace EzSDL
+namespace EzGL
 {
 
 
 
-void DummyLogic::init(Object &object, Game &game)
+void DummyLogic::init(Object &object, Core &core)
 {
 }
 
 
 
-void DummyLogic::update(Object &object, Game &game)
+void DummyLogic::update(Object &object, Core &core)
 {
     double const xceil =
-        static_cast<double>(game.data["render_width"]) -
+        static_cast<double>(core.data["render_width"]) -
         static_cast<double>(object.data["w"]);
     double const yceil =
-        static_cast<double>(game.data["render_height"]) -
+        static_cast<double>(core.data["render_height"]) -
         static_cast<double>(object.data["h"]);
 
     if (object.data["x"] > xceil)
@@ -65,15 +65,8 @@ void DummyLogic::update(Object &object, Game &game)
         object.data["y"] = 0;
         object.data["dy"] = 0;
     }
-
-    object.data["x"] = static_cast<double>(object.data["x"]) +
-        (static_cast<double>(object.data["dx"]) *
-         static_cast<double>(game.data["delta"]));
-    object.data["y"] = static_cast<double>(object.data["y"]) +
-        (static_cast<double>(object.data["dy"]) *
-         static_cast<double>(game.data["delta"]));
 }
 
 
 
-}; /* namespace EzSDL */
+}; /* namespace EzGL */

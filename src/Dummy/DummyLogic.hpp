@@ -1,4 +1,4 @@
-/*  EzSDL/DummyLogic.hpp
+/*  EzGL/DummyLogic.hpp
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -19,45 +19,43 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef EZSDL_DUMMYLOGIC_HPP
-#define EZSDL_DUMMYLOGIC_HPP
+#ifndef EZGL_DUMMYLOGIC_HPP
+#define EZGL_DUMMYLOGIC_HPP
 
-/** @file       EzSDL/DummyLogic.hpp
+/** @file       Dummy/DummyLogic.hpp
  *  @brief      Lorem ipsum
  *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
  */
 
-#include "EzSDL/LogicComponent.hpp"
+#include "EzGL/Component.hpp"
 
 
 
-namespace EzSDL
+namespace EzGL
 {
 
-EZSDL_COMPONENT_ENLIST(DummyLogic, LogicComponent);
+EZGL_COMPONENT_ENLIST(DummyLogic);
 
 /** @brief      Lorem ipsum
  *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
  *              eiusmod tempor incididunt ut labore et dolore magna aliqua.
  */
-class DummyLogic : public LogicComponent<DummyLogic>
+class DummyLogic : public Component<DummyLogic>
 {
 public:
     DummyLogic() = default;
     virtual ~DummyLogic() = default;
 
-    void init(Object &object, Game &game);
-    void update(Object &object, Game &game);
-
-protected:
+    void init(Object &object, Core &core);
+    void update(Object &object, Core &core);
 
 private:
-    DummyLogic(DummyLogic const &other);
-    DummyLogic& operator=(DummyLogic const &other);
+    DummyLogic(DummyLogic const &) = delete;
+    DummyLogic& operator=(DummyLogic const &) = delete;
 };
 
-}; /* namespace EzSDL */
+}; /* namespace EzGL */
 
 
 
-#endif /* EZSDL_DUMMYLOGIC_HPP */
+#endif /* EZGL_DUMMYLOGIC_HPP */

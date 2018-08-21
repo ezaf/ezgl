@@ -31,7 +31,7 @@ MODULES = EzGL
 
 # Similar to MODULES, except PLUGINS are not part of the core application and
 # must be dynamically loaded via a shared object (.dll, .so, etc)
-PLUGINS = EzGL_SDL #Dummy
+PLUGINS = EzGL_SDL Dummy
 
 # Directories within ./src of the apps and tests that you want to build.
 MAINS = test_json test_window

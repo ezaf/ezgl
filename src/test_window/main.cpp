@@ -51,12 +51,11 @@ int main(int argc, char *argv[])
     file >> config;
 
     // TODO: load using json file strings
-    //dlopen("Dummy" DLEXT, RTLD_LAZY);
+    dlopen("Dummy" DLEXT, RTLD_LAZY);
 
     EzGL::Core::Instance().init(config["core"]);
+    EzGL::Core::Instance().addObject(config["dummy"]);
     EzGL::Core::Instance().run();
-
-    //EzGL::Core::addObject(config["dummy"]);
 
     return 0;
 }
