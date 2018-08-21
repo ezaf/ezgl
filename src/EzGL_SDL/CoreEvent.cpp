@@ -21,7 +21,7 @@
 
 #include "EzGL_SDL/CoreEvent.hpp"
 
-#include "EzGL/Object.hpp"
+#include "EzGL/Core.hpp"
 
 #include <iostream>
 #include <SDL2/SDL.h>
@@ -48,11 +48,11 @@ void CoreEvent::init(Object &object, Core &core)
             "Initialized all SDL systems." << std::endl;
     }
 
-    object.data["pause"] = false;
-    object.data["quit"] = false;
+    core.data["pause"] = false;
+    core.data["quit"] = false;
 
 #define KEY(keyname) \
-    object.data["key"][#keyname] = false
+    core.data["key"][#keyname] = false
 
     KEY(F1); KEY(F2); KEY(F3); KEY(F4); KEY(F5); KEY(F6); KEY(F7); KEY(F8);
     KEY(F9); KEY(F10); KEY(F11); KEY(F12); KEY(F13); KEY(F14); KEY(F15);
@@ -95,7 +95,7 @@ void CoreEvent::update(Object &object, Core &core)
         switch (e.type)
         {
         case SDL_QUIT:
-            object.data["quit"] = true;
+            core.data["quit"] = true;
             break;
 
         case SDL_KEYDOWN:
@@ -104,20 +104,20 @@ void CoreEvent::update(Object &object, Core &core)
             {
 #ifndef __EMSCRIPTEN__
             case SDLK_ESCAPE:
-                object.data["quit"] = true;
-                object.data["key"]["ESCAPE"] =
+                core.data["quit"] = true;
+                core.data["key"]["ESCAPE"] =
                     (e.key.type == SDL_KEYDOWN ? true : false);
                 break;
 #endif
             case SDLK_BACKQUOTE:
-                object.data["pause"] = !object.data["pause"];
-                object.data["key"]["BACKQUOTE"] =
+                core.data["pause"] = !core.data["pause"];
+                core.data["key"]["BACKQUOTE"] =
                     (e.key.type == SDL_KEYDOWN ? true : false);
                 break;
 
 #define KEY(keyname) \
             case SDLK_##keyname: \
-                object.data["key"][#keyname] = \
+                core.data["key"][#keyname] = \
                     (e.key.type == SDL_KEYDOWN ? true : false); \
                 break;
 
@@ -160,10 +160,10 @@ void CoreEvent::update(Object &object, Core &core)
             switch (e.window.event)
             {
             case SDL_WINDOWEVENT_FOCUS_GAINED:
-                object.data["pause"] = false;
+                core.data["pause"] = false;
                 break;
             case SDL_WINDOWEVENT_FOCUS_LOST:
-                object.data["pause"] = true;
+                core.data["pause"] = true;
                 break;
             }
         }

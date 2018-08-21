@@ -22,7 +22,6 @@
 #include "EzGL_SDL/CoreLogic.hpp"
 
 #include "EzGL/Core.hpp"
-#include "EzGL/Object.hpp"
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
@@ -41,13 +40,13 @@ void CoreLogic::init(Object &object, Core &core)
     SDL_DisplayMode display;
     if (SDL_GetDesktopDisplayMode(0, &display) != 0)
     {
-        display.w = object.data["render_width"];
-        display.h = object.data["render_height"];
+        display.w = core.data["render_width"].get<int>();
+        display.h = core.data["render_height"].get<int>();
 
-        if (object.data["refresh_rate"] == nullptr)
+        if (core.data["refresh_rate"].is_null())
             display.refresh_rate = 60;
         else
-            display.refresh_rate = object.data["refresh_rate"];
+            display.refresh_rate = core.data["refresh_rate"].get<int>();
 
         std::cout << "Failed to get desktop display mode: " <<
             SDL_GetError() << std::endl;
@@ -64,20 +63,20 @@ void CoreLogic::init(Object &object, Core &core)
             " }" << std::endl;
     }
 
-    if (object.data["display_width"] == nullptr)
-        object.data["display_width"] = display.w;
+    if (core.data["display_width"].is_null())
+        core.data["display_width"] = display.w;
 
-    if (object.data["render_width"] == nullptr)
-        object.data["render_width"] = object.data["display_width"];
+    if (core.data["render_width"].is_null())
+        core.data["render_width"] = core.data["display_width"].get<int>();
 
-    if (object.data["display_height"] == nullptr)
-        object.data["display_height"] = display.h;
+    if (core.data["display_height"].is_null())
+        core.data["display_height"] = display.h;
 
-    if (object.data["render_height"] == nullptr)
-        object.data["render_height"] = object.data["display_height"];
+    if (core.data["render_height"].is_null())
+        core.data["render_height"] = core.data["display_height"].get<int>();
 
-    if (object.data["refresh_rate"] == nullptr)
-        object.data["refresh_rate"] = display.refresh_rate;
+    if (core.data["refresh_rate"].is_null())
+        core.data["refresh_rate"] = display.refresh_rate;
 }
 
 

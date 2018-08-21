@@ -26,8 +26,12 @@
  *  @brief      Game engine core singleton. Handles program flow.
  */
 
+#include "EzGL/Object.hpp"
 #include "EzGL/Singleton.hpp"
 #include "nlohmann/json.hpp"
+
+#include <string>
+#include <vector>
 
 
 
@@ -45,13 +49,14 @@ public:
     Core() = default;
     ~Core();
 
-    void init(nlohmann::json &config);
+    void init(std::string const &fileName);
 
     /* Call this one in main */
     void run();
 
-    /* Anyone can call this at any point */
-    void addObject(nlohmann::json &config);
+    /* Anyone can call these at any point */
+    void addObject(std::string const &objectName);
+    std::vector<ObjectPtr> const& getObjects();
 
     /* Only meant to be called by the graphics API LogicComponent. If called
      * more than once per frame, calls following the first are ignored. */

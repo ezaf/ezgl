@@ -25,36 +25,14 @@
 
 #include "EzGL/Core.hpp"
 
-#include "nlohmann/json.hpp"
-
-#include <fstream> // ifstream
-
-#ifdef __linux__
-#include <dlfcn.h>
-#define DLEXT ".so"
-#elif _WIN32
-#include "dlfcn-win32/dlfcn.h"
-#define DLEXT ".dll"
-#endif
-
-// Counteract SDL hijacking
-#define SDL_main main
+// Counteract SDL hijacking `int main` with -Dmain=SDL_main
+#undef main
 
 
 
 int main(int argc, char *argv[])
 {
-    std::ifstream file("data/main.json");
-    if (!file.good()) return 1;
-
-    nlohmann::json config;
-    file >> config;
-
-    // TODO: load using json file strings
-    dlopen("Dummy" DLEXT, RTLD_LAZY);
-
-    EzGL::Core::Instance().init(config["core"]);
-    EzGL::Core::Instance().addObject(config["dummy"]);
+    EzGL::Core::Instance().init((argc == 2) ? argv[2] : "data/main.json");
     EzGL::Core::Instance().run();
 
     return 0;

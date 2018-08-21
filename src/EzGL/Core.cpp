@@ -21,8 +21,6 @@
 
 #include "EzGL/Core.hpp"
 
-#include "EzGL/Object.hpp"
-
 #ifdef __linux__
 #include <dlfcn.h>
 #define DLEXT ".so"
@@ -37,6 +35,7 @@
 
 #include <chrono>
 #include <cmath>
+#include <fstream>
 #include <iostream>
 #include <memory>
 #include <string>
@@ -52,35 +51,14 @@ namespace EzGL
 class Core::Impl
 {
 public:
-    Impl(nlohmann::json &config) :
-        selfObject(),
+    Impl(nlohmann::json config) :
+        selfObject(EzGL::Object::Create(config["core"])),
         objects(),
         lastFrame(Clock::now()),
-        updated(false)
+        updated(false),
+        root(config)
     {
-        std::string api = config["api"];
-        api.append(DLEXT);
-        dlopen(api.c_str(), RTLD_LAZY);
-
-        // Mandatory default names for window-related core API components.
-        // TextureRender must also exist, but the Core class won't use it.
-        config["components"] =
-            { "CoreEvent", "CoreLogic", "CoreRender" };
-
-        this->selfObject = EzGL::Object::create(config);
-        this->selfObject->init(EzGL::Core::Instance());
-
-        for (nlohmann::json::iterator it = config["objects"].begin();
-                it != config["objects"].end();
-                it++)
-        {
-            // Add that kind of object to the game n times
-            for (int i=0; i<it.value(); i++)
-            {
-                //Core::Instance().addObject(config[it.key()]);
-            }
-        }
-    };
+    }
 
     ~Impl() = default;
 
@@ -94,6 +72,8 @@ public:
 
     std::chrono::time_point<Clock> lastFrame;
     bool updated;
+
+    nlohmann::json root;
 };
 
 
@@ -105,12 +85,44 @@ Core::~Core()
 
 
 
-void Core::init(nlohmann::json &config)
+void Core::init(std::string const &fileName)
 {
-    this->data = config;
-
     if (this->impl != nullptr) delete this->impl;
-    this->impl = new Impl(data);
+
+    std::ifstream file(fileName);
+
+    if (!file.good())
+    {
+        std::cout << "Failed to initialize EzGL core with \'" << fileName <<
+            "\'." << std::endl;
+        return;
+    }
+
+    nlohmann::json config;
+    file >> config;
+
+    for (auto &object : config)
+    {
+        for (std::string plugin : object["plugins"])
+        {
+            plugin.append(DLEXT);
+            dlopen(plugin.c_str(), RTLD_LAZY);
+        }
+    }
+
+    this->data = config["core"];
+    this->impl = new Impl(config);
+    this->impl->selfObject->init(*this);
+
+    for (nlohmann::json::iterator it = config["core"]["objects"].begin();
+            it != config["core"]["objects"].end();
+            it++)
+    {
+        for (int i=0; i<it.value(); i++)
+        {
+            this->addObject(it.key());
+        }
+    }
 }
 
 
@@ -119,17 +131,17 @@ void Core::run()
 {
 #ifdef __EMSCRIPTEN__
     emscripten_set_main_loop_arg(Core::Impl::runOneFrame, *this,
-            this->data["refresh_rate"], 1);
+            this->data["refresh_rate"].get<int>(), 1);
 #else
-    while (!this->data["quit"])
+    while (!this->data["quit"].get<bool>())
     {
         std::chrono::time_point<Clock> now = Clock::now();
 
         double delta = std::chrono::duration<double>(
                 Clock::now() - this->impl->lastFrame).count();
 
-        if (delta > this->data["delta_max"])
-            delta = static_cast<double>(this->data["delta_max"]);
+        if (delta > this->data["delta_max"].get<double>())
+            delta = this->data["delta_max"].get<double>();
 
         this->data["delta"] = delta;
 
@@ -138,10 +150,10 @@ void Core::run()
         this->impl->lastFrame = Clock::now();
         this->impl->updated = false;
 
-        if (this->data["vsync"])
+        if (this->data["vsync"].get<bool>())
         {
             long wait = lround(
-                    (1000.0 / static_cast<double>(this->data["refresh_rate"]))
+                    (1000.0 / this->data["refresh_rate"].get<double>())
                     - delta);
 
             if (wait > 0)
@@ -153,9 +165,9 @@ void Core::run()
 
 
 
-void Core::addObject(nlohmann::json &config)
+void Core::addObject(std::string const &objectName)
 {
-    ObjectPtr object(Object::create(config));
+    ObjectPtr object(Object::Create(this->impl->root[objectName]));
     object->init(*this);
     this->impl->objects.push_back(std::move(object));
 }
@@ -166,7 +178,7 @@ void Core::updateObjects()
 {
     if (!this->impl->updated)
     {
-        if (!this->data["pause"])
+        if (!this->data["pause"].get<bool>())
         {
             for (auto &it : this->impl->objects)
             {

@@ -34,13 +34,13 @@ MODULES = EzGL
 PLUGINS = EzGL_SDL Dummy
 
 # Directories within ./src of the apps and tests that you want to build.
-MAINS = test_json test_window
+MAINS = EzGL_Main
 
 # Name of the application(s) you want to test when you call `make test`.
-TEST = test_json
+TEST =
 
 # Name of the application (singular!) you want to run when you call `make run`.
-RUN = test_window
+RUN = EzGL_Main
 
 # When building all, choose whether to build dynamic and/or static mains
 # EzGL: For some reason statically built mains have trouble loading plugins

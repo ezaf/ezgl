@@ -50,7 +50,7 @@ public:
 
 
 
-ObjectPtr Object::create(nlohmann::json &config)
+ObjectPtr Object::Create(nlohmann::json &config)
 {
     return ObjectPtr(new Object(config));
 }

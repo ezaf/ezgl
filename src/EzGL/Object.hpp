@@ -47,13 +47,13 @@ using ObjectPtr = std::unique_ptr<class Object>;
 class Object final
 {
 public:
-    static ObjectPtr create(nlohmann::json &config);
+    static ObjectPtr Create(nlohmann::json &config);
     virtual ~Object();
 
     void init(Core &core);
     void update(Core &core);
 
-    nlohmann::json &data;
+    nlohmann::json data;
 
 private:
     Object(nlohmann::json &config);

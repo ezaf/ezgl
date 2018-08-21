@@ -21,7 +21,7 @@
 
 #include "EzGL_SDL/CoreRender.hpp"
 
-#include "EzGL/Object.hpp"
+#include "EzGL/Core.hpp"
 
 #include <iostream>
 #include <string>
@@ -50,32 +50,37 @@ void CoreRender::init(Object &object, Core &core)
 {
     this->destroy();
 
-    std::string title = object.data["title"];
+    std::string title = core.data["title"].get<std::string>();
     CoreRender::Window = SDL_CreateWindow(title.c_str(),
             SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-            object.data["display_width"], object.data["display_height"],
+            core.data["display_width"].get<int>(),
+            core.data["display_height"].get<int>(),
             SDL_WINDOW_ALLOW_HIGHDPI);
 
     SDL_SetWindowFullscreen(CoreRender::Window,
-            object.data["fullscreen"] ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0 );
+            core.data["fullscreen"].get<bool>() ?
+                SDL_WINDOW_FULLSCREEN_DESKTOP : 0 );
     SDL_SetWindowBordered(CoreRender::Window,
-            static_cast<SDL_bool>(static_cast<int>(object.data["bordered"])));
-    //SDL_SetWindowIcon(CoreRender::Window, IMG_Load(object.data["icon"]));
+            static_cast<SDL_bool>(core.data["bordered"].get<bool>()));
+    //SDL_SetWindowIcon(CoreRender::Window, IMG_Load(core.data["icon"]));
 
     CoreRender::Renderer = SDL_CreateRenderer(CoreRender::Window, -1,
             SDL_RENDERER_ACCELERATED);
 
     SDL_SetRenderDrawColor(CoreRender::Renderer, 0x00, 0x00, 0x00, 0xFF);
     SDL_RenderSetLogicalSize(CoreRender::Renderer,
-            object.data["render_width"], object.data["render_height"]);
+            core.data["render_width"].get<int>(),
+            core.data["render_height"].get<int>());
 
-    std::string scaling = object.data["scaling"];
+    std::string scaling = core.data["scaling"].get<std::string>();
     if (scaling != "linear" && scaling != "nearest")
         scaling = "linear";
 
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, scaling.c_str());
-    SDL_SetHint(SDL_HINT_RENDER_VSYNC, object.data["vsync"] ? "1" : "0");
-    SDL_ShowCursor(object.data["show_cursor"] ? SDL_ENABLE : SDL_DISABLE);
+    SDL_SetHint(SDL_HINT_RENDER_VSYNC, core.data["vsync"].get<bool>() ?
+            "1" : "0");
+    SDL_ShowCursor(core.data["show_cursor"].get<bool>() ?
+            SDL_ENABLE : SDL_DISABLE);
 }
 
 

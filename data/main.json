@@ -1,7 +1,7 @@
 {
     "core": {
-        "api": "EzGL_SDL",
         "title": "EzGL Demo",
+        "icon": null,
         "render_width": 1920,
         "render_height": 1080,
         "display_width": null,
@@ -13,23 +13,29 @@
         "vsync": true,
         "delta_max": 0.1,
         "show_cursor": true,
+        "plugins": [
+            "EzGL_SDL"
+        ],
+        "components": [
+            "CoreEvent",
+            "CoreLogic",
+            "CoreRender"
+        ],
         "objects": {
             "dummy": 1
         }
     },
 
     "dummy": {
-        "x": 0,
-        "y": 64,
+        "x": 256,
+        "y": 256,
         "speed": 1000,
-        "dx": 500,
-        "dy": 0,
-        "accel": 0,
-        "d2x": 0,
-        "d2y": 0,
         "w": 64,
         "h": 64,
         "image": "data/dummy.png",
+        "plugins": [
+            "Dummy"
+        ],
         "components": [
             "DummyEvent",
             "DummyLogic",
