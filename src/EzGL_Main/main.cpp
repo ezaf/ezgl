@@ -1,4 +1,4 @@
-/*  test_window/main.cpp
+/*  EzGL_Main/main.cpp
  *
  *  Copyright (c) 2018 Kirk Lange
  *
@@ -19,13 +19,16 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-/** @file       test_window/main.cpp
- *  @brief      Hello world example for EzGL.
+/** @file       EzGL_Main/main.cpp
+ *  @brief      The only main function you'll ever need!
+ *  @details    You shouldn't have to change the main function whatsoever. All
+ *              programming and customization is done through plugins and
+ *              json configuration files.
  */
 
 #include "EzGL/Core.hpp"
 
-// Counteract SDL hijacking `int main` with -Dmain=SDL_main
+// Counteract SDL2's `-Dmain=SDL_main` hijacking the main function.
 #undef main
 
 
