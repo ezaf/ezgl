@@ -50,7 +50,7 @@ void Texture::init(Object &object, Core &core)
 
     this->destroy();
 
-    std::string file = object.data["image"];
+    std::string file = object.data["texture"];
     SDL_Surface *load = IMG_Load(file.c_str());
 
     if (load == nullptr)
