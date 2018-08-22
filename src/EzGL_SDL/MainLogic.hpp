@@ -1,4 +1,4 @@
-/*  EzGL/Singleton.hpp
+/*  EzGL_SDL/MainLogic.hpp
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -19,46 +19,35 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef EZGL_SINGLETON_HPP
-#define EZGL_SINGLETON_HPP
+#ifndef EZGL_SDL_MAINLOGIC_HPP
+#define EZGL_SDL_MAINLOGIC_HPP
 
-/** @file       EzGL/Singleton.hpp
+/** @file       EzGL_SDL/MainLogic.hpp
  *  @brief      Lorem ipsum
  *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
  */
+
+#include "EzGL/Component.hpp"
 
 
 
 namespace EzGL
 {
 
-/** @brief      Singleton template class. */
-template <class T>
-class Singleton
+EZGL_COMPONENT_ENLIST(MainLogic);
+
+class MainLogic final : public Component<MainLogic>
 {
 public:
-    virtual ~Singleton() = default;
+    MainLogic() = default;
+    ~MainLogic() = default;
 
-    /** @brief      Lorem ipsum
-     *  @details    Apparently this *is* thread safe:
-     *              https://stackoverflow.com/a/26985665/5890633
-     */
-    static T& Instance()
-    {
-        static T instance;
-        return instance;
-    }
-
-protected:
-    Singleton() = default;
-
-private:
-    Singleton(Singleton const &) = delete;
-    Singleton& operator=(Singleton const &) = delete;
+    void init(Object &self, Object &main);
+    void update(Object &self, Object &main);
 };
 
 }; /* namespace EzGL */
 
 
 
-#endif /* EZGL_SINGLETON_HPP */
+#endif /* EZGL_SDL_MAINLOGIC_HPP */

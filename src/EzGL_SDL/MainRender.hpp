@@ -1,4 +1,4 @@
-/*  EzGL_SDL/CoreEvent.hpp
+/*  EzGL_SDL/MainRender.hpp
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -19,39 +19,44 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef EZGL_SDL_COREEVENT_HPP
-#define EZGL_SDL_COREEVENT_HPP
+#ifndef EZGL_SDL_MAINRENDER_HPP
+#define EZGL_SDL_MAINRENDER_HPP
 
-/** @file       EzGL_SDL/CoreEvent.hpp
+/** @file       EzGL_SDL/MainRender.hpp
  *  @brief      Lorem ipsum
  *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
  */
 
 #include "EzGL/Component.hpp"
 
+#include <SDL2/SDL.h>
+
 
 
 namespace EzGL
 {
 
-EZGL_COMPONENT_ENLIST(CoreEvent);
+EZGL_COMPONENT_ENLIST(MainRender);
 
-class CoreEvent final : public Component<CoreEvent>
+class MainRender final : public Component<MainRender>
 {
 public:
-    CoreEvent() = default;
-    virtual ~CoreEvent() = default;
+    MainRender() = default;
+    ~MainRender();
 
-    void init(Object &object, Core &core);
-    void update(Object &object, Core &core);
+    void init(Object &self, Object &main);
+    void update(Object &self, Object &main);
+
+    // Texture needs to access SDL_Renderer somehow...
+    static SDL_Window *Window;
+    static SDL_Renderer *Renderer;
 
 private:
-    CoreEvent(CoreEvent const &) = delete;
-    CoreEvent& operator=(CoreEvent const &) = delete;
+    void destroy();
 };
 
 }; /* namespace EzGL */
 
 
 
-#endif /* EZGL_SDL_COREEVENT_HPP */
+#endif /* EZGL_SDL_MAINRENDER_HPP */

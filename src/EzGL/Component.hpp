@@ -46,22 +46,18 @@ public:
         return ComponentPtr(new T());
     }
 
-    void IInit(Object &object, Core &core) override
+    void IInit(Object &self, Object &main) override
     {
-        static_cast<T*>(this)->init(object, core);
+        static_cast<T*>(this)->init(self, main);
     }
 
-    void IUpdate(Object &object, Core &core) override
+    void IUpdate(Object &self, Object &main) override
     {
-        static_cast<T*>(this)->update(object, core);
+        static_cast<T*>(this)->update(self, main);
     }
 
 protected:
     Component() = default;
-
-private:
-    Component(Component const &) = delete;
-    Component& operator=(Component const &) = delete;
 };
 
 }; /* namespace EzGL */

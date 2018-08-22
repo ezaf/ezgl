@@ -1,5 +1,5 @@
 {
-    "core": {
+    "main": {
         "title": "EzGL Demo",
         "icon": null,
         "render_width": 1920,
@@ -11,15 +11,22 @@
         "bordered": false,
         "scaling": "linear",
         "vsync": true,
-        "delta_max": 0.1,
+        "dt_max": 0.1,
         "show_cursor": true,
+        "controls": {
+            "quit": { "input": "ESCAPE" },
+            "pause": { "input": "BACKQUOTE" },
+            "bordered": { "input": "F10" },
+            "fullscreen": { "input": "F11" }
+        },
         "plugins": [
             "EzGL_SDL"
         ],
         "components": [
-            "CoreEvent",
-            "CoreLogic",
-            "CoreRender"
+            "MainEvent",
+            "Control",
+            "MainLogic",
+            "MainRender"
         ],
         "objects": {
             "dummy-alpha": 1,

@@ -21,7 +21,6 @@
 
 #include "EzGL/Control.hpp"
 
-#include "EzGL/Core.hpp"
 #include "EzGL/Object.hpp"
 
 #include <string>
@@ -31,25 +30,25 @@ namespace EzGL
 
 
 
-void Control::init(Object &object, Core &core)
+void Control::init(Object &self, Object &main)
 {
     // Initialize all statuses to (probably) false or 0
-    for (auto &control : object.data["controls"])
+    for (auto &control : self.data["controls"])
     {
         control["status"] =
-            core.data["input"][control["input"].get<std::string>()];
+            main.data["input"][control["input"].get<std::string>()];
     }
 }
 
 
 
-void Control::update(Object &object, Core &core)
+void Control::update(Object &self, Object &main)
 {
     // Fetch input statuses (same as init)
-    for (auto &control : object.data["controls"])
+    for (auto &control : self.data["controls"])
     {
         control["status"] =
-            core.data["input"][control["input"].get<std::string>()];
+            main.data["input"][control["input"].get<std::string>()];
     }
 }
 

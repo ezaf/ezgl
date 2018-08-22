@@ -1,4 +1,4 @@
-/*  EzGL/DummyLogic.hpp
+/*  Dummy/DummyLogic.hpp
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -36,22 +36,14 @@ namespace EzGL
 
 EZGL_COMPONENT_ENLIST(DummyLogic);
 
-/** @brief      Lorem ipsum
- *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
- *              eiusmod tempor incididunt ut labore et dolore magna aliqua.
- */
-class DummyLogic : public Component<DummyLogic>
+class DummyLogic final : public Component<DummyLogic>
 {
 public:
     DummyLogic() = default;
-    virtual ~DummyLogic() = default;
+    ~DummyLogic() = default;
 
-    void init(Object &object, Core &core);
-    void update(Object &object, Core &core);
-
-private:
-    DummyLogic(DummyLogic const &) = delete;
-    DummyLogic& operator=(DummyLogic const &) = delete;
+    void init(Object &self, Object &main);
+    void update(Object &self, Object &main);
 };
 
 }; /* namespace EzGL */

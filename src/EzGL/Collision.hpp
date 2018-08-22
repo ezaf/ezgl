@@ -44,21 +44,18 @@ EZGL_COMPONENT_ENLIST(Collision);
  *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
  *              eiusmod tempor incididunt ut labore et dolore magna aliqua.
  */
-class Collision : public Component<Collision>
+class Collision final : public Component<Collision>
 {
 public:
     Collision() = default;
     virtual ~Collision() = default;
 
-    void init(Object &object, Core &core);
-    void update(Object &object, Core &core);
+    void init(Object &self, Object &main);
+    void update(Object &self, Object &main);
 
 private:
-    Collision(Collision const &) = delete;
-    Collision& operator=(Collision const &) = delete;
-
     bool isCollision(Object const &alpha, Object const &bravo);
-    void undoTimestep(Object &alpha, Object &bravo, Core &core);
+    void undoTimestep(Object &alpha, Object &bravo, Object &main);
 
     static std::vector<Object*> Objects;
     static long long time;

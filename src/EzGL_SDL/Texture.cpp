@@ -21,8 +21,8 @@
 
 #include "EzGL_SDL/Texture.hpp"
 
+#include "EzGL_SDL/MainRender.hpp"
 #include "EzGL/Object.hpp"
-#include "EzGL_SDL/CoreRender.hpp"
 
 #include <iostream>
 #include <SDL2/SDL_image.h>
@@ -33,6 +33,13 @@ namespace EzGL
 
 
 
+Texture::Texture() :
+    texture(nullptr)
+{
+}
+
+
+
 Texture::~Texture()
 {
     this->destroy();
@@ -40,9 +47,9 @@ Texture::~Texture()
 
 
 
-void Texture::init(Object &object, Core &core)
+void Texture::init(Object &self, Object &main)
 {
-    if (CoreRender::Renderer == nullptr)
+    if (MainRender::Renderer == nullptr)
     {
         std::cout << "SDL Renderer hasn't been initialized yet!" << std::endl;
         return;
@@ -50,9 +57,9 @@ void Texture::init(Object &object, Core &core)
 
     this->destroy();
 
-    if (!object.data["texture"].is_null())
+    if (!self.data["texture"].is_null())
     {
-        std::string file = object.data["texture"];
+        std::string file = self.data["texture"];
         SDL_Surface *load = IMG_Load(file.c_str());
 
         if (load == nullptr)
@@ -63,7 +70,7 @@ void Texture::init(Object &object, Core &core)
         }
 
         load = SDL_ConvertSurfaceFormat(load, SDL_PIXELFORMAT_RGBA8888, 0);
-        texture = SDL_CreateTextureFromSurface(CoreRender::Renderer, load);
+        texture = SDL_CreateTextureFromSurface(MainRender::Renderer, load);
 
         if (texture == nullptr)
         {
@@ -76,12 +83,12 @@ void Texture::init(Object &object, Core &core)
     }
     else
     {
-        if (!object.data["color"].is_null())
+        if (!self.data["color"].is_null())
         {
-            this->color.r = object.data["color"].at(0);
-            this->color.g = object.data["color"].at(1);
-            this->color.b = object.data["color"].at(2);
-            this->color.a = object.data["color"].at(3);
+            this->color.r = self.data["color"].at(0);
+            this->color.g = self.data["color"].at(1);
+            this->color.b = self.data["color"].at(2);
+            this->color.a = self.data["color"].at(3);
         }
         else
         {
@@ -92,24 +99,24 @@ void Texture::init(Object &object, Core &core)
 
 
 
-void Texture::update(Object &object, Core &core)
+void Texture::update(Object &self, Object &main)
 {
     dst = {
-        static_cast<int>(object.data["x"]), static_cast<int>(object.data["y"]),
-        static_cast<int>(object.data["w"]), static_cast<int>(object.data["h"])
+        static_cast<int>(self.data["x"]), static_cast<int>(self.data["y"]),
+        static_cast<int>(self.data["w"]), static_cast<int>(self.data["h"])
     };
 
     if (texture != nullptr)
     {
         // The two 0s are angle (double) and center (SDL_Point*) respectively
-        SDL_RenderCopyEx(CoreRender::Renderer, texture, &src, &dst,
+        SDL_RenderCopyEx(MainRender::Renderer, texture, &src, &dst,
                 0, 0, SDL_FLIP_NONE);
     }
     else
     {
-        SDL_SetRenderDrawColor(CoreRender::Renderer,
+        SDL_SetRenderDrawColor(MainRender::Renderer,
                 color.r, color.g, color.b, color.a);
-        SDL_RenderFillRect(CoreRender::Renderer, &dst);
+        SDL_RenderFillRect(MainRender::Renderer, &dst);
     }
 }
 
@@ -120,7 +127,7 @@ void Texture::destroy()
     if (this->texture != nullptr)
     {
         SDL_DestroyTexture(this->texture);
-        this->texture = 0;
+        this->texture = nullptr;
     }
 
     src = {0, 0, 0, 0};

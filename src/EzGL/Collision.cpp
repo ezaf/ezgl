@@ -21,9 +21,8 @@
 
 #include "EzGL/Collision.hpp"
 
-#include "EzGL/Core.hpp"
-#include "EzGL/Motion.hpp"
 #include "EzGL/Object.hpp"
+#include "EzGL/Motion.hpp"
 
 namespace EzGL
 {
@@ -35,91 +34,93 @@ std::vector<Object*> Collision::Objects;
 
 
 
-void Collision::init(Object &object, Core &core)
+void Collision::init(Object &self, Object &main)
 {
-    if (object.data["x"].is_null()) object.data["x"] = 0;
-    if (object.data["y"].is_null()) object.data["y"] = 0;
-    if (object.data["z"].is_null()) object.data["z"] = 0;
+    if (self.data["x"].is_null()) self.data["x"] = 0;
+    if (self.data["y"].is_null()) self.data["y"] = 0;
+    if (self.data["z"].is_null()) self.data["z"] = 0;
 
-    if (object.data["impact_resolve"].is_null())
-        object.data["impact_resolve"] = 4;
+    if (self.data["impact_resolve"].is_null())
+        self.data["impact_resolve"] = 4;
 
-    if (object.data["hitbox"].is_null()) object.data["hitbox"] = "rectangle";
+    if (self.data["hitbox"].is_null()) self.data["hitbox"] = "rectangle";
 
-    if (object.data["hitbox"] == "rectangle")
+    if (self.data["hitbox"] == "rectangle")
     {
-        if (object.data["w"].is_null()) object.data["w"] = 0;
-        if (object.data["h"].is_null()) object.data["h"] = 0;
-        if (object.data["d"].is_null()) object.data["d"] = 0;
+        if (self.data["w"].is_null()) self.data["w"] = 0;
+        if (self.data["h"].is_null()) self.data["h"] = 0;
+        if (self.data["d"].is_null()) self.data["d"] = 0;
     }
-    else if (object.data["hitbox"] == "circle")
+    else if (self.data["hitbox"] == "circle")
     {
-        if (object.data["r"].is_null()) object.data["r"] = 0;
+        if (self.data["r"].is_null()) self.data["r"] = 0;
 
         // WARNING: circles are actually treated as squares right now...
-        object.data["w"] = object.data["r"];
-        object.data["h"] = object.data["r"];
-        object.data["d"] = object.data["r"];
+        self.data["w"] = self.data["r"];
+        self.data["h"] = self.data["r"];
+        self.data["d"] = self.data["r"];
     }
 
-    object.data["collided"] = false;
-    Collision::Objects.push_back(&object);
+    self.data["collided"] = false;
+    Collision::Objects.push_back(&self);
 }
 
 
 
-void Collision::update(Object &object, Core &core)
+void Collision::update(Object &self, Object &main)
 {
-    if (Collision::time != core.data["time"])
+    if (Collision::time != main.data["time"])
     {
         for (Object *other : Collision::Objects)
+        {
             other->data["collided"] = false;
-        Collision::time = core.data["time"];
+        }
+        Collision::time = main.data["t"];
     }
 
     // TODO: damn it this is O(n^2)
     for (Object *other : Collision::Objects)
     {
-        if (&object != other && this->isCollision(object, *other))
+        if (&self != other && this->isCollision(self, *other))
         {
-            object.data["collided"] = true;
+            self.data["collided"] = true;
             other->data["collided"] = true;
-            object.other = other;
-            other->other = &object;
+            self.other = other;
+            other->other = &self;
 
-            if (object.data["impact_resolve"] > 0)
+            if (self.data["impact_resolve"] > 0)
             {
-                double origObjDX = object.data["dx"].get<double>();
-                double origObjDY = object.data["dy"].get<double>();
-                double origObjDZ = object.data["dz"].get<double>();
+                double origObjDX = self.data["dx"].get<double>();
+                double origObjDY = self.data["dy"].get<double>();
+                double origObjDZ = self.data["dz"].get<double>();
                 double origOthDX = other->data["dx"].get<double>();
                 double origOthDY = other->data["dy"].get<double>();
                 double origOthDZ = other->data["dz"].get<double>();
 
                 Motion motion;
-                for (int i=0; i<object.data["impact_resolve"] &&
-                        this->isCollision(object, *other); i++)
+                for (int i=0; i<self.data["impact_resolve"] &&
+                        this->isCollision(self, *other); i++)
                 {
-                    this->undoTimestep(object, *other, core);
+                    this->undoTimestep(self, *other, main);
 
-                    object.data["dx"] = object.data["dx"].get<double>() / 2.0;
-                    object.data["dy"] = object.data["dy"].get<double>() / 2.0;
-                    object.data["dz"] = object.data["dz"].get<double>() / 2.0;
+                    self.data["dx"] = self.data["dx"].get<double>() / 2.0;
+                    self.data["dy"] = self.data["dy"].get<double>() / 2.0;
+                    self.data["dz"] = self.data["dz"].get<double>() / 2.0;
 
                     other->data["dx"] = other->data["dx"].get<double>() / 2.0;
                     other->data["dy"] = other->data["dy"].get<double>() / 2.0;
                     other->data["dz"] = other->data["dz"].get<double>() / 2.0;
 
-                    motion.update(object, core);
-                    motion.update(*other, core);
+                    motion.update(self, main);
+                    motion.update(*other, main);
                 }
 
-                if (this->isCollision(object, *other))
-                    this->undoTimestep(object, *other, core);
+                if (this->isCollision(self, *other))
+                    this->undoTimestep(self, *other, main);
 
-                object.data["dx"] = origObjDX;
-                object.data["dy"] = origObjDY;
-                object.data["dz"] = origObjDZ;
+                self.data["dx"] = origObjDX;
+                self.data["dy"] = origObjDY;
+                self.data["dz"] = origObjDZ;
                 other->data["dx"] = origOthDX;
                 other->data["dy"] = origOthDY;
                 other->data["dz"] = origOthDZ;
@@ -149,13 +150,13 @@ bool Collision::isCollision(Object const &alpha, Object const &bravo)
 
 
 
-void Collision::undoTimestep(Object &alpha, Object &bravo, Core &core)
+void Collision::undoTimestep(Object &alpha, Object &bravo, Object &main)
 {
     Motion motion;
-    core.data["delta"] = -core.data["delta"].get<double>();
-    motion.update(alpha, core);
-    motion.update(bravo, core);
-    core.data["delta"] = -core.data["delta"].get<double>();
+    main.data["dt"] = -main.data["dt"].get<double>();
+    motion.update(alpha, main);
+    motion.update(bravo, main);
+    main.data["dt"] = -main.data["dt"].get<double>();
 }
 
 

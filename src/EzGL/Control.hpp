@@ -40,20 +40,14 @@ EZGL_COMPONENT_ENLIST(Control);
  *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
  *              eiusmod tempor incididunt ut labore et dolore magna aliqua.
  */
-class Control : public Component<Control>
+class Control final : public Component<Control>
 {
 public:
     Control() = default;
     virtual ~Control() = default;
 
-    void init(Object &object, Core &core);
-    void update(Object &object, Core &core);
-
-protected:
-
-private:
-    Control(Control const &) = delete;
-    Control& operator=(Control const &) = delete;
+    void init(Object &self, Object &main);
+    void update(Object &self, Object &main);
 };
 
 }; /* namespace EzGL */

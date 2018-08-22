@@ -28,7 +28,6 @@
  */
 
 #include "EzGL/IComponent.hpp"
-#include "EzGL/Singleton.hpp"
 
 #include <map>
 #include <memory>
@@ -39,7 +38,7 @@
 
 #define EZGL_COMPONENT_ENLIST(Obj) \
 EzGL::ComponentFactory::Key const Obj##ComponentID = \
-    EzGL::ComponentFactory::Instance().enlist<Component<class Obj>>(#Obj)
+    EzGL::ComponentFactory::Enlist<Component<class Obj>>(#Obj)
 
 
 
@@ -50,26 +49,26 @@ using ComponentPtr = std::unique_ptr<class IComponent>;
 using ComponentVec = std::vector<ComponentPtr>;
 
 /** @brief      Component smart pointer factory. */
-class ComponentFactory final : public Singleton<ComponentFactory>
+class ComponentFactory final
 {
 public:
     /** @brief      Key/ID type used when enlisting and creating components. */
     using Key = std::string;
 
-    ComponentPtr create(Key const &key);
+    static ComponentPtr Create(Key const &key);
 
     /* T is a container of keys with iterator support */
     template <typename T>
-    ComponentVec create(T const &keys)
+    static ComponentVec Create(T const &keys)
     {
         ComponentVec components;
         for (Key const &key : keys)
-            components.push_back(this->create(key));
+            components.push_back(ComponentFactory::Create(key));
         return components;
     }
 
     template <class T>
-    Key enlist(Key const &key)
+    static Key Enlist(Key const &key)
     {
         if (ComponentFactory::GetComponentMap().count(key) == 0)
             ComponentFactory::GetComponentMap()[key] = T::Create;
@@ -77,8 +76,11 @@ public:
     }
 
 private:
+    ComponentFactory() = default;
+    ComponentFactory(ComponentFactory const &) = delete;
+    ComponentFactory& operator=(ComponentFactory const &) = delete;
+
     using ComponentMap = std::map<Key, ComponentPtr (*)()>;
-    // Yes, this needs to be static too...
     static ComponentMap& GetComponentMap();
 };
 

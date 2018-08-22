@@ -38,21 +38,16 @@ namespace EzGL
 
 EZGL_COMPONENT_ENLIST(Texture);
 
-class Texture : public Component<Texture>
+class Texture final : public Component<Texture>
 {
 public:
-    Texture() = default;
-    virtual ~Texture();
+    Texture();
+    ~Texture();
 
-    void init(Object &object, Core &core);
-    void update(Object &object, Core &core);
-
-protected:
+    void init(Object &self, Object &main);
+    void update(Object &self, Object &main);
 
 private:
-    Texture(Texture const &) = delete;
-    Texture& operator=(Texture const &) = delete;
-
     void destroy();
 
     SDL_Texture *texture;

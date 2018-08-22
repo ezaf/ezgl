@@ -28,7 +28,7 @@ namespace EzGL
 
 
 
-ComponentPtr ComponentFactory::create(Key const &key)
+ComponentPtr ComponentFactory::Create(Key const &key)
 {
     typename ComponentMap::iterator it =
         ComponentFactory::GetComponentMap().find(key);

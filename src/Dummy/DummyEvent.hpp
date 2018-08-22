@@ -1,4 +1,4 @@
-/*  EzGL/DummyEvent.hpp
+/*  Dummy/DummyEvent.hpp
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -36,22 +36,14 @@ namespace EzGL
 
 EZGL_COMPONENT_ENLIST(DummyEvent);
 
-/** @brief      Lorem ipsum
- *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
- *              eiusmod tempor incididunt ut labore et dolore magna aliqua.
- */
-class DummyEvent : public Component<DummyEvent>
+class DummyEvent final : public Component<DummyEvent>
 {
 public:
     DummyEvent() = default;
-    virtual ~DummyEvent() = default;
+    ~DummyEvent() = default;
 
-    void init(Object &object, Core &core);
-    void update(Object &object, Core &core);
-
-private:
-    DummyEvent(DummyEvent const &) = delete;
-    DummyEvent& operator=(DummyEvent const &) = delete;
+    void init(Object &self, Object &main);
+    void update(Object &self, Object &main);
 };
 
 }; /* namespace EzGL */

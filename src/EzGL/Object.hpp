@@ -30,6 +30,7 @@
 #include "nlohmann/json.hpp"
 
 #include <memory>
+#include <string>
 
 
 
@@ -47,16 +48,18 @@ using ObjectPtr = std::unique_ptr<class Object>;
 class Object final
 {
 public:
-    static ObjectPtr Create(nlohmann::json &config);
-    virtual ~Object();
+    static int Main(std::string const &fileName);
+    static Object& Create(std::string const &objectName);
+    static void UpdateAll();
+    ~Object();
 
-    void init(Core &core);
-    void update(Core &core);
+    void init(Object &main);
+    void update(Object &main);
 
     nlohmann::json data;
 
-    // Temporary holder for when two objects interact such as collision
-    Object *other;
+    // Public holder for when two objects interact such as collision
+    Object const *other;
 
 private:
     Object(nlohmann::json &config);

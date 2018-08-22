@@ -1,4 +1,4 @@
-/*  EzGL/DummyEvent.cpp
+/*  Dummy/DummyEvent.cpp
  *
  *  Copythis->right (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -21,7 +21,6 @@
 
 #include "Dummy/DummyEvent.hpp"
 
-#include "EzGL/Core.hpp"
 #include "EzGL/Object.hpp"
 
 namespace EzGL
@@ -29,32 +28,32 @@ namespace EzGL
 
 
 
-void DummyEvent::init(Object &object, Core &core)
+void DummyEvent::init(Object &self, Object &main)
 {
 }
 
 
 
-void DummyEvent::update(Object &object, Core &core)
+void DummyEvent::update(Object &self, Object &main)
 {
-    bool up = object.data["controls"]["up"]["status"];
-    bool down = object.data["controls"]["down"]["status"];
-    bool left = object.data["controls"]["left"]["status"];
-    bool right = object.data["controls"]["right"]["status"];
+    bool up = self.data["controls"]["up"]["status"];
+    bool down = self.data["controls"]["down"]["status"];
+    bool left = self.data["controls"]["left"]["status"];
+    bool right = self.data["controls"]["right"]["status"];
 
     if (up && !down)
-        object.data["dy"] = -static_cast<double>(object.data["speed"]);
+        self.data["dy"] = -static_cast<double>(self.data["speed"]);
     else if (down && !up)
-        object.data["dy"] = static_cast<double>(object.data["speed"]);
+        self.data["dy"] = static_cast<double>(self.data["speed"]);
     else
-        object.data["dy"] = 0.0;
+        self.data["dy"] = 0.0;
 
     if (left && !right)
-        object.data["dx"] = -static_cast<double>(object.data["speed"]);
+        self.data["dx"] = -static_cast<double>(self.data["speed"]);
     else if (right && !left)
-        object.data["dx"] = static_cast<double>(object.data["speed"]);
+        self.data["dx"] = static_cast<double>(self.data["speed"]);
     else
-        object.data["dx"] = 0.0;
+        self.data["dx"] = 0.0;
 }
 
 

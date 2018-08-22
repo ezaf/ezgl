@@ -26,7 +26,7 @@
  *              json configuration files.
  */
 
-#include "EzGL/Core.hpp"
+#include "EzGL/Object.hpp"
 
 // Counteract SDL2's `-Dmain=SDL_main` hijacking the main function.
 #undef main
@@ -35,8 +35,5 @@
 
 int main(int argc, char *argv[])
 {
-    EzGL::Core::Instance().init((argc == 2) ? argv[2] : "data/main.json");
-    EzGL::Core::Instance().run();
-
-    return 0;
+    return EzGL::Object::Main((argc == 2) ? argv[2] : "data/main.json");
 }

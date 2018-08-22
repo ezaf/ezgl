@@ -40,20 +40,14 @@ EZGL_COMPONENT_ENLIST(Motion);
  *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
  *              eiusmod tempor incididunt ut labore et dolore magna aliqua.
  */
-class Motion : public Component<Motion>
+class Motion final : public Component<Motion>
 {
 public:
     Motion() = default;
-    virtual ~Motion() = default;
+    ~Motion() = default;
 
-    void init(Object &object, Core &core);
-    void update(Object &object, Core &core);
-
-protected:
-
-private:
-    Motion(Motion const &) = delete;
-    Motion& operator=(Motion const &) = delete;
+    void init(Object &self, Object &main);
+    void update(Object &self, Object &main);
 };
 
 }; /* namespace EzGL */

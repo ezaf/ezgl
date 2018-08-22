@@ -32,15 +32,14 @@
 namespace EzGL
 {
 
-class Core;
 class Object;
 
 class IComponent
 {
 public:
     virtual ~IComponent() = default;
-    virtual void IInit(Object &object, Core &core) = 0;
-    virtual void IUpdate(Object &object, Core &core) = 0;
+    virtual void IInit(Object &self, Object &main) = 0;
+    virtual void IUpdate(Object &self, Object &main) = 0;
 
 protected:
     IComponent() = default;

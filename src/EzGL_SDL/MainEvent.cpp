@@ -1,4 +1,4 @@
-/*  EzGL_SDL/CoreEvent.cpp
+/*  EzGL_SDL/MainEvent.cpp
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -19,9 +19,9 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-#include "EzGL_SDL/CoreEvent.hpp"
+#include "EzGL_SDL/MainEvent.hpp"
 
-#include "EzGL/Core.hpp"
+#include "EzGL/Object.hpp"
 
 #include <iostream>
 #include <SDL2/SDL.h>
@@ -31,7 +31,7 @@ namespace EzGL
 
 
 
-void CoreEvent::init(Object &object, Core &core)
+void MainEvent::init(Object &self, Object &main)
 {
     // TODO: If SDL wasn't initialized already
     if (true)
@@ -48,11 +48,11 @@ void CoreEvent::init(Object &object, Core &core)
             "Initialized all SDL systems." << std::endl;
     }
 
-    core.data["pause"] = false;
-    core.data["quit"] = false;
+    self.data["pause"] = false;
+    self.data["quit"] = false;
 
 #define KEY(keyname) \
-    core.data["input"][#keyname] = false
+    self.data["input"][#keyname] = false
 
     KEY(F1); KEY(F2); KEY(F3); KEY(F4); KEY(F5); KEY(F6); KEY(F7); KEY(F8);
     KEY(F9); KEY(F10); KEY(F11); KEY(F12); KEY(F13); KEY(F14); KEY(F15);
@@ -68,7 +68,7 @@ void CoreEvent::init(Object &object, Core &core)
     KEY(j); KEY(k); KEY(l); KEY(m); KEY(n); KEY(o); KEY(p); KEY(q); KEY(r);
     KEY(s); KEY(t); KEY(u); KEY(v); KEY(w); KEY(x); KEY(y); KEY(z);
 
-    KEY(BACKSLASH); /*KEY(BACKQUOTE);*/ KEY(LEFTBRACKET); KEY(PERIOD);
+    KEY(BACKSLASH); KEY(BACKQUOTE); KEY(LEFTBRACKET); KEY(PERIOD);
     KEY(RIGHTBRACKET); KEY(SEMICOLON); KEY(SLASH);
 
     KEY(DOWN); KEY(UP); KEY(LEFT); KEY(RIGHT);
@@ -76,8 +76,8 @@ void CoreEvent::init(Object &object, Core &core)
     KEY(DELETE); KEY(END); KEY(HOME); KEY(INSERT); KEY(PAGEDOWN); KEY(PAGEUP);
     KEY(PAUSE); KEY(PRINTSCREEN); KEY(SCROLLLOCK); KEY(SYSREQ);
 
-    KEY(CAPSLOCK); /*KEY(ESCAPE);*/ KEY(LALT); KEY(LCTRL); KEY(LGUI);
-    KEY(LSHIFT); KEY(MENU); KEY(RALT); KEY(RCTRL); KEY(RGUI); KEY(RSHIFT);
+    KEY(CAPSLOCK); KEY(ESCAPE); KEY(LALT); KEY(LCTRL); KEY(LGUI); KEY(LSHIFT);
+    KEY(MENU); KEY(RALT); KEY(RCTRL); KEY(RGUI); KEY(RSHIFT);
 
     KEY(BACKSPACE); KEY(RETURN); KEY(SPACE); KEY(TAB);
 
@@ -86,7 +86,7 @@ void CoreEvent::init(Object &object, Core &core)
 
 
 
-void CoreEvent::update(Object &object, Core &core)
+void MainEvent::update(Object &self, Object &main)
 {
     SDL_Event e;
 
@@ -95,29 +95,16 @@ void CoreEvent::update(Object &object, Core &core)
         switch (e.type)
         {
         case SDL_QUIT:
-            core.data["quit"] = true;
+            self.data["quit"] = true;
             break;
 
         case SDL_KEYDOWN:
         case SDL_KEYUP:
             switch (e.key.keysym.sym)
             {
-#ifndef __EMSCRIPTEN__
-            case SDLK_ESCAPE:
-                core.data["quit"] = true;
-                core.data["input"]["ESCAPE"] =
-                    (e.key.type == SDL_KEYDOWN ? true : false);
-                break;
-#endif
-            case SDLK_BACKQUOTE:
-                core.data["pause"] = !core.data["pause"];
-                core.data["input"]["BACKQUOTE"] =
-                    (e.key.type == SDL_KEYDOWN ? true : false);
-                break;
-
 #define KEY(keyname) \
             case SDLK_##keyname: \
-                core.data["input"][#keyname] = \
+                self.data["input"][#keyname] = \
                     (e.key.type == SDL_KEYDOWN ? true : false); \
                 break;
 
@@ -136,8 +123,8 @@ void CoreEvent::update(Object &object, Core &core)
             KEY(o); KEY(p); KEY(q); KEY(r); KEY(s); KEY(t); KEY(u);
             KEY(v); KEY(w); KEY(x); KEY(y); KEY(z);
 
-            KEY(BACKSLASH); /*KEY(BACKQUOTE);*/ KEY(LEFTBRACKET);
-            KEY(PERIOD); KEY(RIGHTBRACKET); KEY(SEMICOLON); KEY(SLASH);
+            KEY(BACKSLASH); KEY(BACKQUOTE); KEY(LEFTBRACKET); KEY(PERIOD);
+            KEY(RIGHTBRACKET); KEY(SEMICOLON); KEY(SLASH);
 
             KEY(DOWN); KEY(UP); KEY(LEFT); KEY(RIGHT);
 
@@ -145,9 +132,9 @@ void CoreEvent::update(Object &object, Core &core)
             KEY(PAGEUP); KEY(PAUSE); KEY(PRINTSCREEN); KEY(SCROLLLOCK);
             KEY(SYSREQ);
 
-            KEY(CAPSLOCK); /*KEY(ESCAPE);*/ KEY(LALT); KEY(LCTRL);
-            KEY(LGUI); KEY(LSHIFT); KEY(MENU); KEY(RALT); KEY(RCTRL);
-            KEY(RGUI); KEY(RSHIFT);
+            KEY(CAPSLOCK); KEY(ESCAPE); KEY(LALT); KEY(LCTRL); KEY(LGUI);
+            KEY(LSHIFT); KEY(MENU); KEY(RALT); KEY(RCTRL); KEY(RGUI);
+            KEY(RSHIFT);
 
             KEY(BACKSPACE); KEY(RETURN); KEY(SPACE); KEY(TAB);
 
@@ -160,10 +147,10 @@ void CoreEvent::update(Object &object, Core &core)
             switch (e.window.event)
             {
             case SDL_WINDOWEVENT_FOCUS_GAINED:
-                core.data["pause"] = false;
+                self.data["pause"] = false;
                 break;
             case SDL_WINDOWEVENT_FOCUS_LOST:
-                core.data["pause"] = true;
+                self.data["pause"] = true;
                 break;
             }
         }

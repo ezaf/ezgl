@@ -21,12 +21,30 @@
 
 #include "EzGL/Object.hpp"
 
-#include "EzGL/Core.hpp"
 #include "EzGL/ComponentFactory.hpp"
 #include "EzGL/IComponent.hpp"
 
+#ifdef __linux__
+#include <dlfcn.h>
+#define DLEXT ".so"
+#elif _WIN32
+#include "dlfcn-win32/dlfcn.h"
+#define DLEXT ".dll"
+#endif
+
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#endif
+
+#include <chrono>
+#include <cstdlib>
+#include <fstream>
+#include <iostream>
 #include <string>
+#include <thread>
 #include <vector>
+
+using Clock = std::chrono::high_resolution_clock;
 
 namespace EzGL
 {
@@ -36,8 +54,8 @@ namespace EzGL
 class Object::Impl
 {
 public:
-    Impl(nlohmann::json &config) :
-        components(ComponentFactory::Instance().create(config["components"]))
+    Impl(nlohmann::json const &config) :
+        components(ComponentFactory::Create(config["components"]))
     {
     }
 
@@ -48,13 +66,128 @@ public:
     }
 
     std::vector<ComponentPtr> components;
+
+    // Need a static function for emscripten's sake
+    static void UpdateMain(Object &main) { main.update(main); }
+
+    static nlohmann::json Root;
+    static bool Updated;
+    static ObjectPtr MainObject;
+    static std::vector<ObjectPtr> Objects;
 };
 
+nlohmann::json Object::Impl::Root;
+bool Object::Impl::Updated = false;
+ObjectPtr Object::Impl::MainObject;
+std::vector<ObjectPtr> Object::Impl::Objects;
 
 
-ObjectPtr Object::Create(nlohmann::json &config)
+
+int Object::Main(std::string const &fileName)
 {
-    return ObjectPtr(new Object(config));
+    // Load file
+    std::ifstream file(fileName);
+    if (!file.good())
+    {
+        std::cout << "Failed to load main json file \'" << fileName <<
+            "\'." << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    std::cout << "Successfully loaded main json file \'" << fileName <<
+        "\'." << std::endl;
+    file >> Object::Impl::Root;
+    file.close();
+
+    // Load all plugins
+    for (auto &objname : Object::Impl::Root)
+    {
+        for (std::string plugin : objname["plugins"])
+        {
+            plugin.append(DLEXT);
+            dlopen(plugin.c_str(), RTLD_LAZY);
+        }
+    }
+
+    // Initialize main
+    Object::Impl::MainObject.reset(new Object(Object::Impl::Root["main"]));
+    Object &main = *Object::Impl::MainObject;
+    main.init(main);
+
+    // Spawn all initial objects
+    for (nlohmann::json::iterator it = main.data["objects"].begin();
+            it != main.data["objects"].end(); it++)
+    {
+        for (int i=0; i<it.value(); i++)
+        {
+            Object::Create(it.key());
+        }
+    }
+
+    // Main loop
+#ifdef __EMSCRIPTEN__
+    emscripten_set_main_loop_arg(Object::Impl::UpdateMain, main,
+            main.data["refresh_rate"].get<int>(), 1);
+#else
+    std::chrono::time_point<Clock> prev = Clock::now();
+
+    while (!main.data["quit"].get<bool>())
+    {
+        std::chrono::time_point<Clock> now = Clock::now();
+        double dt = std::chrono::duration<double>(now - prev).count();
+
+        if (dt > main.data["dt_max"].get<double>())
+            dt = main.data["dt_max"].get<double>();
+
+        main.data["dt"] = dt;
+        main.data["t"] = std::chrono::duration_cast
+            <std::chrono::milliseconds>(now.time_since_epoch()).count();
+
+        Object::Impl::UpdateMain(main);
+
+        prev = Clock::now();
+        Object::Impl::Updated = false;
+
+        if (main.data["vsync"].get<bool>())
+        {
+            long wait = lround(
+                    (1000.0 / main.data["refresh_rate"].get<double>()) - dt);
+
+            if (wait > 0)
+                std::this_thread::sleep_for(std::chrono::milliseconds(wait));
+        }
+    }
+#endif
+
+    Object::Impl::MainObject.reset();
+
+    return EXIT_SUCCESS;
+}
+
+
+
+Object& Object::Create(std::string const &objectName)
+{
+    ObjectPtr object(new Object(Object::Impl::Root[objectName]));
+    object->init(*Object::Impl::MainObject);
+    Object::Impl::Objects.push_back(std::move(object));
+    return *object; // TODO: Verify if still points to object after std::move
+}
+
+
+
+void Object::UpdateAll()
+{
+    // Won't update if called more than once per frame
+    if (!Object::Impl::Updated)
+    {
+        for (auto &it : Object::Impl::Objects)
+        {
+            it->update(*Object::Impl::MainObject);
+        }
+
+        Object::Impl::Updated = true;
+    }
 }
 
 
@@ -62,7 +195,7 @@ ObjectPtr Object::Create(nlohmann::json &config)
 Object::Object(nlohmann::json &config) :
     data(config),
     other(nullptr),
-    impl(nullptr)
+    impl(nullptr) // Must load inherits first in init
 {
 }
 
@@ -75,13 +208,13 @@ Object::~Object()
 
 
 
-void Object::init(Core &core)
+void Object::init(Object &main)
 {
     if (!this->data["inherit"].is_null())
     {
         // Have this->data override what it inherits from
-        nlohmann::json temp =
-            core.getFromRoot(this->data["inherit"].get<std::string>());
+        nlohmann::json temp = Object::Impl::Root[
+            this->data["inherit"].get<std::string>()];
         temp.merge_patch(this->data);
         this->data = temp;
     }
@@ -90,17 +223,17 @@ void Object::init(Core &core)
 
     for (auto &it : this->impl->components)
     {
-        it->IInit(*this, core);
+        it->IInit(*this, main);
     }
 }
 
 
 
-void Object::update(Core &core)
+void Object::update(Object &main)
 {
     for (auto &it : this->impl->components)
     {
-        it->IUpdate(*this, core);
+        it->IUpdate(*this, main);
     }
 }
 

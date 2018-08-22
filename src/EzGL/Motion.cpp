@@ -21,7 +21,6 @@
 
 #include "EzGL/Motion.hpp"
 
-#include "EzGL/Core.hpp"
 #include "EzGL/Object.hpp"
 
 namespace EzGL
@@ -29,38 +28,38 @@ namespace EzGL
 
 
 
-void Motion::init(Object &object, Core &core)
+void Motion::init(Object &self, Object &main)
 {
-    if (object.data["x"].is_null()) object.data["x"] = 0;
-    if (object.data["y"].is_null()) object.data["y"] = 0;
-    if (object.data["z"].is_null()) object.data["z"] = 0;
+    if (self.data["x"].is_null()) self.data["x"] = 0;
+    if (self.data["y"].is_null()) self.data["y"] = 0;
+    if (self.data["z"].is_null()) self.data["z"] = 0;
 
-    if (object.data["dx"].is_null()) object.data["dx"] = 0;
-    if (object.data["dy"].is_null()) object.data["dy"] = 0;
-    if (object.data["dz"].is_null()) object.data["dz"] = 0;
+    if (self.data["dx"].is_null()) self.data["dx"] = 0;
+    if (self.data["dy"].is_null()) self.data["dy"] = 0;
+    if (self.data["dz"].is_null()) self.data["dz"] = 0;
 
-    if (object.data["d2x"].is_null()) object.data["d2x"] = 0;
-    if (object.data["d2y"].is_null()) object.data["d2y"] = 0;
-    if (object.data["d2z"].is_null()) object.data["d2z"] = 0;
+    if (self.data["d2x"].is_null()) self.data["d2x"] = 0;
+    if (self.data["d2y"].is_null()) self.data["d2y"] = 0;
+    if (self.data["d2z"].is_null()) self.data["d2z"] = 0;
 }
 
 
 
-void Motion::update(Object &object, Core &core)
+void Motion::update(Object &self, Object &main)
 {
-    object.data["dx"] = object.data["dx"].get<double>() +
-        (object.data["d2x"].get<double>() * core.data["delta"].get<double>());
-    object.data["dy"] = object.data["dy"].get<double>() +
-        (object.data["d2y"].get<double>() * core.data["delta"].get<double>());
-    object.data["dz"] = object.data["dz"].get<double>() +
-        (object.data["d2z"].get<double>() * core.data["delta"].get<double>());
+    self.data["dx"] = self.data["dx"].get<double>() +
+        (self.data["d2x"].get<double>() * main.data["dt"].get<double>());
+    self.data["dy"] = self.data["dy"].get<double>() +
+        (self.data["d2y"].get<double>() * main.data["dt"].get<double>());
+    self.data["dz"] = self.data["dz"].get<double>() +
+        (self.data["d2z"].get<double>() * main.data["dt"].get<double>());
 
-    object.data["x"] = object.data["x"].get<double>() +
-        (object.data["dx"].get<double>() * core.data["delta"].get<double>());
-    object.data["y"] = object.data["y"].get<double>() +
-        (object.data["dy"].get<double>() * core.data["delta"].get<double>());
-    object.data["z"] = object.data["z"].get<double>() +
-        (object.data["dz"].get<double>() * core.data["delta"].get<double>());
+    self.data["x"] = self.data["x"].get<double>() +
+        (self.data["dx"].get<double>() * main.data["dt"].get<double>());
+    self.data["y"] = self.data["y"].get<double>() +
+        (self.data["dy"].get<double>() * main.data["dt"].get<double>());
+    self.data["z"] = self.data["z"].get<double>() +
+        (self.data["dz"].get<double>() * main.data["dt"].get<double>());
 }
 
 
