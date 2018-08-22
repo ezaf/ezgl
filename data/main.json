@@ -22,23 +22,25 @@
             "CoreRender"
         ],
         "objects": {
-            "dummy": 1
+            "dummy-alpha": 1,
+            "dummy-beta": 1
         }
     },
 
     "dummy": {
-        "x": 256,
-        "y": 256,
+        "x": 0,
+        "y": 0,
         "speed": 1000,
         "w": 64,
         "h": 64,
+        "hitbox": "rectangle",
         "controls": {
-            "up": { "input": "w" },
-            "down": { "input": "s" },
-            "left": { "input": "a" },
-            "right": { "input": "d" }
+            "up": { "input": "UP" },
+            "down": { "input": "DOWN" },
+            "left": { "input": "LEFT" },
+            "right": { "input": "RIGHT" }
         },
-        "image": "data/dummy.png",
+        "texture": "data/dummy.png",
         "plugins": [
             "Dummy"
         ],
@@ -46,8 +48,37 @@
             "Control",
             "DummyEvent",
             "Motion",
+            "Collision",
             "DummyLogic",
             "Texture"
         ]
+    },
+
+
+    "dummy-alpha": {
+        "inherit": "dummy",
+        "x": 256,
+        "y": 256,
+        "controls": {
+            "up": { "input": "w" },
+            "down": { "input": "s" },
+            "left": { "input": "a" },
+            "right": { "input": "d" }
+        }
+    },
+
+    "dummy-beta": {
+        "inherit": "dummy",
+        "x": 512,
+        "y": 384,
+        "speed": 100,
+        "w": 128,
+        "h": 96,
+        "controls": {
+            "up": { "input": "i" },
+            "down": { "input": "k" },
+            "left": { "input": "j" },
+            "right": { "input": "l" }
+        }
     }
 }

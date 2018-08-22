@@ -1,4 +1,4 @@
-/*  EzGL/Object.hpp
+/*  EzGL/Collision.hpp
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -19,56 +19,53 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef EZGL_OBJECT_HPP
-#define EZGL_OBJECT_HPP
+#ifndef EZGL_COLLISION_HPP
+#define EZGL_COLLISION_HPP
 
-/** @file       EzGL/Object.hpp
+/** @file       EzGL/Collision.hpp
  *  @brief      Lorem ipsum
  *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
  */
 
-#include "nlohmann/json.hpp"
+#include "EzGL/Component.hpp"
 
-#include <memory>
+#include <vector>
 
 
 
 namespace EzGL
 {
 
-class Core;
+class Object;
 
-using ObjectPtr = std::unique_ptr<class Object>;
+EZGL_COMPONENT_ENLIST(Collision);
 
 /** @brief      Lorem ipsum
  *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
  *              eiusmod tempor incididunt ut labore et dolore magna aliqua.
  */
-class Object final
+class Collision : public Component<Collision>
 {
 public:
-    static ObjectPtr Create(nlohmann::json &config);
-    virtual ~Object();
+    Collision() = default;
+    virtual ~Collision() = default;
 
-    void init(Core &core);
-    void update(Core &core);
-
-    nlohmann::json data;
-
-    // Temporary holder for when two objects interact such as collision
-    Object *other;
+    void init(Object &object, Core &core);
+    void update(Object &object, Core &core);
 
 private:
-    Object(nlohmann::json &config);
-    Object(Object const &other) = delete;
-    Object& operator=(Object const &other) = delete;
+    Collision(Collision const &) = delete;
+    Collision& operator=(Collision const &) = delete;
 
-    class Impl;
-    Impl *impl;
+    bool isCollision(Object const &alpha, Object const &bravo);
+    void undoTimestep(Object &alpha, Object &bravo, Core &core);
+
+    static std::vector<Object*> Objects;
+    static long long time;
 };
 
 }; /* namespace EzGL */
 
 
 
-#endif /* EZGL_OBJECT_HPP */
+#endif /* EZGL_COLLISION_HPP */

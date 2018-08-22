@@ -65,6 +65,11 @@ void DummyLogic::update(Object &object, Core &core)
         object.data["y"] = 0;
         object.data["dy"] = 0;
     }
+
+    if (object.data["collided"])
+    {
+        // Do stuff in response to collision signal
+    }
 }
 
 

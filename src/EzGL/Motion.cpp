@@ -48,25 +48,19 @@ void Motion::init(Object &object, Core &core)
 
 void Motion::update(Object &object, Core &core)
 {
-    object.data["dx"] = static_cast<double>(object.data["dx"]) +
-        (static_cast<double>(object.data["d2x"]) *
-         static_cast<double>(core.data["delta"]));
-    object.data["dy"] = static_cast<double>(object.data["dy"]) +
-        (static_cast<double>(object.data["d2y"]) *
-         static_cast<double>(core.data["delta"]));
-    object.data["dz"] = static_cast<double>(object.data["dz"]) +
-        (static_cast<double>(object.data["d2z"]) *
-         static_cast<double>(core.data["delta"]));
+    object.data["dx"] = object.data["dx"].get<double>() +
+        (object.data["d2x"].get<double>() * core.data["delta"].get<double>());
+    object.data["dy"] = object.data["dy"].get<double>() +
+        (object.data["d2y"].get<double>() * core.data["delta"].get<double>());
+    object.data["dz"] = object.data["dz"].get<double>() +
+        (object.data["d2z"].get<double>() * core.data["delta"].get<double>());
 
-    object.data["x"] = static_cast<double>(object.data["x"]) +
-        (static_cast<double>(object.data["dx"]) *
-         static_cast<double>(core.data["delta"]));
-    object.data["y"] = static_cast<double>(object.data["y"]) +
-        (static_cast<double>(object.data["dy"]) *
-         static_cast<double>(core.data["delta"]));
-    object.data["z"] = static_cast<double>(object.data["z"]) +
-        (static_cast<double>(object.data["dz"]) *
-         static_cast<double>(core.data["delta"]));
+    object.data["x"] = object.data["x"].get<double>() +
+        (object.data["dx"].get<double>() * core.data["delta"].get<double>());
+    object.data["y"] = object.data["y"].get<double>() +
+        (object.data["dy"].get<double>() * core.data["delta"].get<double>());
+    object.data["z"] = object.data["z"].get<double>() +
+        (object.data["dz"].get<double>() * core.data["delta"].get<double>());
 }
 
 

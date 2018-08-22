@@ -62,6 +62,9 @@ public:
      * more than once per frame, calls following the first are ignored. */
     void updateObjects();
 
+    /* Likely only to be called by Object */
+    nlohmann::json getFromRoot(std::string const &objectName);
+
     nlohmann::json data;
 
 private:

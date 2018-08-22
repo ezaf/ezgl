@@ -114,8 +114,8 @@ void Core::init(std::string const &fileName)
     this->impl = new Impl(config);
     this->impl->selfObject->init(*this);
 
-    for (nlohmann::json::iterator it = config["core"]["objects"].begin();
-            it != config["core"]["objects"].end();
+    for (nlohmann::json::iterator it = this->data["objects"].begin();
+            it != this->data["objects"].end();
             it++)
     {
         for (int i=0; i<it.value(); i++)
@@ -144,6 +144,9 @@ void Core::run()
             delta = this->data["delta_max"].get<double>();
 
         this->data["delta"] = delta;
+        this->data["time"] =
+            std::chrono::duration_cast<std::chrono::milliseconds>(
+                    Clock::now().time_since_epoch()).count();
 
         Core::Impl::runOneFrame(*this);
 
@@ -167,7 +170,8 @@ void Core::run()
 
 void Core::addObject(std::string const &objectName)
 {
-    ObjectPtr object(Object::Create(this->impl->root[objectName]));
+    nlohmann::json objectData = this->getFromRoot(objectName);
+    ObjectPtr object(Object::Create(objectData));
     object->init(*this);
     this->impl->objects.push_back(std::move(object));
 }
@@ -188,6 +192,13 @@ void Core::updateObjects()
 
         this->impl->updated = true;
     }
+}
+
+
+
+nlohmann::json Core::getFromRoot(std::string const &objectName)
+{
+    return this->impl->root[objectName];
 }
 
 

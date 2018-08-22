@@ -21,9 +21,11 @@
 
 #include "EzGL/Object.hpp"
 
+#include "EzGL/Core.hpp"
 #include "EzGL/ComponentFactory.hpp"
 #include "EzGL/IComponent.hpp"
 
+#include <string>
 #include <vector>
 
 namespace EzGL
@@ -59,7 +61,8 @@ ObjectPtr Object::Create(nlohmann::json &config)
 
 Object::Object(nlohmann::json &config) :
     data(config),
-    impl(new Impl(config))
+    other(nullptr),
+    impl(nullptr)
 {
 }
 
@@ -74,6 +77,17 @@ Object::~Object()
 
 void Object::init(Core &core)
 {
+    if (!this->data["inherit"].is_null())
+    {
+        // Have this->data override what it inherits from
+        nlohmann::json temp =
+            core.getFromRoot(this->data["inherit"].get<std::string>());
+        temp.merge_patch(this->data);
+        this->data = temp;
+    }
+
+    this->impl = new Impl(this->data);
+
     for (auto &it : this->impl->components)
     {
         it->IInit(*this, core);
