@@ -32,11 +32,18 @@
         "speed": 1000,
         "w": 64,
         "h": 64,
+        "controls": {
+            "up": { "input": "w" },
+            "down": { "input": "s" },
+            "left": { "input": "a" },
+            "right": { "input": "d" }
+        },
         "image": "data/dummy.png",
         "plugins": [
             "Dummy"
         ],
         "components": [
+            "Control",
             "DummyEvent",
             "Motion",
             "DummyLogic",

@@ -1,6 +1,6 @@
-/*  EzGL/DummyEvent.cpp
+/*  EzGL/Control.cpp
  *
- *  Copythis->right (c) 2018 Kirk Lange <github.com/kirklange>
+ *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
  *  This software is provided 'as-is', without any express or implied
  *  warranty. In no event will the authors be held liable for any damages
@@ -19,42 +19,38 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-#include "Dummy/DummyEvent.hpp"
+#include "EzGL/Control.hpp"
 
 #include "EzGL/Core.hpp"
 #include "EzGL/Object.hpp"
+
+#include <string>
 
 namespace EzGL
 {
 
 
 
-void DummyEvent::init(Object &object, Core &core)
+void Control::init(Object &object, Core &core)
 {
+    // Initialize all statuses to (probably) false or 0
+    for (auto &control : object.data["controls"])
+    {
+        control["status"] =
+            core.data["input"][control["input"].get<std::string>()];
+    }
 }
 
 
 
-void DummyEvent::update(Object &object, Core &core)
+void Control::update(Object &object, Core &core)
 {
-    bool up = object.data["controls"]["up"]["status"];
-    bool down = object.data["controls"]["down"]["status"];
-    bool left = object.data["controls"]["left"]["status"];
-    bool right = object.data["controls"]["right"]["status"];
-
-    if (up && !down)
-        object.data["dy"] = -static_cast<double>(object.data["speed"]);
-    else if (down && !up)
-        object.data["dy"] = static_cast<double>(object.data["speed"]);
-    else
-        object.data["dy"] = 0.0;
-
-    if (left && !right)
-        object.data["dx"] = -static_cast<double>(object.data["speed"]);
-    else if (right && !left)
-        object.data["dx"] = static_cast<double>(object.data["speed"]);
-    else
-        object.data["dx"] = 0.0;
+    // Fetch input statuses (same as init)
+    for (auto &control : object.data["controls"])
+    {
+        control["status"] =
+            core.data["input"][control["input"].get<std::string>()];
+    }
 }
 
 

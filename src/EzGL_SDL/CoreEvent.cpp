@@ -52,7 +52,7 @@ void CoreEvent::init(Object &object, Core &core)
     core.data["quit"] = false;
 
 #define KEY(keyname) \
-    core.data["key"][#keyname] = false
+    core.data["input"][#keyname] = false
 
     KEY(F1); KEY(F2); KEY(F3); KEY(F4); KEY(F5); KEY(F6); KEY(F7); KEY(F8);
     KEY(F9); KEY(F10); KEY(F11); KEY(F12); KEY(F13); KEY(F14); KEY(F15);
@@ -105,19 +105,19 @@ void CoreEvent::update(Object &object, Core &core)
 #ifndef __EMSCRIPTEN__
             case SDLK_ESCAPE:
                 core.data["quit"] = true;
-                core.data["key"]["ESCAPE"] =
+                core.data["input"]["ESCAPE"] =
                     (e.key.type == SDL_KEYDOWN ? true : false);
                 break;
 #endif
             case SDLK_BACKQUOTE:
                 core.data["pause"] = !core.data["pause"];
-                core.data["key"]["BACKQUOTE"] =
+                core.data["input"]["BACKQUOTE"] =
                     (e.key.type == SDL_KEYDOWN ? true : false);
                 break;
 
 #define KEY(keyname) \
             case SDLK_##keyname: \
-                core.data["key"][#keyname] = \
+                core.data["input"][#keyname] = \
                     (e.key.type == SDL_KEYDOWN ? true : false); \
                 break;
 
