@@ -50,32 +50,44 @@ void Texture::init(Object &object, Core &core)
 
     this->destroy();
 
-    std::string file = object.data["texture"];
-    SDL_Surface *load = IMG_Load(file.c_str());
-
-    if (load == nullptr)
+    if (!object.data["texture"].is_null())
     {
-        std::cout << "Failed to load image \'" << file << "\': " <<
-            IMG_GetError() << std::endl;
-        return;
+        std::string file = object.data["texture"];
+        SDL_Surface *load = IMG_Load(file.c_str());
+
+        if (load == nullptr)
+        {
+            std::cout << "Failed to load image \'" << file << "\': " <<
+                IMG_GetError() << std::endl;
+            return;
+        }
+
+        load = SDL_ConvertSurfaceFormat(load, SDL_PIXELFORMAT_RGBA8888, 0);
+        texture = SDL_CreateTextureFromSurface(CoreRender::Renderer, load);
+
+        if (texture == nullptr)
+        {
+            std::cout << "Unable to create texture from " << file << "\': " <<
+                SDL_GetError() << std::endl;
+        }
+
+        src = load->clip_rect;
+        SDL_FreeSurface(load);
     }
-
-    load = SDL_ConvertSurfaceFormat(load, SDL_PIXELFORMAT_RGBA8888, 0);
-    texture = SDL_CreateTextureFromSurface(CoreRender::Renderer, load);
-
-    if (texture == nullptr)
+    else
     {
-        std::cout << "Unable to create texture from " << file << "\': " <<
-            SDL_GetError() << std::endl;
+        if (!object.data["color"].is_null())
+        {
+            this->color.r = object.data["color"].at(0);
+            this->color.g = object.data["color"].at(1);
+            this->color.b = object.data["color"].at(2);
+            this->color.a = object.data["color"].at(3);
+        }
+        else
+        {
+            this->color = {255, 255, 255, 255};
+        }
     }
-
-    src = load->clip_rect;
-    dst = {
-        static_cast<int>(object.data["x"]), static_cast<int>(object.data["y"]),
-        static_cast<int>(object.data["w"]), static_cast<int>(object.data["h"])
-    };
-
-    SDL_FreeSurface(load);
 }
 
 
@@ -87,9 +99,18 @@ void Texture::update(Object &object, Core &core)
         static_cast<int>(object.data["w"]), static_cast<int>(object.data["h"])
     };
 
-    // The two 0s are angle (double) and center (SDL_Point*) respectively
-    SDL_RenderCopyEx(CoreRender::Renderer, texture, &src, &dst,
-            0, 0, SDL_FLIP_NONE);
+    if (texture != nullptr)
+    {
+        // The two 0s are angle (double) and center (SDL_Point*) respectively
+        SDL_RenderCopyEx(CoreRender::Renderer, texture, &src, &dst,
+                0, 0, SDL_FLIP_NONE);
+    }
+    else
+    {
+        SDL_SetRenderDrawColor(CoreRender::Renderer,
+                color.r, color.g, color.b, color.a);
+        SDL_RenderFillRect(CoreRender::Renderer, &dst);
+    }
 }
 
 

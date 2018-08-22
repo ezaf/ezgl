@@ -56,6 +56,7 @@ private:
     void destroy();
 
     SDL_Texture *texture;
+    SDL_Color color;
     SDL_Rect src, dst;
 };
 

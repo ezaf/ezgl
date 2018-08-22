@@ -74,6 +74,8 @@
         "speed": 100,
         "w": 128,
         "h": 96,
+        "texture": null,
+        "color": [255, 255, 0, 255],
         "controls": {
             "up": { "input": "i" },
             "down": { "input": "k" },
