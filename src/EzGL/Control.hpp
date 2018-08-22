@@ -36,15 +36,11 @@ namespace EzGL
 
 EZGL_COMPONENT_ENLIST(Control);
 
-/** @brief      Lorem ipsum
- *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
- *              eiusmod tempor incididunt ut labore et dolore magna aliqua.
- */
 class Control final : public Component<Control>
 {
 public:
     Control() = default;
-    virtual ~Control() = default;
+    ~Control() = default;
 
     void init(Object &self, Object &main);
     void update(Object &self, Object &main);

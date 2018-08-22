@@ -36,10 +36,6 @@ namespace EzGL
 
 EZGL_COMPONENT_ENLIST(Motion);
 
-/** @brief      Lorem ipsum
- *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
- *              eiusmod tempor incididunt ut labore et dolore magna aliqua.
- */
 class Motion final : public Component<Motion>
 {
 public:

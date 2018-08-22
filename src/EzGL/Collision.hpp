@@ -40,15 +40,11 @@ class Object;
 
 EZGL_COMPONENT_ENLIST(Collision);
 
-/** @brief      Lorem ipsum
- *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
- *              eiusmod tempor incididunt ut labore et dolore magna aliqua.
- */
 class Collision final : public Component<Collision>
 {
 public:
     Collision() = default;
-    virtual ~Collision() = default;
+    ~Collision() = default;
 
     void init(Object &self, Object &main);
     void update(Object &self, Object &main);
