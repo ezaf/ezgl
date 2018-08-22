@@ -35,5 +35,5 @@
 
 int main(int argc, char *argv[])
 {
-    return EzGL::Object::Main((argc == 2) ? argv[2] : "data/main.json");
+    return EzGL::Object::Main((argc == 2) ? argv[1] : "data/main.json");
 }

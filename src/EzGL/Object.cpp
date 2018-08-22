@@ -83,6 +83,13 @@ std::vector<ObjectPtr> Object::Impl::Objects;
 
 
 
+int Object::Main(char const *fileName)
+{
+    return Object::Main(std::string(fileName));
+}
+
+
+
 int Object::Main(std::string const &fileName)
 {
     // Load file

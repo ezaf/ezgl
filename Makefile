@@ -37,7 +37,11 @@ PLUGINS = EzGL_SDL Dummy
 MAINS = EzGL_Main
 
 # Name of the application(s) you want to test when you call `make test`.
-TEST =
+TEST = EzGL_Main
+
+# Specifies whether the test input files should be interpreted as command line
+# arguments or as program user input.
+TEST_INPUT_IS_ARG = true
 
 # Name of the application (singular!) you want to run when you call `make run`.
 RUN = EzGL_Main
@@ -78,7 +82,7 @@ CC = g++
 # In many cases the order in which your `-l`s appear matters! One limitation of
 # EzMake is that we assume all tests/mains use the same compiler flags. If this
 # becomes a big enough issue, this will be amended in a future version.
-CF = -std=c++11 -w -O3 -I./sub
+CF = -std=c++11 -w -O3 -I./sub #-g -pg
 LF = #-lOpenGL32 -lglew32
 
 ifneq (,$(shell uname -s | grep -E _NT))

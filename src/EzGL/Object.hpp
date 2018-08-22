@@ -48,6 +48,7 @@ using ObjectPtr = std::unique_ptr<class Object>;
 class Object final
 {
 public:
+    static int Main(char const *fileName);
     static int Main(std::string const &fileName);
     static Object& Create(std::string const &objectName);
     static void UpdateAll();
