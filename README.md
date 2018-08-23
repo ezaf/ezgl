@@ -6,11 +6,13 @@
 [![License: zlib](https://img.shields.io/badge/license-zlib-blue.svg)](https://zlib.net/zlib_license.html)
 <!--[![Contributors](https://img.shields.io/github/contributors/ezaf/ezgl.svg)](https://github.com/ezaf/ezgl/graphs/contributors)-->
 
-A component-based, graphics-API-agnostic game engine.
+A component-based, graphics API-agnostic game engine.
 
 
 
 ## About
+
+**Update Thu Aug 23:** The documentation is about 50% complete.
 
 You may have noticed that the documentation is basically non-existent and full
 of a lot of Lorem Ipsums. That is because this month (August) the engine has
