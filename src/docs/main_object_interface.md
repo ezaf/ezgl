@@ -73,10 +73,10 @@ quantity inside `root["main"]["objects"]`,
 
 ```json
 "main": {
-    "objects": [
+    "objects": {
         "MyObjectA": 3,
         "MyObjectB": 1
-    ]
+    }
 }
 ```
 
@@ -125,7 +125,7 @@ material. Definitions for `"apple"` and `"banana"` are left blank.
             "MainRender"
         ],
         "objects": {
-            "apple": 7
+            "apple": 7,
             "banana": 3
         }
     },
