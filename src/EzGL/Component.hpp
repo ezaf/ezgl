@@ -23,8 +23,7 @@
 #define EZGL_COMPONENT_HPP
 
 /** @file       EzGL/Component.hpp
- *  @brief      Lorem ipsum
- *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+ *  @brief      The base class to inherit from for all components.
  */
 
 #include "EzGL/ComponentFactory.hpp"
@@ -35,22 +34,42 @@
 namespace EzGL
 {
 
+/** @brief      The base class to inherit from for all components.
+ *  @details    To inherit from this class the curiously recurring template
+ *              pattern (CRTP) must be used. The main reason this is done is
+ *              so that the Create() function can be automatically generated.
+ */
 template <class T>
 class Component : private IComponent
 {
 public:
     virtual ~Component() = default;
 
+    /** @brief      Automatically generated per-class component factory.
+     *  @details    Only ComponentFactory should be calling this.
+     */
     static ComponentPtr Create()
     {
         return ComponentPtr(new T());
     }
 
+    /** @brief      Initialize all components.
+     *  @details    Inheritors to Component must define a function exactly like
+     *              this one except with the name `init`.
+     *  @param      self    Reference to object in question.
+     *  @param      main    Reference to main object.
+     */
     void IInit(Object &self, Object &main) override
     {
         static_cast<T*>(this)->init(self, main);
     }
 
+    /** @brief      Initialize all components.
+     *  @details    Inheritors to Component must define a function exactly like
+     *              this one except with the name `update`.
+     *  @param      self    Reference to object in question.
+     *  @param      main    Reference to main object.
+     */
     void IUpdate(Object &self, Object &main) override
     {
         static_cast<T*>(this)->update(self, main);

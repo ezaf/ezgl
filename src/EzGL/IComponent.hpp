@@ -23,8 +23,7 @@
 #define EZGL_ICOMPONENT_HPP
 
 /** @file       EzGL/IComponent.hpp
- *  @brief      Lorem ipsum
- *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+ *  @brief      Allows Component to utilize dynamic polymorphism.
  */
 
 
@@ -34,11 +33,26 @@ namespace EzGL
 
 class Object;
 
+/** @brief      Allows Component to utilize dynamic polymorphism.
+ *  @details    Without this base class, components of unspecified types
+ *              couldn't be stored inside containers like vectors. This class
+ *              is not copyable.
+ */
 class IComponent
 {
 public:
     virtual ~IComponent() = default;
+
+    /** @brief      Initialize all components.
+     *  @param      self    Reference to object in question.
+     *  @param      main    Reference to main object.
+     */
     virtual void IInit(Object &self, Object &main) = 0;
+
+    /** @brief      Update all components.
+     *  @param      self    Reference to object in question.
+     *  @param      main    Reference to main object.
+     */
     virtual void IUpdate(Object &self, Object &main) = 0;
 
 protected:

@@ -23,8 +23,7 @@
 #define EZGL_COMPONENTFACTORY_HPP
 
 /** @file       EzGL/ComponentFactory.hpp
- *  @brief      Lorem ipsum
- *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+ *  @brief      Component enlister and smart pointer factory.
  */
 
 #include "EzGL/IComponent.hpp"
@@ -36,6 +35,11 @@
 
 
 
+/** @brief      Enlist your custom component to the component factory.
+ *  @details    When implementing a component, place this in your header file
+ *              just before the class definition.
+ *  @param      Obj     The name of the component class being enlisted.
+ */
 #define EZGL_COMPONENT_ENLIST(Obj) \
 EzGL::ComponentFactory::Key const Obj##ComponentID = \
     EzGL::ComponentFactory::Enlist<Component<class Obj>>(#Obj)
@@ -45,19 +49,39 @@ EzGL::ComponentFactory::Key const Obj##ComponentID = \
 namespace EzGL
 {
 
+/** @brief      Component smart pointer type. */
 using ComponentPtr = std::unique_ptr<class IComponent>;
+
+/** @brief      Component smart pointer container. */
 using ComponentVec = std::vector<ComponentPtr>;
 
-/** @brief      Component smart pointer factory. */
+/** @brief      Component enlister and smart pointer factory.
+ *  @details    Component developers need only to worry about the enlisting
+ *              capabilities of this class. Component creation is Object's
+ *              responsability.
+ */
 class ComponentFactory final
 {
 public:
-    /** @brief      Key/ID type used when enlisting and creating components. */
+    /** @brief      Component key type.
+     *  @details    Component keys are essentially the name of the component
+     *              we will use when refering to it during enlistment and
+     *              creation.
+     */
     using Key = std::string;
 
+    /** @brief      Component smart pointer creator.
+     *  @param      key     Key of the desired component.
+     *  @returns    A smart pointer to the newly created component.
+     */
     static ComponentPtr Create(Key const &key);
 
-    /* T is a container of keys with iterator support */
+    /** @brief      Component container creator.
+     *  @tparam     T       Container of keys with iterator support.
+     *  @param      keys    Keys of the desired components.
+     *  @returns    A container of smart pointers to the newly created
+     *              components.
+     */
     template <typename T>
     static ComponentVec Create(T const &keys)
     {
@@ -67,6 +91,16 @@ public:
         return components;
     }
 
+    /** @brief      Component enlister.
+     *  @details    _**It is NOT RECOMMENDED for you to call this directly.**_
+     *              Use the @ref EZGL_COMPONENT_ENLIST macro, it will do a lot
+     *              of the work for you as well as make sure that your
+     *              component gets enlisted before anyone attempts to create
+     *              it.
+     *  @tparam     T       Name of the component class being enlisted.
+     *  @param      key     Key that should be associated with the component.
+     *  @returns    Same value as the `key` parameter.
+     */
     template <class T>
     static Key Enlist(Key const &key)
     {
