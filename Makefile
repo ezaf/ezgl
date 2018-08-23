@@ -69,6 +69,10 @@ ifneq (,$(shell uname -s | grep -E _NT))
 	SUB_FILES += dlfcn-win32/dlfcn.c
 endif
 
+# What the built submodule library will be named. Does not affect the code at
+# all, it is just what the shared object and library file will be named.
+SUBMODULE = dlfcn-win32
+
 
 
 ###############################################################################
