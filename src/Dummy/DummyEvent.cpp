@@ -36,10 +36,10 @@ void DummyEvent::init(Object &self, Object &main)
 
 void DummyEvent::update(Object &self, Object &main)
 {
-    bool up = self.data["controls"]["up"]["status"];
-    bool down = self.data["controls"]["down"]["status"];
-    bool left = self.data["controls"]["left"]["status"];
-    bool right = self.data["controls"]["right"]["status"];
+    bool up = self.data["input"]["up"];
+    bool down = self.data["input"]["down"];
+    bool left = self.data["input"]["left"];
+    bool right = self.data["input"]["right"];
 
     if (up && !down)
         self.data["dy"] = -static_cast<double>(self.data["speed"]);

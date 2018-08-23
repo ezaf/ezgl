@@ -22,6 +22,7 @@
 #include "EzGL_SDL/MainEvent.hpp"
 
 #include "EzGL/Object.hpp"
+#include "EzGL_SDL/MainRender.hpp"
 
 #include <iostream>
 #include <SDL2/SDL.h>
@@ -82,6 +83,15 @@ void MainEvent::init(Object &self, Object &main)
     KEY(BACKSPACE); KEY(RETURN); KEY(SPACE); KEY(TAB);
 
 #undef KEY
+
+    // In case there is no Control component
+    self.data["input"]["pause"] = false;
+    self.data["input"]["quit"] = false;
+    self.data["input"]["show_cursor"] = false;
+    self.data["input"]["bordered"] = false;
+    self.data["input"]["fullscreen"] = false;
+
+    this->cooldown = 0;
 }
 
 
@@ -154,7 +164,58 @@ void MainEvent::update(Object &self, Object &main)
                 break;
             }
         }
+    } // End event polling
+
+    // Handle window setting events
+    if (self.data["input"]["pause"])
+        self.data["pause"] = !self.data["pause"].get<bool>();
+
+#ifndef __EMSCRIPTEN__
+    if (self.data["input"]["quit"])
+    {
+        self.data["quit"] = true;
     }
+
+    if (cooldown == 0)
+    {
+        if (self.data["input"]["show_cursor"])
+        {
+            // TODO
+        }
+
+        if (self.data["input"]["bordered"])
+        {
+            bool isbl = SDL_WINDOW_BORDERLESS &
+                SDL_GetWindowFlags(MainRender::Window);
+
+            SDL_SetWindowBordered(MainRender::Window,
+                    static_cast<SDL_bool>(isbl));
+
+            if (!isbl)
+                SDL_SetWindowPosition(MainRender::Window,
+                    SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+            else
+                SDL_SetWindowPosition(MainRender::Window, 4, 32);
+
+            cooldown = 250;
+        }
+
+        if (self.data["input"]["fullscreen"])
+        {
+            bool isfs = SDL_WINDOW_FULLSCREEN_DESKTOP &
+                SDL_GetWindowFlags(MainRender::Window);
+
+            SDL_SetWindowFullscreen(MainRender::Window,static_cast<SDL_bool>(
+                    isfs ? 0 : SDL_WINDOW_FULLSCREEN_DESKTOP));
+
+            cooldown = 250;
+        }
+    }
+    else if (cooldown < 0) cooldown = 0;
+    else if (cooldown > 0) cooldown -= (main.data["dt"].get<double>()*1000.0);
+#endif
+
+
 }
 
 

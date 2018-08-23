@@ -44,9 +44,6 @@ public:
 
     void init(Object &self, Object &main);
     void update(Object &self, Object &main);
-
-private:
-    int cooldown;
 };
 
 }; /* namespace EzGL */

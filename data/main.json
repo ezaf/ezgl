@@ -14,10 +14,11 @@
         "dt_max": 0.1,
         "show_cursor": true,
         "controls": {
-            "quit": { "input": "ESCAPE" },
-            "pause": { "input": "BACKQUOTE" },
-            "bordered": { "input": "F10" },
-            "fullscreen": { "input": "F11" }
+            "quit": "ESCAPE",
+            "pause": "BACKQUOTE",
+            "show_cursor": "F9",
+            "bordered": "F10",
+            "fullscreen": "F11"
         },
         "plugins": [
             "EzGL_SDL"
@@ -42,10 +43,10 @@
         "h": 64,
         "hitbox": "rectangle",
         "controls": {
-            "up": { "input": "UP" },
-            "down": { "input": "DOWN" },
-            "left": { "input": "LEFT" },
-            "right": { "input": "RIGHT" }
+            "up": "UP",
+            "down": "DOWN",
+            "left": "LEFT",
+            "right": "RIGHT"
         },
         "texture": "data/dummy.png",
         "plugins": [
@@ -67,10 +68,10 @@
         "x": 256,
         "y": 256,
         "controls": {
-            "up": { "input": "w" },
-            "down": { "input": "s" },
-            "left": { "input": "a" },
-            "right": { "input": "d" }
+            "up": "w",
+            "down": "s",
+            "left": "a",
+            "right": "d"
         }
     },
 
@@ -84,10 +85,10 @@
         "texture": null,
         "color": [255, 255, 0, 255],
         "controls": {
-            "up": { "input": "i" },
-            "down": { "input": "k" },
-            "left": { "input": "j" },
-            "right": { "input": "l" }
+            "up": "i",
+            "down": "k",
+            "left": "j",
+            "right": "l"
         }
     }
 }

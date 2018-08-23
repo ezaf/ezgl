@@ -22,7 +22,6 @@
 #include "EzGL_SDL/MainLogic.hpp"
 
 #include "EzGL/Object.hpp"
-#include "EzGL_SDL/MainRender.hpp"
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
@@ -78,62 +77,14 @@ void MainLogic::init(Object &self, Object &main)
 
     if (self.data["refresh_rate"].is_null())
         self.data["refresh_rate"] = display.refresh_rate;
-
-    this->cooldown = 0;
 }
 
 
 
 void MainLogic::update(Object &self, Object &main)
 {
-    // Normally this command-handling code would go in the event component, but
-    // because these are the self components we are dealing with (and Control
-    // has to come after MainEvent), this is the way it must be done.
-    if (self.data["controls"]["pause"]["status"])
-        self.data["pause"] = !self.data["pause"].get<bool>();
-
-#ifndef __EMSCRIPTEN__
-    if (self.data["controls"]["quit"]["status"])
-    {
-        self.data["quit"] = true;
-    }
-
-    if (cooldown == 0)
-    {
-        if (self.data["controls"]["bordered"]["status"])
-        {
-            bool isbl = SDL_WINDOW_BORDERLESS &
-                SDL_GetWindowFlags(MainRender::Window);
-
-            SDL_SetWindowBordered(MainRender::Window,
-                    static_cast<SDL_bool>(isbl));
-
-            if (!isbl)
-                SDL_SetWindowPosition(MainRender::Window,
-                    SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
-            else
-                SDL_SetWindowPosition(MainRender::Window, 4, 32);
-
-            cooldown = 250;
-        }
-
-        if (self.data["controls"]["fullscreen"]["status"])
-        {
-            bool isfs = SDL_WINDOW_FULLSCREEN_DESKTOP &
-                SDL_GetWindowFlags(MainRender::Window);
-
-            SDL_SetWindowFullscreen(MainRender::Window,static_cast<SDL_bool>(
-                    isfs ? 0 : SDL_WINDOW_FULLSCREEN_DESKTOP));
-
-            cooldown = 250;
-        }
-    }
-    else if (cooldown < 0) cooldown = 0;
-    else if (cooldown > 0) cooldown -= (main.data["dt"].get<double>()*1000.0);
-#endif
-
     // IMPORTANT: GRAPHICS API WRAPPERS *MUST* CALL THIS!!!
-    Object::UpdateAll();
+    if (!self.data["pause"]) Object::UpdateAll();
 }
 
 

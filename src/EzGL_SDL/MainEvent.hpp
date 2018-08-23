@@ -23,8 +23,8 @@
 #define EZGL_SDL_MAINEVENT_HPP
 
 /** @file       EzGL_SDL/MainEvent.hpp
- *  @brief      Lorem ipsum
- *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+ *  @brief      Initializes SDL2 and handles keyboard/mouse/controller input.
+ *  @details
  */
 
 #include "EzGL/Component.hpp"
@@ -44,6 +44,9 @@ public:
 
     void init(Object &self, Object &main);
     void update(Object &self, Object &main);
+
+private:
+    int cooldown;
 };
 
 }; /* namespace EzGL */

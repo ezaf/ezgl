@@ -9,10 +9,11 @@
         "dt_max": 0.1,
         "show_cursor": true,
         "controls": {
-            "quit": { "input": "ESCAPE" },
-            "pause": { "input": "BACKQUOTE" },
-            "bordered": { "input": "F10" },
-            "fullscreen": { "input": "F11" }
+            "quit": "ESCAPE",
+            "pause": "BACKQUOTE",
+            "show_cursor": "F9",
+            "bordered": "F10",
+            "fullscreen": "F11"
         },
         "plugins": [
             "EzGL_SDL"

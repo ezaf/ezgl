@@ -32,11 +32,12 @@ namespace EzGL
 
 void Control::init(Object &self, Object &main)
 {
-    // Initialize all statuses to (probably) false or 0
-    for (auto &control : self.data["controls"])
+    // Initialize all inputes to (probably) false or 0
+    for (nlohmann::json::iterator it = self.data["controls"].begin();
+            it != self.data["controls"].end(); it++)
     {
-        control["status"] =
-            main.data["input"][control["input"].get<std::string>()];
+        std::string key = it.key(), value = it.value();
+        self.data["input"][key] = main.data["input"][value];
     }
 }
 
@@ -44,11 +45,12 @@ void Control::init(Object &self, Object &main)
 
 void Control::update(Object &self, Object &main)
 {
-    // Fetch input statuses (same as init)
-    for (auto &control : self.data["controls"])
+    // Fetch input inputes (same as init)
+    for (nlohmann::json::iterator it = self.data["controls"].begin();
+            it != self.data["controls"].end(); it++)
     {
-        control["status"] =
-            main.data["input"][control["input"].get<std::string>()];
+        std::string key = it.key(), value = it.value();
+        self.data["input"][key] = main.data["input"][value];
     }
 }
 
