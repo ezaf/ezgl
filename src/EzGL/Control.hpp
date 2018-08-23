@@ -23,8 +23,12 @@
 #define EZGL_CONTROL_HPP
 
 /** @file       EzGL/Control.hpp
- *  @brief      Lorem ipsum
- *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+ *  @brief      Control component (command pattern).
+ *  @details    Bind keyboard/mouse/controller statuses to specified data
+ *              fields in your object. For example, an object with
+ *              `data["controls"]["jump"] = "SPACE"` will have
+ *              `data["input"]["jump"]` be set to `true` when the spacebar is
+ *              pressed and `false` when the spacebar is not pressed.
  */
 
 #include "EzGL/Component.hpp"

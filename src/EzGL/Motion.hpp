@@ -23,8 +23,9 @@
 #define EZGL_MOTION_HPP
 
 /** @file       EzGL/Motion.hpp
- *  @brief      Lorem ipsum
- *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+ *  @brief      Motion component.
+ *  @details    Updates object's position, velocity, and acceleration based on
+ *              game window's delta-time.
  */
 
 #include "EzGL/Component.hpp"

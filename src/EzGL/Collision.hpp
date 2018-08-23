@@ -23,8 +23,12 @@
 #define EZGL_COLLISION_HPP
 
 /** @file       EzGL/Collision.hpp
- *  @brief      Lorem ipsum
- *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+ *  @brief      Collision component.
+ *  @details    Enables collision between this object and all other objects
+ *              with a collision component. An object's `data["collided"]` is
+ *              set to `true` if it has collied with another object during
+ *              the current frame. Additionally object's `Object *other`
+ *              pointer is set to point to the object that it collided with.
  */
 
 #include "EzGL/Component.hpp"
