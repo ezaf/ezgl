@@ -23,8 +23,7 @@
 #define EZGL_OBJECT_HPP
 
 /** @file       EzGL/Object.hpp
- *  @brief      Lorem ipsum
- *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+ *  @brief      Object factory and Main game executor.
  */
 
 #include "nlohmann/json.hpp"
@@ -37,35 +36,70 @@
 namespace EzGL
 {
 
-class Core;
-
+/** @brief      Object smart pointer type. */
 using ObjectPtr = std::unique_ptr<class Object>;
 
-/** @brief      Lorem ipsum
- *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
- *              eiusmod tempor incididunt ut labore et dolore magna aliqua.
+/** @brief      Object factory and Main game executor.
+ *  @details    This class is non-inheritable (final). Use components to extend
+ *              the functionality of an object instead.
  */
 class Object final
 {
 public:
-    static int Main(char const *fileName);
+    /** @brief      Initialize and run the game.
+     *  @param      fileName    File name of the main json file relative to the
+     *                          executable, including the file extension. A
+     *                          c-string accepting version of this function
+     *                          exists too, but does not receive its own
+     *                          documentation subsection.
+     *  @returns    `EXIT_SUCCESS` or `EXIT_FAILURE`
+     */
     static int Main(std::string const &fileName);
+    static int Main(char const *fileName);
+
+    /** @brief      Object factory.
+     *  @details    Created objects are automatically added to the universe.
+     *              The caller gets a reference to this new object but is not
+     *              responsible for its memory management.
+     *  @param      objectName  Name of the object to be created. This object
+     *                          name should appear in the bottom-most level
+     *                          of the provided main json file.
+     *  @returns    Reference to the newly created object.
+     */
     static Object& Create(std::string const &objectName);
+
+    /** @brief      Only graphics API binding components should call this.
+     *  @details    Updates all the components of all objects in the universe.
+     *              Should only be called once per frame.
+     */
     static void UpdateAll();
+
+    // One should never have to explicitly call this.
     ~Object();
 
-    void init(Object &main);
-    void update(Object &main);
-
+    /** @brief      Modifiable object data.
+     *  @details    Stores object parameters, runtime data, component
+     *              information, etc. Consult the user guides for more on how
+     *              the json files are parsed and loaded.
+     */
     nlohmann::json data;
 
-    // Public holder for when two objects interact such as collision
+    /** @brief      Interactor object pointer.
+     *  @details    Used in situations when two objects interact with one
+     *              another. The `Collision` module, for example, sets each
+     *              object's `other` pointers to the other when two objects
+     *              collide. This pointer **does not** get reset at the end of
+     *              each frame; it remains the same until it is overwritten.
+     */
     Object const *other;
 
 private:
     Object(nlohmann::json &config);
     Object(Object const &other) = delete;
     Object& operator=(Object const &other) = delete;
+
+    void init(Object &main);
+    void update(Object &main);
 
     class Impl;
     Impl *impl;

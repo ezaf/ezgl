@@ -31,6 +31,7 @@
 #include "dlfcn-win32/dlfcn.h"
 #define DLEXT ".dll"
 #endif
+// TODO: Mac OS support
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
