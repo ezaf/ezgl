@@ -1,4 +1,4 @@
-/*  Dummy/DummyEvent.cpp
+/*  Pong/PongPaddleEvent.cpp
  *
  *  Copythis->right (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -19,7 +19,7 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-#include "Dummy/DummyEvent.hpp"
+#include "Pong/PongPaddleEvent.hpp"
 
 #include "EzGL/Object.hpp"
 
@@ -28,18 +28,16 @@ namespace EzGL
 
 
 
-void DummyEvent::init(Object &self, Object &main)
+void PongPaddleEvent::init(Object &self, Object &main)
 {
 }
 
 
 
-void DummyEvent::update(Object &self, Object &main)
+void PongPaddleEvent::update(Object &self, Object &main)
 {
     bool up = self.data["input"]["up"];
     bool down = self.data["input"]["down"];
-    bool left = self.data["input"]["left"];
-    bool right = self.data["input"]["right"];
 
     if (up && !down)
         self.data["dy"] = -static_cast<double>(self.data["speed"]);
@@ -47,13 +45,6 @@ void DummyEvent::update(Object &self, Object &main)
         self.data["dy"] = static_cast<double>(self.data["speed"]);
     else
         self.data["dy"] = 0.0;
-
-    if (left && !right)
-        self.data["dx"] = -static_cast<double>(self.data["speed"]);
-    else if (right && !left)
-        self.data["dx"] = static_cast<double>(self.data["speed"]);
-    else
-        self.data["dx"] = 0.0;
 }
 
 

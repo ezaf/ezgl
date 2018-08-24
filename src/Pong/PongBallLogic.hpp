@@ -1,4 +1,4 @@
-/*  Dummy/DummyLogic.hpp
+/*  Pong/PongBallLogic.hpp
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -19,13 +19,8 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef EZGL_DUMMYLOGIC_HPP
-#define EZGL_DUMMYLOGIC_HPP
-
-/** @file       Dummy/DummyLogic.hpp
- *  @brief      Lorem ipsum
- *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
- */
+#ifndef EZGL_PONGBALLLOGIC_HPP
+#define EZGL_PONGBALLLOGIC_HPP
 
 #include "EzGL/Component.hpp"
 
@@ -34,20 +29,27 @@
 namespace EzGL
 {
 
-EZGL_COMPONENT_ENLIST(DummyLogic);
+EZGL_COMPONENT_ENLIST(PongBallLogic);
 
-class DummyLogic final : public Component<DummyLogic>
+class PongBallLogic final : public Component<PongBallLogic>
 {
 public:
-    DummyLogic() = default;
-    ~DummyLogic() = default;
+    PongBallLogic() = default;
+    ~PongBallLogic() = default;
 
     void init(Object &self, Object &main);
     void update(Object &self, Object &main);
+
+private:
+    void recenter(Object &self, Object &main);
+
+    double startPause;
+    int scoreLeft, scoreRight;
+    bool goLeft;
 };
 
 }; /* namespace EzGL */
 
 
 
-#endif /* EZGL_DUMMYLOGIC_HPP */
+#endif /* EZGL_PONGBALLLOGIC_HPP */

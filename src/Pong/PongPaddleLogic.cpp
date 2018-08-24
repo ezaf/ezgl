@@ -1,4 +1,4 @@
-/*  Dummy/DummyLogic.cpp
+/*  Pong/PongPaddleLogic.cpp
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -19,7 +19,7 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-#include "Dummy/DummyLogic.hpp"
+#include "Pong/PongPaddleLogic.hpp"
 
 #include "EzGL/Object.hpp"
 
@@ -28,31 +28,36 @@ namespace EzGL
 
 
 
-void DummyLogic::init(Object &self, Object &main)
+void PongPaddleLogic::init(Object &self, Object &main)
 {
+    self.data["y"] = (main.data["render_height"].get<int>() / 2) -
+        (self.data["h"].get<int>() / 2);
+
+    if (self.data["side"] == "left")
+    {
+        self.data["x"] = self.data["w"];
+    }
+    else
+    {
+        self.data["x"] = main.data["render_width"].get<int>() -
+            (self.data["w"].get<int>() * 2);
+    }
 }
 
 
 
-void DummyLogic::update(Object &self, Object &main)
+void PongPaddleLogic::update(Object &self, Object &main)
 {
-    double const xceil =
-        static_cast<double>(main.data["render_width"]) -
-        static_cast<double>(self.data["w"]);
+    if (main.data["pong"]["start_pause"] == true)
+    {
+        self.data["y"] = (main.data["render_height"].get<int>() / 2) -
+            (self.data["h"].get<int>() / 2);
+        self.data["dy"] = 0;
+    }
+
     double const yceil =
         static_cast<double>(main.data["render_height"]) -
         static_cast<double>(self.data["h"]);
-
-    if (self.data["x"] > xceil)
-    {
-        self.data["x"] = xceil;
-        self.data["dx"] = 0;
-    }
-    else if (self.data["x"] < 0)
-    {
-        self.data["x"] = 0;
-        self.data["dx"] = 0;
-    }
 
     if (self.data["y"] > yceil)
     {
@@ -67,7 +72,7 @@ void DummyLogic::update(Object &self, Object &main)
 
     if (self.data["collided"])
     {
-        // Do stuff in response to collision signal
+        // Do stuff in response to collision signal?
     }
 }
 

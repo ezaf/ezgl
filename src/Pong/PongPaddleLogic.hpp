@@ -1,4 +1,4 @@
-/*  Dummy/DummyEvent.hpp
+/*  Pong/PongPaddleLogic.hpp
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -19,13 +19,8 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef EZGL_DUMMYEVENT_HPP
-#define EZGL_DUMMYEVENT_HPP
-
-/** @file       Dummy/DummyEvent.hpp
- *  @brief      Lorem ipsum
- *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
- */
+#ifndef EZGL_PONGPADDLELOGIC_HPP
+#define EZGL_PONGPADDLELOGIC_HPP
 
 #include "EzGL/Component.hpp"
 
@@ -34,13 +29,13 @@
 namespace EzGL
 {
 
-EZGL_COMPONENT_ENLIST(DummyEvent);
+EZGL_COMPONENT_ENLIST(PongPaddleLogic);
 
-class DummyEvent final : public Component<DummyEvent>
+class PongPaddleLogic final : public Component<PongPaddleLogic>
 {
 public:
-    DummyEvent() = default;
-    ~DummyEvent() = default;
+    PongPaddleLogic() = default;
+    ~PongPaddleLogic() = default;
 
     void init(Object &self, Object &main);
     void update(Object &self, Object &main);
@@ -50,4 +45,4 @@ public:
 
 
 
-#endif /* EZGL_DUMMYEVENT_HPP */
+#endif /* EZGL_PONGPADDLELOGIC_HPP */
