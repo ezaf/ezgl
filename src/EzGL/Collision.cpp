@@ -24,6 +24,8 @@
 #include "EzGL/Object.hpp"
 #include "EzGL/Motion.hpp"
 
+#include <algorithm>
+
 namespace EzGL
 {
 
@@ -61,7 +63,10 @@ void Collision::init(Object &self, Object &main)
         self.data["d"] = self.data["r"];
     }
 
-    self.data["collided"] = false;
+    self.data["collision"]["status"] = false;
+    self.data["collision"]["x_overlap"] = 0.0;
+    self.data["collision"]["y_overlap"] = 0.0;
+    self.data["collision"]["z_overlap"] = 0.0;
     Collision::Objects.push_back(&self);
 }
 
@@ -73,7 +78,7 @@ void Collision::update(Object &self, Object &main)
     {
         for (Object *other : Collision::Objects)
         {
-            other->data["collided"] = false;
+            other->data["collision"]["status"] = false;
         }
         Collision::time = main.data["t"];
     }
@@ -83,10 +88,20 @@ void Collision::update(Object &self, Object &main)
     {
         if (&self != other && this->isCollision(self, *other))
         {
-            self.data["collided"] = true;
-            other->data["collided"] = true;
+            self.data["collision"]["status"] = true;
+            other->data["collision"]["status"] = true;
             self.other = other;
             other->other = &self;
+
+            self.data["collision"]["x_overlap"] =
+                other->data["collision"]["x_overlap"] =
+                    this->getOverlap(self, *other, "x", "w");
+            self.data["collision"]["y_overlap"] =
+                other->data["collision"]["y_overlap"] =
+                    this->getOverlap(self, *other, "y", "h");
+            self.data["collision"]["z_overlap"] =
+                other->data["collision"]["z_overlap"] =
+                    this->getOverlap(self, *other, "z", "d");
 
             if (self.data["impact_resolve"] > 0)
             {
@@ -157,6 +172,25 @@ void Collision::undoTimestep(Object &alpha, Object &bravo, Object &main)
     motion.update(alpha, main);
     motion.update(bravo, main);
     main.data["dt"] = -main.data["dt"].get<double>();
+}
+
+
+
+double Collision::getOverlap(Object &alpha, Object &bravo,
+        std::string const &pos, std::string const &dim)
+{
+    // Algorithm from https://stackoverflow.com/a/16691908/5890633
+    return std::max(0.0, (
+                std::min(
+                    alpha.data[pos].get<double>() +
+                        alpha.data[dim].get<double>(),
+                    bravo.data[pos].get<double>() +
+                        bravo.data[dim].get<double>())
+                -
+                std::max(
+                    alpha.data[pos].get<double>(),
+                    bravo.data[pos].get<double>())
+                ));
 }
 
 

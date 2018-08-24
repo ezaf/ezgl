@@ -101,9 +101,17 @@ void PongBallLogic::update(Object &self, Object &main)
     }
 
     // Paddle collision
-    if (self.data["collided"])
+    if (self.data["collision"]["status"] == true)
     {
-        self.data["dx"] = -self.data["dx"].get<double>();
+        if (self.data["collision"]["y_overlap"] >
+                self.data["collision"]["x_overlap"])
+        {
+            self.data["dx"] = -self.data["dx"].get<double>();
+        }
+        else
+        {
+            self.data["dy"] = -self.data["dy"].get<double>();
+        }
     }
 }
 

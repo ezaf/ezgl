@@ -70,7 +70,7 @@ void PongPaddleLogic::update(Object &self, Object &main)
         self.data["dy"] = 0;
     }
 
-    if (self.data["collided"])
+    if (self.data["collision"]["status"] == true)
     {
         // Do stuff in response to collision signal?
     }

@@ -33,6 +33,7 @@
 
 #include "EzGL/Component.hpp"
 
+#include <string>
 #include <vector>
 
 
@@ -56,6 +57,8 @@ public:
 private:
     bool isCollision(Object const &alpha, Object const &bravo);
     void undoTimestep(Object &alpha, Object &bravo, Object &main);
+    double getOverlap(Object &alpha, Object &bravo,
+            std::string const &pos, std::string const &dim);
 
     static std::vector<Object*> Objects;
     static long long time;

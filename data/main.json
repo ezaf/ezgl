@@ -11,7 +11,7 @@
         "bordered": false,
         "scaling": "nearest",
         "vsync": true,
-        "dt_max": 0.1,
+        "dt_max": 0.015,
         "show_cursor": false,
         "controls": {
             "quit": "ESCAPE",
