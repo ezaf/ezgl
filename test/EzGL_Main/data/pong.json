@@ -13,6 +13,7 @@
         "vsync": true,
         "dt_max": 0.015,
         "show_cursor": false,
+        "self_destruct": 5.0,
         "controls": {
             "quit": "ESCAPE",
             "bordered": "F10",
