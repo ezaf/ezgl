@@ -45,6 +45,7 @@ Data Field         | Description
 `"render_height"`  | Rendered/Logical resolution height within window.
 `"render_width"`   | Rendered/Logical resolution width within window.
 `"scaling"`        | `"nearest"` or `"linear"`. You're more likely to use the latter.
+`"self_destruct"`  | Program will self destruct after this many seconds. Useful for automated build tests.
 `"show_cursor"`    | Whether the mouse cursor is shown.
 `"quit"`           | If set to `true`, the program will exit after the current frame.
 `"t"`              | Unix time (ms).
@@ -52,7 +53,8 @@ Data Field         | Description
 `"vsync"`          | Whether vertical-sync is enabled.
 
 All frame rate and timing code is handled internally by EzGL. Therefore it is
-not the responsibility of any component to assign `"dt"`, `"dt_max"`, or `"t"`.
+not the responsibility of any component to assign `"dt"`, `"dt_max"`,
+`self_destruct`, or `"t"`.
 
 If you want to enter fullscreen borderless mode, have both `"bordered"` and
 `"fullscreen"` set to `false` and have both `"display_height"` and

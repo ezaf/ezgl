@@ -151,6 +151,16 @@ int Object::Main(std::string const &fileName)
         main.data["t"] = std::chrono::duration_cast
             <std::chrono::milliseconds>(now.time_since_epoch()).count();
 
+        if (!main.data["self_destruct"].is_null())
+        {
+            if (main.data["self_destruct"].get<double>() < 0.0)
+                main.data["quit"] = true;
+            else
+                main.data["self_destruct"] =
+                    main.data["self_destruct"].get<double>() -
+                    main.data["dt"].get<double>();
+        }
+
         Object::Impl::UpdateMain(main);
 
         prev = Clock::now();

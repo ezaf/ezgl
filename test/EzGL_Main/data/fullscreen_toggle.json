@@ -8,6 +8,7 @@
         "vsync": true,
         "dt_max": 0.1,
         "show_cursor": true,
+        "self_destruct": 5.0,
         "controls": {
             "quit": "ESCAPE",
             "pause": "BACKQUOTE",
