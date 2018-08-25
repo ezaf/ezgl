@@ -26,9 +26,11 @@
 
 #ifdef __linux__
 #include <dlfcn.h>
+#define DLPRE "./bin/"
 #define DLEXT ".so"
 #elif _WIN32
 #include "dlfcn-win32/dlfcn.h"
+#define DLPRE ""
 #define DLEXT ".dll"
 #endif
 // TODO: Mac OS support
@@ -113,6 +115,7 @@ int Object::Main(std::string const &fileName)
         for (std::string plugin : objname["plugins"])
         {
             plugin.append(DLEXT);
+            plugin.insert(0, DLPRE);
             dlopen(plugin.c_str(), RTLD_LAZY);
         }
     }
