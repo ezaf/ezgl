@@ -23,8 +23,9 @@
 #define EZGL_SDL_MAINLOGIC_HPP
 
 /** @file       EzGL_SDL/MainLogic.hpp
- *  @brief      Lorem ipsum
- *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+ *  @brief      Updates all objects in the game universe.
+ *  @details    See \ref src/docs/main_object_interface.md for more
+ *              information.
  */
 
 #include "EzGL/Component.hpp"

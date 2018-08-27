@@ -54,7 +54,7 @@ Data Field         | Description
 
 All frame rate and timing code is handled internally by EzGL. Therefore it is
 not the responsibility of any component to assign `"dt"`, `"dt_max"`,
-`self_destruct`, or `"t"`.
+`"self_destruct"`, or `"t"`.
 
 If you want to enter fullscreen borderless mode, have both `"bordered"` and
 `"fullscreen"` set to `false` and have both `"display_height"` and
@@ -63,7 +63,8 @@ If you want to enter fullscreen borderless mode, have both `"bordered"` and
 ## Controls
 
 The format of `root["main"]["controls"]` follows that of any other control
-subgroup. Consult the `Control` documentation for more information.
+subgroup. Consult the [**Control**](http://ezgl.ezaf.io/Control_8hpp.html)
+documentation for more information.
 
 Controls for the main object are optional. Toggles are only supported for
 `"bordered"`, `"fullscreen"`, `"pause"`, `"show_cursor"`, and `"quit"`.
@@ -85,7 +86,8 @@ quantity inside `root["main"]["objects"]`,
 where `MyObjectA` et al. must have their own respective data blocks in the
 root, for example, `root["MyObjectA"]`.
 
-Components can spawn objects in at runtime using `Object::Create`, where the
+Components can spawn objects in at runtime using
+[**Object::Create**](http://ezgl.ezaf.io/classEzGL_1_1Object.html), where the
 provided object name has the same requirements as the `MyObjectA` example
 above.
 
@@ -110,6 +112,7 @@ material. Definitions for `"apple"` and `"banana"` are left blank.
         "vsync": true,
         "dt_max": 0.1,
         "show_cursor": true,
+        "self_destruct": 5.0,
         "controls": {
             "quit": "ESCAPE",
             "pause": "BACKQUOTE",

@@ -24,7 +24,8 @@
 
 /** @file       EzGL_SDL/MainEvent.hpp
  *  @brief      Initializes SDL2 and handles keyboard/mouse/controller input.
- *  @details
+ *  @details    See \ref src/docs/main_object_interface.md and @ref Control.hpp for
+ *              more information.
  */
 
 #include "EzGL/Component.hpp"

@@ -23,8 +23,9 @@
 #define EZGL_SDL_MAINRENDER_HPP
 
 /** @file       EzGL_SDL/MainRender.hpp
- *  @brief      Lorem ipsum
- *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+ *  @brief      Creates the SDL2 window and renderer.
+ *  @details    See \ref src/docs/main_object_interface.md for more
+ *              information.
  */
 
 #include "EzGL/Component.hpp"
