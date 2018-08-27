@@ -44,7 +44,7 @@ TEST = EzGL_Main
 TEST_INPUT_IS_ARG = true
 
 # Name of the application (singular!) you want to run when you call `make run`.
-RUN =
+RUN = EzGL_Main
 
 # When building all, choose whether to build dynamic and/or static mains
 # EzGL: For some reason statically built mains have trouble loading plugins
