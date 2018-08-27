@@ -23,8 +23,28 @@
 #define EZGL_SDL_TEXTURE_HPP
 
 /** @file       EzGL_SDL/Texture.hpp
- *  @brief      Lorem ipsum
- *  @details    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+ *  @brief      Texture component with image file loading support.
+ *  @details    Texture render position and dimensions match that of the
+ *              object's `"x"`, `"y"`, `"w"`, and `"h"` dimensions. To load
+ *              an image from file specify its relative path in `"texture"`.
+ *              If instead you want to render a solid, colored rectangle,
+ *              provide an integer RGBA array of size four in `"color"`.
+ *
+ *              Example with image file:
+ *
+ *              @code{.json}
+ *              "DankMeme": {
+ *                  "texture": "data/dankmeme.png"
+ *              }
+ *              @endcode
+ *
+ *              Example with color:
+ *
+ *              @code{.json}
+ *              "CommunistRectangle": {
+ *                  "color": [255, 0, 0, 255]
+ *              }
+ *              @endcode
  */
 
 #include "EzGL/Component.hpp"
