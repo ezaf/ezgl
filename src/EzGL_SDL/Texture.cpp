@@ -78,7 +78,15 @@ void Texture::init(Object &self, Object &main)
                 SDL_GetError() << std::endl;
         }
 
-        src = load->clip_rect;
+        if (self.data["sx"].is_null())
+            self.data["sx"] = load->clip_rect.x;
+        if (self.data["sy"].is_null())
+            self.data["sy"] = load->clip_rect.y;
+        if (self.data["sw"].is_null())
+            self.data["sw"] = load->clip_rect.w;
+        if (self.data["sh"].is_null())
+            self.data["sh"] = load->clip_rect.h;
+
         SDL_FreeSurface(load);
     }
     else
@@ -101,6 +109,11 @@ void Texture::init(Object &self, Object &main)
 
 void Texture::update(Object &self, Object &main)
 {
+    src = {
+        static_cast<int>(self.data["sx"]), static_cast<int>(self.data["sy"]),
+        static_cast<int>(self.data["sw"]), static_cast<int>(self.data["sh"])
+    };
+
     dst = {
         static_cast<int>(self.data["x"]), static_cast<int>(self.data["y"]),
         static_cast<int>(self.data["w"]), static_cast<int>(self.data["h"])
