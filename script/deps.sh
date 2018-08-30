@@ -1,20 +1,26 @@
 #!/bin/bash
 
-wget https://www.libsdl.org/release/SDL2-2.0.8.tar.gz
-tar -xzf SDL2-*.tar.gz
-pushd SDL2-* && ./configure && make && sudo make install && popd
+sdl2_base="SDL2-2.0.8"
+sdl2_image="SDL2_image-2.0.3"
+sdl2_mixer="SDL2_mixer-2.0.2"
+sdl2_ttf="SDL2_ttf-2.0.14"
+sdl2_net="SDL2_net-2.0.1"
 
-wget -q https://www.libsdl.org/projects/SDL_image/release/SDL2_image-2.0.3.tar.gz
-wget -q https://www.libsdl.org/projects/SDL_mixer/release/SDL2_mixer-2.0.2.tar.gz
-wget -q https://www.libsdl.org/projects/SDL_ttf/release/SDL2_ttf-2.0.14.tar.gz
-wget -q https://www.libsdl.org/projects/SDL_net/release/SDL2_net-2.0.1.tar.gz
-tar -xzf SDL2_image-*.tar.gz
-tar -xzf SDL2_mixer-*.tar.gz
-tar -xzf SDL2_ttf-*.tar.gz
-tar -xzf SDL2_net-*.tar.gz
-pushd SDL2_image-* && ./configure && make && sudo make install && popd
-pushd SDL2_mixer-* && ./configure && make && sudo make install && popd
-pushd SDL2_ttf-* && ./configure && make && sudo make install && popd
-pushd SDL2_net-* && ./configure && make && sudo make install && popd
+wget $(printf "https://www.libsdl.org/release/%s.tar.gz" $sdl2_base)
+tar -xzf $(printf "%s.tar.gz" $sdl2_base)
+pushd $(printf "%s" $sdl2_base) && ./configure && make && sudo make install && popd
+
+wget -q $(printf "https://www.libsdl.org/projects/SDL_image/release/%s.tar.gz" $sdl2_image)
+wget -q $(printf "https://www.libsdl.org/projects/SDL_mixer/release/%s.tar.gz" $sdl2_mixer)
+wget -q $(printf "https://www.libsdl.org/projects/SDL_ttf/release/%s.tar.gz" $sdl2_ttf)
+wget -q $(printf "https://www.libsdl.org/projects/SDL_net/release/%s.tar.gz" $sdl2_net)
+tar -xzf $(printf "%s.tar.gz" $sdl2_image)
+tar -xzf $(printf "%s.tar.gz" $sdl2_mixer)
+tar -xzf $(printf "%s.tar.gz" $sdl2_ttf)
+tar -xzf $(printf "%s.tar.gz" $sdl2_net)
+pushd $(printf "%s" $sdl2_image) && ./configure && make && sudo make install && popd
+pushd $(printf "%s" $sdl2_mixer) && ./configure && make && sudo make install && popd
+pushd $(printf "%s" $sdl2_ttf) && ./configure && make && sudo make install && popd
+pushd $(printf "%s" $sdl2_net) && ./configure && make && sudo make install && popd
 
 rm -rf SDL2*
