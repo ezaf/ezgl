@@ -26,10 +26,13 @@
 
 #include <iostream>
 #include <SDL2/SDL_image.h>
-#include <string>
 
 namespace EzGL
 {
+
+
+
+std::map<std::string, SDL_Texture*> Texture::Textures;
 
 
 
@@ -60,34 +63,41 @@ void Texture::init(Object &self, Object &main)
     if (!self.data["texture"].is_null())
     {
         std::string file = self.data["texture"];
-        SDL_Surface *load = IMG_Load(file.c_str());
 
-        if (load == nullptr)
+        if (Texture::Textures.count(file) == 0)
         {
-            std::cout << "Failed to load image \'" << file << "\': " <<
-                IMG_GetError() << std::endl;
-            return;
+            SDL_Surface *load = IMG_Load(file.c_str());
+
+            if (load == nullptr)
+            {
+                std::cout << "Failed to load image \'" << file << "\': " <<
+                    IMG_GetError() << std::endl;
+                return;
+            }
+
+            load = SDL_ConvertSurfaceFormat(load, SDL_PIXELFORMAT_RGBA8888, 0);
+            Texture::Textures[file] =
+                SDL_CreateTextureFromSurface(MainRender::Renderer, load);
+
+            if (Texture::Textures[file] == nullptr)
+            {
+                std::cout << "Unable to create texture from " << file << "\': " <<
+                    SDL_GetError() << std::endl;
+            }
+
+            if (self.data["sx"].is_null())
+                self.data["sx"] = load->clip_rect.x;
+            if (self.data["sy"].is_null())
+                self.data["sy"] = load->clip_rect.y;
+            if (self.data["sw"].is_null())
+                self.data["sw"] = load->clip_rect.w;
+            if (self.data["sh"].is_null())
+                self.data["sh"] = load->clip_rect.h;
+
+            SDL_FreeSurface(load);
         }
 
-        load = SDL_ConvertSurfaceFormat(load, SDL_PIXELFORMAT_RGBA8888, 0);
-        texture = SDL_CreateTextureFromSurface(MainRender::Renderer, load);
-
-        if (texture == nullptr)
-        {
-            std::cout << "Unable to create texture from " << file << "\': " <<
-                SDL_GetError() << std::endl;
-        }
-
-        if (self.data["sx"].is_null())
-            self.data["sx"] = load->clip_rect.x;
-        if (self.data["sy"].is_null())
-            self.data["sy"] = load->clip_rect.y;
-        if (self.data["sw"].is_null())
-            self.data["sw"] = load->clip_rect.w;
-        if (self.data["sh"].is_null())
-            self.data["sh"] = load->clip_rect.h;
-
-        SDL_FreeSurface(load);
+        texture = Texture::Textures[file];
     }
     else
     {

@@ -49,7 +49,9 @@
 
 #include "EzGL/Component.hpp"
 
+#include <map>
 #include <SDL2/SDL.h>
+#include <string>
 
 
 
@@ -69,6 +71,8 @@ public:
 
 private:
     void destroy();
+
+    static std::map<std::string, SDL_Texture*> Textures;
 
     SDL_Texture *texture;
     SDL_Color color;

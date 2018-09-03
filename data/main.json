@@ -28,20 +28,35 @@
             "MainRender"
         ],
         "objects": {
-            "MrBlock": 1
+            "RedDude": 1,
+            "BlueDude": 1
         }
     },
 
-    "MrBlock": {
-        "speed": 1024,
-        "x": 128,
-        "y": 128,
-        "w": 64,
-        "h": 64,
-        "hitbox": "rectangle",
-        "color": [255, 0, 0, 255],
+    "Dude": {
+        "w": 128,
+        "h": 128,
+        "sw": 128,
+        "sh": 128,
+        "texture": "data/colored_dude.png",
         "components": [
             "Texture"
         ]
+    },
+
+    "RedDude": {
+        "inherit": "Dude",
+        "x": 256,
+        "y": 256,
+        "sx": 0,
+        "sy": 0
+    },
+
+    "BlueDude": {
+        "inherit": "Dude",
+        "x": 512,
+        "y": 256,
+        "sx": 128,
+        "sy": 128
     }
 }
