@@ -12,25 +12,17 @@ A component-based, graphics API-agnostic game engine.
 
 ## About
 
-**Update Thu Aug 23:** The documentation is about 50% complete.
+The EzGL game engine allows for great flexibility and customizability through
+it's ground-up, component-based architecture. Heck, the window and renderer
+themselves are components! This unique design allows for EzGL to work with any
+graphics API you desire such as SDL, OpenGL, or DirectX, assuming you or
+someone else has written an EzGL plugin for that respective API. So far I have
+written the SDL plugin; OpenGL/GLFW will come next.
 
-You may have noticed that the documentation is basically non-existent and full
-of a lot of Lorem Ipsums. That is because this month (August) the engine has
-undergone three major refactorings, the most recent one being on August 19th.
-As far as I can tell, the engine shouldn't drastically change from now on, so
-over the next couple weeks I'll be repaying all that technical debt.
-
-In communicating the purpose of the EzGL game engine, I think it would help to
-describe the purpose of the August 19th refactoring (EzSDL -> EzGL). For the
-longest time I've been stagnating, only bothering to use SDL2. While I'll most
-likely still implement my next semester's project in SDL2, I also want to learn
-OpenGL/GLFW. What I thought would be really cool is if after I learn the ropes
-of OpenGL I could write a drop-in replacement for the SDL2 component of the
-game engine. Thus, over the weekend, I seperated out the component-based
-foundation of EzGL from the SDL2-related code. Now, changing the graphics API
-is as simple as changing `core.api` in the json configuration file! It is this
-concept of dynamic loading and robust run-time customization that is at the
-heart of EzGL.
+EzGL's component-based architecture is also a boon for prototyping! No longer
+do you have to keep recompiling every time you make a subtle change; much of
+the design work is done entirely within json configuration files. For more
+information, visit the [EzGL documentation website](http://ezgl.ezaf.io).
 
 
 
