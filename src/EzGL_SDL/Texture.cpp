@@ -119,11 +119,6 @@ void Texture::init(Object &self, Object &main)
 
 void Texture::update(Object &self, Object &main)
 {
-    src = {
-        static_cast<int>(self.data["sx"]), static_cast<int>(self.data["sy"]),
-        static_cast<int>(self.data["sw"]), static_cast<int>(self.data["sh"])
-    };
-
     dst = {
         static_cast<int>(self.data["x"]), static_cast<int>(self.data["y"]),
         static_cast<int>(self.data["w"]), static_cast<int>(self.data["h"])
@@ -131,6 +126,11 @@ void Texture::update(Object &self, Object &main)
 
     if (texture != nullptr)
     {
+        src = {
+            static_cast<int>(self.data["sx"]), static_cast<int>(self.data["sy"]),
+            static_cast<int>(self.data["sw"]), static_cast<int>(self.data["sh"])
+        };
+
         // The two 0s are angle (double) and center (SDL_Point*) respectively
         SDL_RenderCopyEx(MainRender::Renderer, texture, &src, &dst,
                 0, 0, SDL_FLIP_NONE);
