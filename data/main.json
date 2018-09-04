@@ -28,35 +28,57 @@
             "MainRender"
         ],
         "objects": {
-            "RedDude": 1,
-            "BlueDude": 1
+            "GameLevel": 1
         }
     },
 
-    "Dude": {
-        "w": 128,
-        "h": 128,
-        "sw": 128,
-        "sh": 128,
-        "texture": "data/colored_dude.png",
+    "GameLevel": {
+        "x": 64,
+        "y": 64,
+        "tilemap": {
+            "map": "BBBBBBBBggBBBBBBBBwwwwww",
+            "map_w": 6,
+            "map_h": 4,
+            "tile_w": 64,
+            "tile_h": 64,
+            "tiles": {
+                "B[rick]": {
+                    "inherit": "TerrainX16",
+                    "sx": 112,
+                    "sy": 0
+                },
+                "w[ood]": {
+                    "inherit": "TerrainX16",
+                    "sx": 64,
+                    "sy": 0
+                },
+                "g[lass]": {
+                    "inherit": "TerrainX16",
+                    "sx": 16,
+                    "sy": 48
+                },
+                " ": {
+                    "inherit": "TerrainX16",
+                    "sx": 0,
+                    "sy": 0
+                }
+            }
+        },
         "components": [
-            "Texture"
+            "Tilemap"
         ]
     },
 
-    "RedDude": {
-        "inherit": "Dude",
-        "x": 256,
-        "y": 256,
-        "sx": 0,
-        "sy": 0
-    },
-
-    "BlueDude": {
-        "inherit": "Dude",
-        "x": 512,
-        "y": 256,
-        "sx": 128,
-        "sy": 128
+    "TerrainX16": {
+        "x": 0,
+        "y": 0,
+        "w": 64,
+        "h": 64,
+        "sw": 16,
+        "sh": 16,
+        "texture": "data/terrain.png",
+        "components": [
+            "Texture"
+        ]
     }
 }

@@ -68,11 +68,23 @@ public:
      */
     static Object& Create(std::string const &objectName);
 
+    /** @brief      Object factory.
+     *  @details    Created objects are automatically added to the universe.
+     *              The caller gets a reference to this new object but is not
+     *              responsible for its memory management.
+     *  @param      config      Starting json data for the new object.
+     *  @returns    Reference to the newly created object.
+     */
+    static Object& Create(nlohmann::json &config);
+
     /** @brief      Only graphics API binding components should call this.
      *  @details    Updates all the components of all objects in the universe.
      *              Should only be called once per frame.
      */
     static void UpdateAll();
+
+    void init(Object &main);
+    void update(Object &main);
 
     // One should never have to explicitly call this.
     ~Object();
@@ -96,10 +108,7 @@ public:
 private:
     Object(nlohmann::json &config);
     Object(Object const &other) = delete;
-    Object& operator=(Object const &other) = delete;
-
-    void init(Object &main);
-    void update(Object &main);
+    //Object& operator=(Object const &other) = delete;
 
     class Impl;
     Impl *impl;

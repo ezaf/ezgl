@@ -37,6 +37,8 @@
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
+#define DLPRE ""
+#define DLEXT ".js"
 #endif
 
 #include <chrono>
@@ -189,11 +191,19 @@ int Object::Main(std::string const &fileName)
 
 Object& Object::Create(std::string const &objectName)
 {
-    ObjectPtr object(new Object(Object::Impl::Root[objectName]));
+    return Object::Create(Object::Impl::Root[objectName]);
+}
+
+
+
+Object& Object::Create(nlohmann::json &config)
+{
+    ObjectPtr object(new Object(config));
     object->init(*Object::Impl::MainObject);
     Object::Impl::Objects.push_back(std::move(object));
-    return *object; // TODO: Verify if still points to object after std::move
+    return *Object::Impl::Objects.back();
 }
+
 
 
 
