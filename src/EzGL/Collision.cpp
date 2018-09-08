@@ -45,6 +45,9 @@ void Collision::init(Object &self, Object &main)
     if (self.data["impact_resolve"].is_null())
         self.data["impact_resolve"] = 4;
 
+    if (self.data["collision"]["no_self_check"].is_null())
+        self.data["collision"]["no_self_check"] = false;
+
     if (self.data["hitbox"].is_null()) self.data["hitbox"] = "rectangle";
 
     if (self.data["hitbox"] == "rectangle")
@@ -74,6 +77,7 @@ void Collision::init(Object &self, Object &main)
 
 void Collision::update(Object &self, Object &main)
 {
+    // Undo collision status flags once per frame
     if (Collision::time != main.data["time"])
     {
         for (Object *other : Collision::Objects)
@@ -86,7 +90,9 @@ void Collision::update(Object &self, Object &main)
     // TODO: damn it this is O(n^2)
     for (Object *other : Collision::Objects)
     {
-        if (&self != other && this->isCollision(self, *other))
+        if (&self != other &&
+                !self.data["collision"]["no_self_check"].get<bool>() &&
+                this->isCollision(self, *other))
         {
             self.data["collision"]["status"] = true;
             other->data["collision"]["status"] = true;

@@ -36,6 +36,8 @@ void Tilemap::init(Object &self, Object &main)
     for (nlohmann::json::iterator it = self.data["tilemap"]["tiles"].begin();
             it != self.data["tilemap"]["tiles"].end(); it++)
     {
+        it.value()["collision"]["no_self_check"] = true;
+
         this->tiles[static_cast<std::string>(it.key())[0]] =
             &Object::Create(it.value());
     }
