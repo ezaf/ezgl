@@ -32,7 +32,8 @@ namespace EzGL
 
 void Tilemap::init(Object &self, Object &main)
 {
-    //for (auto &tile : self.data["tilemap"]["tiles"])
+    this->destroyed = false;
+
     for (nlohmann::json::iterator it = self.data["tilemap"]["tiles"].begin();
             it != self.data["tilemap"]["tiles"].end(); it++)
     {
@@ -47,42 +48,60 @@ void Tilemap::init(Object &self, Object &main)
 
 void Tilemap::update(Object &self, Object &main)
 {
-    long mapX = self.data["x"].get<long>(),
-         mapY = self.data["y"].get<long>();
-
-    long const tileW = self.data["tilemap"]["tile_w"].get<long>(),
-               tileH = self.data["tilemap"]["tile_h"].get<long>(),
-               mapW = mapX + (tileW *
-                       self.data["tilemap"]["map_w"].get<long>()),
-               mapH = mapY + (tileH *
-                       self.data["tilemap"]["map_h"].get<long>());
-
-    for (char const &c : self.data["tilemap"]["map"].get<std::string>())
+    if (self.data["input"]["destroy"].get<bool>())
     {
-        Object &tile = *this->tiles[c];
-        tile.data["x"] = mapX;
-        tile.data["y"] = mapY;
-
-        tile.update(main);
-
-        mapX += tileW;
-        if (mapX >= mapW)
+        // If is first time being destroyed, delete objects
+        if (!this->destroyed)
         {
-            mapX = self.data["x"].get<long>();
-            mapY += tileH;
+            for (auto const &kv : tiles)
+            {
+                Object::Destroy(*kv.second);
+                this->tiles.erase(kv.first);
+            }
         }
-        if (mapY >= mapH)
-        {
-            break;
-        }
+
+        this->destroyed = true;
     }
 
-    // Hide tile flyweights off-screen
-    for (auto &kv : this->tiles)
+    if (!this->destroyed)
     {
-        Object &tile = *kv.second;
-        tile.data["x"] = -tile.data["w"].get<long>();
-        tile.data["y"] = -tile.data["h"].get<long>();
+        long mapX = self.data["x"].get<long>(),
+             mapY = self.data["y"].get<long>();
+
+        long const tileW = self.data["tilemap"]["tile_w"].get<long>(),
+                   tileH = self.data["tilemap"]["tile_h"].get<long>(),
+                   mapW = mapX + (tileW *
+                           self.data["tilemap"]["map_w"].get<long>()),
+                   mapH = mapY + (tileH *
+                           self.data["tilemap"]["map_h"].get<long>());
+
+        for (char const &c : self.data["tilemap"]["map"].get<std::string>())
+        {
+            Object &tile = *this->tiles[c];
+            tile.data["x"] = mapX;
+            tile.data["y"] = mapY;
+
+            tile.update(main);
+
+            mapX += tileW;
+            if (mapX >= mapW)
+            {
+                mapX = self.data["x"].get<long>();
+                mapY += tileH;
+            }
+            if (mapY >= mapH)
+            {
+                break;
+            }
+        }
+
+        // Hide tile flyweights off-screen
+        for (auto &kv : this->tiles)
+        {
+            Object &tile = *kv.second;
+            tile.data["x"] = -tile.data["w"].get<long>();
+            tile.data["y"] = -tile.data["h"].get<long>();
+        }
     }
 }
 

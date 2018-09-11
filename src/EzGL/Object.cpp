@@ -60,6 +60,7 @@ class Object::Impl
 {
 public:
     Impl(nlohmann::json const &config) :
+        id(Object::Impl::Counter++),
         components(ComponentFactory::Create(config["components"]))
     {
     }
@@ -70,6 +71,7 @@ public:
         components.shrink_to_fit();
     }
 
+    long const id;
     std::vector<ComponentPtr> components;
 
     // Need a static function for emscripten's sake
@@ -77,12 +79,14 @@ public:
 
     static nlohmann::json Root;
     static bool Updated;
+    static long Counter;
     static ObjectPtr MainObject;
     static std::vector<ObjectPtr> Objects;
 };
 
 nlohmann::json Object::Impl::Root;
 bool Object::Impl::Updated = false;
+long Object::Impl::Counter = 0;
 ObjectPtr Object::Impl::MainObject;
 std::vector<ObjectPtr> Object::Impl::Objects;
 
@@ -206,6 +210,23 @@ Object& Object::Create(nlohmann::json &config)
 
 
 
+bool Object::Destroy(Object const &object)
+{
+    for (auto it = Object::Impl::Objects.begin();
+            it != Object::Impl::Objects.end();
+            it++)
+    {
+        if (*(*it) == object)
+        {
+            Object::Impl::Objects.erase(it);
+            return true;
+        }
+    }
+
+    return false;
+}
+
+
 
 void Object::UpdateAll()
 {
@@ -235,6 +256,20 @@ Object::Object(nlohmann::json &config) :
 Object::~Object()
 {
     delete impl;
+}
+
+
+
+bool Object::operator==(Object const &other)
+{
+    return this->impl->id == other.impl->id;
+}
+
+
+
+bool Object::operator!=(Object const &other)
+{
+    return !(*this == other);
 }
 
 

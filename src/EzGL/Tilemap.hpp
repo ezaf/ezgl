@@ -47,6 +47,7 @@ public:
     void update(Object &self, Object &main);
 
 private:
+    bool destroyed;
     std::map<char, Object*> tiles;
 };
 

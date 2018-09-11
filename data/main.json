@@ -64,7 +64,11 @@
                 }
             }
         },
+        "controls": {
+            "destroy": "BACKSPACE"
+        },
         "components": [
+            "Control",
             "Tilemap"
         ]
     },

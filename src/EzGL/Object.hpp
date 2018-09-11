@@ -77,11 +77,21 @@ public:
      */
     static Object& Create(nlohmann::json &config);
 
+    /** @brief      Object destroyer.
+     *  @details    Removes the referenced object from the universe.
+     *  @param      object      Reference to object you want to delete.
+     *  @returns    Whether the object was found and deleted or not.
+     */
+    static bool Destroy(Object const &object);
+
     /** @brief      Only graphics API binding components should call this.
      *  @details    Updates all the components of all objects in the universe.
      *              Should only be called once per frame.
      */
     static void UpdateAll();
+
+    bool operator==(Object const &other);
+    bool operator!=(Object const &other);
 
     void init(Object &main);
     void update(Object &main);
