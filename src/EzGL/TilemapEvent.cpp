@@ -1,4 +1,4 @@
-/*  EzGL/Tilemap.hpp
+/*  EzGL/TilemapEvent.cpp
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -19,39 +19,44 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef EZGL_TILEMAP_HPP
-#define EZGL_TILEMAP_HPP
+#include "EzGL/TilemapEvent.hpp"
 
-/** @file       EzGL/Tilemap.hpp
- *  @brief      Tilemap component.
- */
-
-#include "EzGL/Component.hpp"
-
-#include <vector>
-
-
+#include "EzGL/Object.hpp"
 
 namespace EzGL
 {
 
-EZGL_COMPONENT_ENLIST(Tilemap);
 
-class Tilemap final : public Component<Tilemap>
+
+void TilemapEvent::init(Object &self, Object &main)
 {
-public:
-    Tilemap() = default;
-    ~Tilemap() = default;
+}
 
-    void init(Object &self, Object &main);
-    void update(Object &self, Object &main);
 
-private:
-    std::vector<Object*> tiles;
-};
+
+void TilemapEvent::update(Object &self, Object &main)
+{
+    bool up = self.data["input"]["up"],
+        down = self.data["input"]["down"],
+        left = self.data["input"]["left"],
+        right = self.data["input"]["right"];
+
+    // Inverse because we're moving the player in given direction, not the map.
+    if (left && !right)
+        self.data["dx"] = static_cast<double>(self.data["speed"]);
+    else if (right && !left)
+        self.data["dx"] = -static_cast<double>(self.data["speed"]);
+    else
+        self.data["dx"] = 0.0;
+
+    if (up && !down)
+        self.data["dy"] = static_cast<double>(self.data["speed"]);
+    else if (down && !up)
+        self.data["dy"] = -static_cast<double>(self.data["speed"]);
+    else
+        self.data["dy"] = 0.0;
+}
+
+
 
 }; /* namespace EzGL */
-
-
-
-#endif /* EZGL_TILEMAP_HPP */

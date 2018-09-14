@@ -23,8 +23,6 @@
 
 #include "EzGL/Object.hpp"
 
-#include <iostream>
-
 namespace EzGL
 {
 
@@ -32,15 +30,12 @@ namespace EzGL
 
 void Tilemap::init(Object &self, Object &main)
 {
-    this->destroyed = false;
-
-    for (nlohmann::json::iterator it = self.data["tilemap"]["tiles"].begin();
-            it != self.data["tilemap"]["tiles"].end(); it++)
+    for (char const &c : self.data["tilemap"]["map"].get<std::string>())
     {
-        it.value()["collision"]["no_self_check"] = true;
+        this->tiles.push_back(&Object::Create(
+                    self.data["tilemap"]["tiles"][std::string(1, c)]));
 
-        this->tiles[static_cast<std::string>(it.key())[0]] =
-            &Object::Create(it.value());
+        this->tiles.back()->data["collision"]["no_self_check"] = true;
     }
 }
 
@@ -48,60 +43,46 @@ void Tilemap::init(Object &self, Object &main)
 
 void Tilemap::update(Object &self, Object &main)
 {
+    // TODO: Destroy this level then reload A NEW LEVEL
     if (self.data["input"]["destroy"].get<bool>())
     {
-        // If is first time being destroyed, delete objects
-        if (!this->destroyed)
+        for (Object *tile : tiles)
         {
-            for (auto const &kv : tiles)
-            {
-                Object::Destroy(*kv.second);
-                this->tiles.erase(kv.first);
-            }
+            Object::Destroy(*tile);
         }
 
-        this->destroyed = true;
+        this->tiles.clear();
+
+        // Reloads same level instead of some next level
+        this->init(self, main);
     }
 
-    if (!this->destroyed)
+    // TODO: Move camera around map instead of vice versa
+    long mapX = self.data["x"].get<long>(),
+         mapY = self.data["y"].get<long>();
+
+    long const tileW = self.data["tilemap"]["tile_w"].get<long>(),
+               tileH = self.data["tilemap"]["tile_h"].get<long>(),
+               mapW = mapX + (tileW *
+                       self.data["tilemap"]["map_w"].get<long>()),
+               mapH = mapY + (tileH *
+                       self.data["tilemap"]["map_h"].get<long>());
+
+    // Draw/Move all tiles. Assumes correct ordering!
+    for (Object *tile : this->tiles)
     {
-        long mapX = self.data["x"].get<long>(),
-             mapY = self.data["y"].get<long>();
+        tile->data["x"] = mapX;
+        tile->data["y"] = mapY;
 
-        long const tileW = self.data["tilemap"]["tile_w"].get<long>(),
-                   tileH = self.data["tilemap"]["tile_h"].get<long>(),
-                   mapW = mapX + (tileW *
-                           self.data["tilemap"]["map_w"].get<long>()),
-                   mapH = mapY + (tileH *
-                           self.data["tilemap"]["map_h"].get<long>());
+        tile->update(main);
 
-        for (char const &c : self.data["tilemap"]["map"].get<std::string>())
+        mapX += tileW;
+        if (mapX >= mapW)
         {
-            Object &tile = *this->tiles[c];
-            tile.data["x"] = mapX;
-            tile.data["y"] = mapY;
-
-            tile.update(main);
-
-            mapX += tileW;
-            if (mapX >= mapW)
-            {
-                mapX = self.data["x"].get<long>();
-                mapY += tileH;
-            }
-            if (mapY >= mapH)
-            {
-                break;
-            }
+            mapX = self.data["x"].get<long>();
+            mapY += tileH;
         }
-
-        // Hide tile flyweights off-screen
-        for (auto &kv : this->tiles)
-        {
-            Object &tile = *kv.second;
-            tile.data["x"] = -tile.data["w"].get<long>();
-            tile.data["y"] = -tile.data["h"].get<long>();
-        }
+        //if (mapY >= mapH) { break; }
     }
 }
 

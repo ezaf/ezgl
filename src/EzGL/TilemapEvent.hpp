@@ -1,4 +1,4 @@
-/*  EzGL/Tilemap.hpp
+/*  EzGL/TilemapEvent.hpp
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -19,11 +19,11 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef EZGL_TILEMAP_HPP
-#define EZGL_TILEMAP_HPP
+#ifndef EZGL_TILEMAPEVENT_HPP
+#define EZGL_TILEMAPEVENT_HPP
 
-/** @file       EzGL/Tilemap.hpp
- *  @brief      Tilemap component.
+/** @file       EzGL/TilemapEvent.hpp
+ *  @brief      Temporary, soon-to-be-deprecated TilemapEvent component.
  */
 
 #include "EzGL/Component.hpp"
@@ -35,23 +35,20 @@
 namespace EzGL
 {
 
-EZGL_COMPONENT_ENLIST(Tilemap);
+EZGL_COMPONENT_ENLIST(TilemapEvent);
 
-class Tilemap final : public Component<Tilemap>
+class TilemapEvent final : public Component<TilemapEvent>
 {
 public:
-    Tilemap() = default;
-    ~Tilemap() = default;
+    TilemapEvent() = default;
+    ~TilemapEvent() = default;
 
     void init(Object &self, Object &main);
     void update(Object &self, Object &main);
-
-private:
-    std::vector<Object*> tiles;
 };
 
 }; /* namespace EzGL */
 
 
 
-#endif /* EZGL_TILEMAP_HPP */
+#endif /* EZGL_TILEMAPEVENT_HPP */
