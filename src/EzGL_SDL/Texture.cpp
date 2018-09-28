@@ -120,8 +120,10 @@ void Texture::init(Object &self, Object &main)
 void Texture::update(Object &self, Object &main)
 {
     dst = {
-        self.data["x"].get<int>() - main.data["camera"]["x"].get<int>(),
-        self.data["y"].get<int>() - main.data["camera"]["y"].get<int>(),
+        self.data["x"].get<int>() - main.data["camera_x"].get<int>() +
+            (main.data["render_width"].get<int>()/2),
+        self.data["y"].get<int>() - main.data["camera_y"].get<int>() +
+            (main.data["render_height"].get<int>()/2),
         self.data["w"].get<int>(),
         self.data["h"].get<int>()
     };

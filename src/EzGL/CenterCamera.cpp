@@ -39,14 +39,12 @@ void CenterCamera::init(Object &self, Object &main)
 
 void CenterCamera::update(Object &self, Object &main)
 {
-    main.data["camera"]["x"] = static_cast<int>(round(
+    main.data["camera_x"] = static_cast<int>(round(
                     self.data["x"].get<double>() +
-                    (self.data["w"].get<double>()/2.0) -
-                    (main.data["render_width"].get<double>()/2.0)));
-    main.data["camera"]["y"] = static_cast<int>(round(
+                    (self.data["w"].get<double>()/2.0)));
+    main.data["camera_y"] = static_cast<int>(round(
                     self.data["y"].get<double>() +
-                    (self.data["h"].get<double>()/2.0) -
-                    (main.data["render_height"].get<double>()/2.0)));
+                    (self.data["h"].get<double>()/2.0)));
 }
 
 

@@ -34,6 +34,8 @@ they are only meant to be accessed at runtime such as `"dt"` and `"t"`.
 Data Field         | Description
 :----------------- | :----------
 `"bordered"`       | Whether the window has a border.
+`"camera_x"`       | X-coordinate on which the camera should be centered.
+`"camera_y"`       | Y-coordinate on which the camera should be centered.
 `"dt"`             | Time (s) since last frame.
 `"display_height"` | Height of the window itself.
 `"display_width"`  | Width of the window itself.
@@ -42,8 +44,8 @@ Data Field         | Description
 `"icon"`           | Application icon png file.
 `"pause"`          | If set to `true`, pauses all object updates **including rendering**.
 `"refresh_rate"`   | Graphics and physics refresh rate.
-`"render_height"`  | Rendered/Logical resolution height within window.
-`"render_width"`   | Rendered/Logical resolution width within window.
+`"render_height"`  | Rendered/Logical resolution height within window. Functions as the camera width.
+`"render_width"`   | Rendered/Logical resolution width within window. Functions as the camera height.
 `"scaling"`        | `"nearest"` or `"linear"`. You're more likely to use the latter.
 `"self_destruct"`  | Program will self destruct after this many seconds. Useful for automated build tests.
 `"show_cursor"`    | Whether the mouse cursor is shown.
@@ -113,6 +115,10 @@ material. Definitions for `"apple"` and `"banana"` are left blank.
         "dt_max": 0.1,
         "show_cursor": true,
         "self_destruct": 5.0,
+        "camera": {
+            "x": 0,
+            "y": 0
+        }
         "controls": {
             "quit": "ESCAPE",
             "pause": "BACKQUOTE",
