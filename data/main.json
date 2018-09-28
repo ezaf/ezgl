@@ -35,7 +35,6 @@
     "GameLevel": {
         "x": 64,
         "y": 64,
-        "speed": 256,
         "tilemap": {
             "map": "BBBBBBBBggBBBBBBBBwwwwww",
             "map_w": 6,
@@ -66,17 +65,12 @@
             }
         },
         "controls": {
-            "destroy": "BACKSPACE",
-            "up": "w",
-            "down": "s",
-            "left": "a",
-            "right": "d"
+            "destroy": "BACKSPACE"
         },
         "components": [
             "Control",
-            "TilemapEvent",
-            "Motion",
-            "Tilemap"
+            "Tilemap",
+            "CenterCamera"
         ]
     },
 

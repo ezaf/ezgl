@@ -37,6 +37,11 @@ void Tilemap::init(Object &self, Object &main)
 
         this->tiles.back()->data["collision"]["no_self_check"] = true;
     }
+
+    self.data["w"] = self.data["tilemap"]["map_w"].get<int>() *
+        self.data["tilemap"]["tile_w"].get<int>();
+    self.data["h"] = self.data["tilemap"]["map_h"].get<int>() *
+        self.data["tilemap"]["tile_h"].get<int>();
 }
 
 

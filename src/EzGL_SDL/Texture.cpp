@@ -120,15 +120,19 @@ void Texture::init(Object &self, Object &main)
 void Texture::update(Object &self, Object &main)
 {
     dst = {
-        static_cast<int>(self.data["x"]), static_cast<int>(self.data["y"]),
-        static_cast<int>(self.data["w"]), static_cast<int>(self.data["h"])
+        self.data["x"].get<int>() - main.data["camera"]["x"].get<int>(),
+        self.data["y"].get<int>() - main.data["camera"]["y"].get<int>(),
+        self.data["w"].get<int>(),
+        self.data["h"].get<int>()
     };
 
     if (texture != nullptr)
     {
         src = {
-            static_cast<int>(self.data["sx"]), static_cast<int>(self.data["sy"]),
-            static_cast<int>(self.data["sw"]), static_cast<int>(self.data["sh"])
+            static_cast<int>(self.data["sx"]),
+            static_cast<int>(self.data["sy"]),
+            static_cast<int>(self.data["sw"]),
+            static_cast<int>(self.data["sh"])
         };
 
         // The two 0s are angle (double) and center (SDL_Point*) respectively

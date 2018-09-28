@@ -77,6 +77,12 @@ void MainLogic::init(Object &self, Object &main)
 
     if (self.data["refresh_rate"].is_null())
         self.data["refresh_rate"] = display.refresh_rate;
+
+    if (self.data["camera"]["x"].is_null())
+        self.data["camera"]["x"] = 0;
+
+    if (self.data["camera"]["y"].is_null())
+        self.data["camera"]["y"] = 0;
 }
 
 
