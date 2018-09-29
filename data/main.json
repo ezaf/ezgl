@@ -13,6 +13,7 @@
         "vsync": true,
         "dt_max": 0.015,
         "show_cursor": false,
+        "gravity_dy": 8,
         "controls": {
             "quit": "ESCAPE",
             "bordered": "F10",
@@ -28,15 +29,42 @@
             "MainRender"
         ],
         "objects": {
+            "Player": 1,
             "GameLevel": 1
         }
     },
 
+    "Player": {
+        "x": 0,
+        "y": -128,
+        "w": 48,
+        "h": 48,
+        "speed": 128,
+        "jump_speed": 512,
+        "color": [0, 0, 255, 255],
+        "controls": {
+            "left": "a",
+            "right": "d",
+            "jump": "SPACE"
+        },
+        "components": [
+            "Control",
+            "PlatformerEvent",
+            "Gravity",
+            "Motion",
+            "Collision",
+            "PlatformerLogic",
+            "CenterCamera",
+            "Texture"
+        ]
+    },
+
     "GameLevel": {
-        "x": 64,
-        "y": 64,
+        "x": 0,
+        "y": 0,
         "tilemap": {
-            "map": "BBBBBBBBggBBBBBBBBwwwwww",
+            "   ": "......,,,,,,......,,,,,,",
+            "map": "BB  wwBBg  wBBBB wBBBBBB",
             "map_w": 6,
             "map_h": 4,
             "tile_w": 64,
@@ -45,22 +73,26 @@
                 "B": {
                     "inherit": "TerrainX16",
                     "sx": 112,
-                    "sy": 0
+                    "sy": 0,
+                    "components": ["Collision", "Texture"]
                 },
                 "w": {
                     "inherit": "TerrainX16",
                     "sx": 64,
-                    "sy": 0
+                    "sy": 0,
+                    "components": ["Collision", "Texture"]
                 },
                 "g": {
                     "inherit": "TerrainX16",
                     "sx": 16,
-                    "sy": 48
+                    "sy": 48,
+                    "components": ["Collision", "Texture"]
                 },
                 " ": {
                     "inherit": "TerrainX16",
                     "sx": 0,
-                    "sy": 0
+                    "sy": 0,
+                    "components": ["Texture"]
                 }
             }
         },
@@ -69,8 +101,7 @@
         },
         "components": [
             "Control",
-            "Tilemap",
-            "CenterCamera"
+            "Tilemap"
         ]
     },
 
@@ -81,9 +112,6 @@
         "h": 64,
         "sw": 16,
         "sh": 16,
-        "texture": "data/terrain.png",
-        "components": [
-            "Texture"
-        ]
+        "texture": "data/terrain.png"
     }
 }

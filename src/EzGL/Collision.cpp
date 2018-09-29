@@ -25,6 +25,7 @@
 #include "EzGL/Motion.hpp"
 
 #include <algorithm>
+#include <iostream>
 
 namespace EzGL
 {
@@ -41,6 +42,14 @@ void Collision::init(Object &self, Object &main)
     if (self.data["x"].is_null()) self.data["x"] = 0;
     if (self.data["y"].is_null()) self.data["y"] = 0;
     if (self.data["z"].is_null()) self.data["z"] = 0;
+
+    if (self.data["dx"].is_null()) self.data["dx"] = 0;
+    if (self.data["dy"].is_null()) self.data["dy"] = 0;
+    if (self.data["dz"].is_null()) self.data["dz"] = 0;
+
+    if (self.data["d2x"].is_null()) self.data["d2x"] = 0;
+    if (self.data["d2y"].is_null()) self.data["d2y"] = 0;
+    if (self.data["d2z"].is_null()) self.data["d2z"] = 0;
 
     if (self.data["impact_resolve"].is_null())
         self.data["impact_resolve"] = 4;
@@ -61,9 +70,9 @@ void Collision::init(Object &self, Object &main)
         if (self.data["r"].is_null()) self.data["r"] = 0;
 
         // WARNING: circles are actually treated as squares right now...
-        self.data["w"] = self.data["r"];
-        self.data["h"] = self.data["r"];
-        self.data["d"] = self.data["r"];
+        self.data["w"] = self.data["r"].get<double>() * 2;
+        self.data["h"] = self.data["r"].get<double>() * 2;
+        self.data["d"] = self.data["r"].get<double>() * 2;
     }
 
     self.data["collision"]["status"] = false;
@@ -80,20 +89,18 @@ void Collision::update(Object &self, Object &main)
     // Undo collision status flags once per frame
     if (Collision::time != main.data["time"])
     {
-        for (Object *other : Collision::Objects)
-        {
-            other->data["collision"]["status"] = false;
-        }
+        self.data["collision"]["status"] = false;
         Collision::time = main.data["t"];
     }
 
-    // TODO: damn it this is O(n^2)
-    for (Object *other : Collision::Objects)
+    if (!self.data["collision"]["no_self_check"].get<bool>())
     {
-        if (&self != other &&
-                !self.data["collision"]["no_self_check"].get<bool>() &&
-                this->isCollision(self, *other))
+        // TODO: damn it this is O(n^2)
+        for (Object *other : Collision::Objects)
         {
+            if (self == *other || !this->isCollision(self, *other))
+                continue;
+
             self.data["collision"]["status"] = true;
             other->data["collision"]["status"] = true;
             self.other = other;
@@ -111,40 +118,9 @@ void Collision::update(Object &self, Object &main)
 
             if (self.data["impact_resolve"] > 0)
             {
-                double origObjDX = self.data["dx"].get<double>();
-                double origObjDY = self.data["dy"].get<double>();
-                double origObjDZ = self.data["dz"].get<double>();
-                double origOthDX = other->data["dx"].get<double>();
-                double origOthDY = other->data["dy"].get<double>();
-                double origOthDZ = other->data["dz"].get<double>();
-
-                Motion motion;
-                for (int i=0; i<self.data["impact_resolve"] &&
-                        this->isCollision(self, *other); i++)
-                {
-                    this->undoTimestep(self, *other, main);
-
-                    self.data["dx"] = self.data["dx"].get<double>() / 2.0;
-                    self.data["dy"] = self.data["dy"].get<double>() / 2.0;
-                    self.data["dz"] = self.data["dz"].get<double>() / 2.0;
-
-                    other->data["dx"] = other->data["dx"].get<double>() / 2.0;
-                    other->data["dy"] = other->data["dy"].get<double>() / 2.0;
-                    other->data["dz"] = other->data["dz"].get<double>() / 2.0;
-
-                    motion.update(self, main);
-                    motion.update(*other, main);
-                }
-
-                if (this->isCollision(self, *other))
-                    this->undoTimestep(self, *other, main);
-
-                self.data["dx"] = origObjDX;
-                self.data["dy"] = origObjDY;
-                self.data["dz"] = origObjDZ;
-                other->data["dx"] = origOthDX;
-                other->data["dy"] = origOthDY;
-                other->data["dz"] = origOthDZ;
+                this->resolveImpact("dz", self, *other, main);
+                this->resolveImpact("dy", self, *other, main);
+                this->resolveImpact("dx", self, *other, main);
             }
         }
     }
@@ -178,6 +154,34 @@ void Collision::undoTimestep(Object &alpha, Object &bravo, Object &main)
     motion.update(alpha, main);
     motion.update(bravo, main);
     main.data["dt"] = -main.data["dt"].get<double>();
+}
+
+
+
+void Collision::resolveImpact(std::string const &dim,
+        Object &self, Object &other, Object &main)
+{
+    double origObj = self.data[dim].get<double>();
+    double origOth = other.data[dim].get<double>();
+
+    Motion motion;
+    for (int i=0; i<self.data["impact_resolve"] &&
+            this->isCollision(self, other); i++)
+    {
+        this->undoTimestep(self, other, main);
+
+        self.data[dim] = self.data[dim].get<double>() / 2.0;
+        other.data[dim] = other.data[dim].get<double>() / 2.0;
+
+        motion.update(self, main);
+        motion.update(other, main);
+    }
+
+    if (this->isCollision(self, other))
+        this->undoTimestep(self, other, main);
+
+    self.data[dim] = origObj;
+    other.data[dim] = origOth;
 }
 
 

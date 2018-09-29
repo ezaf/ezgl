@@ -57,6 +57,8 @@ public:
 private:
     bool isCollision(Object const &alpha, Object const &bravo);
     void undoTimestep(Object &alpha, Object &bravo, Object &main);
+    void resolveImpact(std::string const &dim,
+            Object &alpha, Object &bravo, Object &main);
     double getOverlap(Object &alpha, Object &bravo,
             std::string const &pos, std::string const &dim);
 
