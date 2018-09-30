@@ -1,4 +1,4 @@
-/*  EzGL/Tilemap.cpp
+/*  EzGL/TileMap.cpp
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -19,7 +19,7 @@
  *  3. This notice may not be removed or altered from any source distribution.
  */
 
-#include "EzGL/Tilemap.hpp"
+#include "EzGL/TileMap.hpp"
 
 #include "EzGL/Object.hpp"
 
@@ -28,7 +28,7 @@ namespace EzGL
 
 
 
-void Tilemap::init(Object &self, Object &main)
+void TileMap::init(Object &self, Object &main)
 {
     for (char const &c : self.data["tilemap"]["map"].get<std::string>())
     {
@@ -46,7 +46,7 @@ void Tilemap::init(Object &self, Object &main)
 
 
 
-void Tilemap::update(Object &self, Object &main)
+void TileMap::update(Object &self, Object &main)
 {
     // TODO: Destroy this level then reload A NEW LEVEL
     if (self.data["input"]["destroy"].get<bool>())

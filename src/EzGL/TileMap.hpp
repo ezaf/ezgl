@@ -1,4 +1,4 @@
-/*  EzGL/Tilemap.hpp
+/*  EzGL/TileMap.hpp
  *
  *  Copyright (c) 2018 Kirk Lange <github.com/kirklange>
  *
@@ -22,8 +22,8 @@
 #ifndef EZGL_TILEMAP_HPP
 #define EZGL_TILEMAP_HPP
 
-/** @file       EzGL/Tilemap.hpp
- *  @brief      Tilemap component.
+/** @file       EzGL/TileMap.hpp
+ *  @brief      TileMap component.
  */
 
 #include "EzGL/Component.hpp"
@@ -35,13 +35,13 @@
 namespace EzGL
 {
 
-EZGL_COMPONENT_ENLIST(Tilemap);
+EZGL_COMPONENT_ENLIST(TileMap);
 
-class Tilemap final : public Component<Tilemap>
+class TileMap final : public Component<TileMap>
 {
 public:
-    Tilemap() = default;
-    ~Tilemap() = default;
+    TileMap() = default;
+    ~TileMap() = default;
 
     void init(Object &self, Object &main);
     void update(Object &self, Object &main);

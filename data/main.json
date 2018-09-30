@@ -101,7 +101,7 @@
         },
         "components": [
             "Control",
-            "Tilemap"
+            "TileMap"
         ]
     },
 
